@@ -9,7 +9,7 @@ on:
       - dev
 
 jobs:
-  deploy-draft:
+  deploy-staging-trv11:
     runs-on: ubuntu-latest
     environment:  
           name: ${{ github.ref_name }}
