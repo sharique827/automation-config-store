@@ -26954,6 +26954,7 @@ x-validations:
           - ebn
           - linked_order_diff
           - linked_order_diff_proof
+          - precancel_state
         tagPath: $.message.order.fulfillments[*].tags[*].code
         _CONTINUE_: '!(tagPath are present)'
         _RETURN_: tagPath all in validTags
@@ -27106,6 +27107,13 @@ x-validations:
         validValues:
           - type
           - url
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_2_precancel_state
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='precancel_state')]
+        subTags: $.list[*].code
+        validValues:
+          - fulfillment_state
+          - updated_at
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_3
         validTags:
