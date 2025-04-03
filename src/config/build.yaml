@@ -27163,6 +27163,7 @@ x-validations:
           - At-delivery
           - Order-delivered
           - Cancelled
+          - RTO
           - RTO-Initiated
           - RTO-Disposed
           - RTO-Delivered
@@ -27191,6 +27192,7 @@ x-validations:
           - Delivery-rescheduled
           - Order-delivered
           - Cancelled
+          - RTO
           - RTO-Initiated
           - RTO-Disposed
           - RTO-Delivered
@@ -27260,5 +27262,6 @@ x-validations:
           $.message.order.fulfillments[?(@.type=='Delivery')].end.location.address.city
         _RETURN_: endLocation are present
   _SESSION_DATA_: {}
+
 
 
