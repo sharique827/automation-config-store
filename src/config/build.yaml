@@ -23270,6 +23270,8 @@ x-validations:
           - linked_order
           - linked_order_item
           - cod_settlement_detail
+          - fulfill_request
+          - fulfill_response
           - state
           - rto_action
           - provider
@@ -23333,6 +23335,27 @@ x-validations:
           - ifsc_code
           - bank_name
           - branch_name
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_3_fulfill_request
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_request')]
+        subTags: $.list[*].code
+        validValues:
+          - rider_count
+          - order_count
+          - rate_basis
+          - motorable_distance
+          - pickup_slot_start
+          - pickup_slot_end
+          - delivery_slot_start
+          - delivery_slot_end
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_3_fulfill_response
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_response')]
+        subTags: $.list[*].code
+        validValues:
+          - rider_count
+          - order_count
+          - rate_basis
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_3_state
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='state')]
@@ -23866,6 +23889,8 @@ x-validations:
           - linked_provider
           - linked_order
           - linked_order_item
+          - fulfill_request
+          - fulfill_response
         tagPath: $.message.order.fulfillments[*].tags[*].code
         _CONTINUE_: '!(tagPath are present)'
         _RETURN_: tagPath all in validTags
@@ -23912,6 +23937,27 @@ x-validations:
           - quantity
           - weight_unit
           - weight_value
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_0_fulfill_request
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_request')]
+        subTags: $.list[*].code
+        validValues:
+          - rider_count
+          - order_count
+          - rate_basis
+          - motorable_distance
+          - pickup_slot_start
+          - pickup_slot_end
+          - delivery_slot_start
+          - delivery_slot_end
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_0_fulfill_response
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_response')]
+        subTags: $.list[*].code
+        validValues:
+          - rider_count
+          - order_count
+          - rate_basis
         _RETURN_: subTags all in validValues
       - _NAME_: instructions_validations
         _RETURN_:
@@ -24108,6 +24154,7 @@ x-validations:
         validTags:
           - distance
           - fulfill_request
+          - linked_provider
           - fulfill_response
         tagPath: $.message.catalog['bpp/providers'][*].fulfillments[*].tags[*].code
         _CONTINUE_: '!(tagPath are present)'
@@ -24133,6 +24180,14 @@ x-validations:
           - pickup_slot_end
           - delivery_slot_start
           - delivery_slot_end
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_1_linked_provider
+        _SCOPE_: >-
+          $.message.catalog['bpp/providers'][*].fulfillments[*].tags[?(@.code=='linked_provider')]
+        subTags: $.list[*].code
+        validValues:
+          - id
+          - name
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_1_fulfill_response
         _SCOPE_: >-
@@ -25056,6 +25111,8 @@ x-validations:
           - linked_order
           - linked_order_item
           - cod_settlement_detail
+          - fulfill_request
+          - fulfill_response
           - state
           - rto_action
           - shipping_label
@@ -25112,6 +25169,27 @@ x-validations:
           - ifsc_code
           - bank_name
           - branch_name
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_3_fulfill_request
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_request')]
+        subTags: $.list[*].code
+        validValues:
+          - rider_count
+          - order_count
+          - rate_basis
+          - motorable_distance
+          - pickup_slot_start
+          - pickup_slot_end
+          - delivery_slot_start
+          - delivery_slot_end
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_3_fulfill_response
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_response')]
+        subTags: $.list[*].code
+        validValues:
+          - rider_count
+          - order_count
+          - rate_basis
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_3_state
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='state')]
@@ -25714,6 +25792,8 @@ x-validations:
           - ebn
           - linked_order_diff
           - linked_order_diff_proof
+          - fulfill_request
+          - fulfill_response
         tagPath: $.message.order.fulfillments[*].tags[*].code
         _CONTINUE_: '!(tagPath are present)'
         _RETURN_: tagPath all in validTags
@@ -25832,6 +25912,27 @@ x-validations:
         validValues:
           - type
           - url
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_2_fulfill_request
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_request')]
+        subTags: $.list[*].code
+        validValues:
+          - rider_count
+          - order_count
+          - rate_basis
+          - motorable_distance
+          - pickup_slot_start
+          - pickup_slot_end
+          - delivery_slot_start
+          - delivery_slot_end
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_2_fulfill_response
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_response')]
+        subTags: $.list[*].code
+        validValues:
+          - rider_count
+          - order_count
+          - rate_basis
         _RETURN_: subTags all in validValues
       - _NAME_: order_picked_up_timestamp
         _DESCRIPTION_: >-
