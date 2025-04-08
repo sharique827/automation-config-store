@@ -6,7 +6,7 @@ export async function confirm(payload: any): Promise<validationOutput> {
   const domain = context?.domain;
   const action = context?.action;
   console.log(`Running validations for ${domain}/${action}`);
-  console.log("Payload received:", JSON.stringify(payload, null, 2));
+
 
   const results: validationOutput = [];
 
@@ -19,8 +19,8 @@ export async function confirm(payload: any): Promise<validationOutput> {
   const validFulfillments = await validateFulfillments(payload);
   console.log("Fulfillments validation result:", validFulfillments);
 
-  const validOrderDimensions = await validateOrderDimensions(payload);
-  console.log("Order Dimensions validation result:", validOrderDimensions);
+  // const validOrderDimensions = await validateOrderDimensions(payload);
+  // console.log("Order Dimensions validation result:", validOrderDimensions);
 
   const acceptLSPterms = await validateLSPterms(payload);
   console.log("LSP terms acceptance validation result:", acceptLSPterms);
@@ -52,13 +52,13 @@ export async function confirm(payload: any): Promise<validationOutput> {
     });
   }
 
-  if (!validOrderDimensions) {
-    results.push({
-      valid: false,
-      code: 60011,
-      description: `LSP is unable to validate the order request : Order dimensions/weight does not match with /search`,
-    });
-  }
+  // if (!validOrderDimensions) {
+  //   results.push({
+  //     valid: false,
+  //     code: 60011,
+  //     description: `LSP is unable to validate the order request : Order dimensions/weight does not match with /search`,
+  //   });
+  // }
 
   if (!acceptLSPterms) {
     results.push({
@@ -93,7 +93,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
 
   if (!transaction_id || quotePrice == null) return false;
 
-  const onInitQuoteRaw = await RedisService.getKey(`${transaction_id}:confirmQuote`);
+  const onInitQuoteRaw = await RedisService.getKey(`${transaction_id}:onInitQuote`);
   console.log("Redis Quote Raw:", onInitQuoteRaw);
   if (!onInitQuoteRaw) return false;
 
@@ -118,7 +118,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
 
   if (!Array.isArray(items) || !transaction_id) return false;
 
-  const onInitItemsRaw = await RedisService.getKey(`${transaction_id}:confirmItems`);
+  const onInitItemsRaw = await RedisService.getKey(`${transaction_id}:onInitItems`);
   console.log("Redis Items Raw:", onInitItemsRaw);
   if (!onInitItemsRaw) return false;
 
@@ -149,7 +149,7 @@ async function validateFulfillments(payload: Record<string, any>): Promise<boole
 
   if (!Array.isArray(fulfillments) || !transaction_id) return false;
 
-  const onInitFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:confirmFulfillments`);
+  const onInitFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:onInitFulfillments`);
   console.log("Redis Fulfillments Raw:", onInitFulfillmentsRaw);
   if (!onInitFulfillmentsRaw) return false;
 
@@ -171,46 +171,46 @@ async function validateFulfillments(payload: Record<string, any>): Promise<boole
   }
 }
 
-async function validateOrderDimensions(payload: Record<string, any>): Promise<boolean> {
-  console.log("Running validateOrderDimensions");
-  const payloadDetails = payload.message.order["@ondc/org/payload_details"];
-  const dimensions = payloadDetails?.dimensions;
-  const weight = payloadDetails?.weight;
-  const transaction_id = payload?.context?.transaction_id;
+// async function validateOrderDimensions(payload: Record<string, any>): Promise<boolean> {
+//   console.log("Running validateOrderDimensions");
+//   const payloadDetails = payload.message.order["@ondc/org/payload_details"];
+//   const dimensions = payloadDetails?.dimensions;
+//   const weight = payloadDetails?.weight;
+//   const transaction_id = payload?.context?.transaction_id;
 
-  if (!dimensions || !weight || !transaction_id) return false;
+//   if (!dimensions || !weight || !transaction_id) return false;
 
-  let searchDimensions = await RedisService.getKey(`${transaction_id}:orderDimensions`);
-  let searchWeight = await RedisService.getKey(`${transaction_id}:orderWeight`);
-  console.log("Redis Dimensions:", searchDimensions);
-  console.log("Redis Weight:", searchWeight);
-  if (!searchDimensions || !searchWeight) return false;
+//   let searchDimensions = await RedisService.getKey(`${transaction_id}:orderDimensions`);
+//   let searchWeight = await RedisService.getKey(`${transaction_id}:orderWeight`);
+//   console.log("Redis Dimensions:", searchDimensions);
+//   console.log("Redis Weight:", searchWeight);
+//   if (!searchDimensions || !searchWeight) return false;
 
-  try {
-    searchDimensions = JSON.parse(searchDimensions).dimensions;
-    searchWeight = JSON.parse(searchWeight).weight;
-  } catch (error) {
-    console.error("Error parsing order details from Redis:", error);
-    return false;
-  }
+//   try {
+//     searchDimensions = JSON.parse(searchDimensions).dimensions;
+//     searchWeight = JSON.parse(searchWeight).weight;
+//   } catch (error) {
+//     console.error("Error parsing order details from Redis:", error);
+//     return false;
+//   }
 
-  function compareDimensions(obj1: any, obj2: any): boolean {
-    return (
-      obj1?.length?.unit === obj2?.length?.unit &&
-      obj1?.length?.value === obj2?.length?.value &&
-      obj1?.breadth?.unit === obj2?.breadth?.unit &&
-      obj1?.breadth?.value === obj2?.breadth?.value &&
-      obj1?.height?.unit === obj2?.height?.unit &&
-      obj1?.height?.value === obj2?.height?.value
-    );
-  }
+//   function compareDimensions(obj1: any, obj2: any): boolean {
+//     return (
+//       obj1?.length?.unit === obj2?.length?.unit &&
+//       obj1?.length?.value === obj2?.length?.value &&
+//       obj1?.breadth?.unit === obj2?.breadth?.unit &&
+//       obj1?.breadth?.value === obj2?.breadth?.value &&
+//       obj1?.height?.unit === obj2?.height?.unit &&
+//       obj1?.height?.value === obj2?.height?.value
+//     );
+//   }
 
-  function compareWeight(obj1: any, obj2: any): boolean {
-    return obj1?.unit === obj2?.unit && obj1?.value === obj2?.value;
-  }
+//   function compareWeight(obj1: any, obj2: any): boolean {
+//     return obj1?.unit === obj2?.unit && obj1?.value === obj2?.value;
+//   }
 
-  return compareDimensions(dimensions, searchDimensions) && compareWeight(weight, searchWeight);
-}
+//   return compareDimensions(dimensions, searchDimensions) && compareWeight(weight, searchWeight);
+// }
 
 async function validateLSPterms(payload: Record<string, any>): Promise<boolean> {
   console.log("Running validateLSPterms");

@@ -58,7 +58,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   const quotePrice = payload?.message?.order?.quote?.price;
   if (!quotePrice) return false;
 
-  const onInitQuoteRaw = await RedisService.getKey(`${transaction_id}:confirmQuote`);
+  const onInitQuoteRaw = await RedisService.getKey(`${transaction_id}:onInitQuote`);
   if (!onInitQuoteRaw) return true;
 
   try {
@@ -79,7 +79,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
 
   if (!Array.isArray(items) || !transaction_id) return false;
 
-  const onInitItemsRaw = await RedisService.getKey(`${transaction_id}:confirmItems`);
+  const onInitItemsRaw = await RedisService.getKey(`${transaction_id}:onInitItems`);
   if (!onInitItemsRaw) return false;
 
   try {
@@ -113,7 +113,7 @@ async function validateFulfillments(payload: Record<string, any>): Promise<boole
 
   if (!Array.isArray(fulfillments) || !transaction_id) return false;
 
-  const onInitFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:confirmFulfillments`);
+  const onInitFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:onInitFulfillments`);
   if (!onInitFulfillmentsRaw) return false;
 
   try {
