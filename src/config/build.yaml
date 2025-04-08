@@ -22825,12 +22825,6 @@ x-validations:
       enumList:
       - IND
       useCasePath: "$.message.intent.fulfillment.vehicle.category"
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
-      useCasePath: "$.message.intent.fulfillment.vehicle.category"
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
       _RETURN_: attr are present && attr all in enumList
@@ -22970,11 +22964,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
       _RETURN_: attr are present && attr all in enumList
@@ -23089,6 +23078,7 @@ x-validations:
       enumList:
       - ROUTE
       - TRIP
+      - TICKET
       enumPath: "$.message.order.fulfillments[*].type"
       _CONTINUE_: "!(enumPath are present)"
       _RETURN_: enumPath all in enumList
@@ -23126,7 +23116,7 @@ x-validations:
       _RETURN_: enumPath all in enumList
     - _NAME_: VALID_ENUM_MESSAGE_TITLE_8
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -23148,6 +23138,7 @@ x-validations:
       validValues:
       - ROUTE_ID
       - ROUTE_DIRECTION
+      - ROUTE_NAME
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_0_TICKET_INFO
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -23159,7 +23150,7 @@ x-validations:
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='INFO')]"
       subTags: "$.list[*].descriptor.code"
       validValues:
-      - PARENT_ITEM_ID
+      - PARENT_ID
       _RETURN_: subTags all in validValues
     init:
     - _NAME_: REQUIRED_CONTEXT_CODE_1
@@ -23167,11 +23158,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
       _RETURN_: attr are present && attr all in enumList
@@ -23304,6 +23290,7 @@ x-validations:
       enumList:
       - ROUTE
       - TRIP
+      - TICKET
       enumPath: "$.message.order.fulfillments[*].type"
       _CONTINUE_: "!(enumPath are present)"
       _RETURN_: enumPath all in enumList
@@ -23341,7 +23328,7 @@ x-validations:
       _RETURN_: enumPath all in enumList
     - _NAME_: VALID_ENUM_MESSAGE_TITLE_8
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -23382,11 +23369,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
       _RETURN_: attr are present && attr all in enumList
@@ -23423,9 +23405,6 @@ x-validations:
       _RETURN_: attr are present
     - _NAME_: REQUIRED_CONTEXT_BPP_URI_13
       attr: "$.context.bpp_uri"
-      _RETURN_: attr are present
-    - _NAME_: REQUIRED_MESSAGE_ID_14
-      attr: "$.message.order.id"
       _RETURN_: attr are present
     - _NAME_: REQUIRED_MESSAGE_ID_15
       attr: "$.message.order.items[*].id"
@@ -23583,7 +23562,7 @@ x-validations:
       _RETURN_: enumPath all in enumList
     - _NAME_: VALID_ENUM_MESSAGE_TITLE_7
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -23597,11 +23576,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
       _RETURN_: attr are present && attr all in enumList
@@ -23687,11 +23661,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
       _RETURN_: attr are present && attr all in enumList
@@ -23739,8 +23708,8 @@ x-validations:
       attr: "$.message.descriptor.code"
       _RETURN_: attr are present && attr all in enumList
       enumList:
-      - SOFT-CANCEL
-      - CONFIRM-CANCEL
+      - SOFT_CANCEL
+      - CONFIRM_CANCEL
     - _NAME_: REQUIRED_MESSAGE_NAME_17
       attr: "$.message.descriptor.name"
       _RETURN_: attr are present
@@ -23750,11 +23719,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
       _RETURN_: attr are present && attr all in enumList
@@ -23867,7 +23831,7 @@ x-validations:
       _RETURN_: enumPath all in enumList
     - _NAME_: VALID_ENUM_MESSAGE_TITLE_10
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -23889,12 +23853,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-      useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
       useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
@@ -24195,6 +24153,7 @@ x-validations:
       validValues:
       - ROUTE_ID
       - ROUTE_DIRECTION
+      - ROUTE_NAME
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_1_TICKET_INFO
       _SCOPE_: "$.message.catalog.providers[*].fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -24267,12 +24226,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
@@ -24417,6 +24370,7 @@ x-validations:
       enumList:
       - ROUTE
       - TRIP
+      - TICKET
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
       - METRO
@@ -24477,7 +24431,7 @@ x-validations:
       attr: "$.message.order.quote.breakup[*].title"
       _RETURN_: attr are present && attr all in enumList
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -24831,6 +24785,7 @@ x-validations:
       validValues:
       - ROUTE_ID
       - ROUTE_DIRECTION
+      - ROUTE_NAME
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_0_TICKET_INFO
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -24842,7 +24797,7 @@ x-validations:
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='INFO')]"
       subTags: "$.list[*].descriptor.code"
       validValues:
-      - PARENT_ITEM_ID
+      - PARENT_ID
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_1
       validTags:
@@ -24870,12 +24825,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
@@ -25023,6 +24972,7 @@ x-validations:
       enumList:
       - ROUTE
       - TRIP
+      - TICKET
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
       - METRO
@@ -25083,7 +25033,7 @@ x-validations:
       attr: "$.message.order.quote.breakup[*].title"
       _RETURN_: attr are present && attr all in enumList
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -25507,6 +25457,7 @@ x-validations:
       validValues:
       - ROUTE_ID
       - ROUTE_DIRECTION
+      - ROUTE_NAME
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_0_TICKET_INFO
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -25518,7 +25469,7 @@ x-validations:
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='INFO')]"
       subTags: "$.list[*].descriptor.code"
       validValues:
-      - PARENT_ITEM_ID
+      - PARENT_ID
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_1
       validTags:
@@ -25573,12 +25524,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
@@ -25730,6 +25675,7 @@ x-validations:
       enumList:
       - ROUTE
       - TRIP
+      - TICKET
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
       - METRO
@@ -25813,7 +25759,7 @@ x-validations:
       attr: "$.message.order.quote.breakup[*].title"
       _RETURN_: attr are present && attr all in enumList
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -25897,13 +25843,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_AMOUNT_48
       attr: "$.message.order.payments[*].params.amount"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - METRO
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_DURATION_49
-      attr: "$.message.order.cancellation_terms[*].cancel_by.duration"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -26224,6 +26163,7 @@ x-validations:
       validValues:
       - ROUTE_ID
       - ROUTE_DIRECTION
+      - ROUTE_NAME
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_0_TICKET_INFO
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -26235,7 +26175,7 @@ x-validations:
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='INFO')]"
       subTags: "$.list[*].descriptor.code"
       validValues:
-      - PARENT_ITEM_ID
+      - PARENT_ID
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_1
       validTags:
@@ -26514,6 +26454,7 @@ x-validations:
       enumList:
       - ROUTE
       - TRIP
+      - TICKET
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
       - BUS
@@ -26567,7 +26508,7 @@ x-validations:
       attr: "$.message.order.quote.breakup[*].title"
       _RETURN_: attr are present && attr all in enumList
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -26683,6 +26624,7 @@ x-validations:
       validValues:
       - ROUTE_ID
       - ROUTE_DIRECTION
+      - ROUTE_NAME
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_0_TICKET_INFO
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -26694,7 +26636,7 @@ x-validations:
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='INFO')]"
       subTags: "$.list[*].descriptor.code"
       validValues:
-      - PARENT_ITEM_ID
+      - PARENT_ID
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_1
       validTags:
@@ -26749,11 +26691,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
       _RETURN_: attr are present && attr all in enumList
@@ -26778,7 +26715,7 @@ x-validations:
       attr: "$.context.action"
       _RETURN_: attr are present && attr all in enumList
       enumList:
-      - on_cancel
+      - on_update
     - _NAME_: REQUIRED_CONTEXT_BAP_URI_10
       attr: "$.context.bap_uri"
       _RETURN_: attr are present
@@ -26841,6 +26778,7 @@ x-validations:
       enumList:
       - ROUTE
       - TRIP
+      - TICKET
     - _NAME_: REQUIRED_MESSAGE_NAME_28
       attr: "$.message.order.fulfillments[*].stops[*].instructions.name"
       _RETURN_: attr are present
@@ -26883,7 +26821,7 @@ x-validations:
       attr: "$.message.order.quote.breakup[*].title"
       _RETURN_: attr are present && attr all in enumList
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -26928,9 +26866,6 @@ x-validations:
     - _NAME_: REQUIRED_MESSAGE_AMOUNT_49
       attr: "$.message.order.payments[*].params.amount"
       _RETURN_: attr are present
-    - _NAME_: REQUIRED_MESSAGE_DURATION_50
-      attr: "$.message.order.cancellation_terms[*].cancel_by.duration"
-      _RETURN_: attr are present
     - _NAME_: VALID_ENUM_MESSAGE_STATUS_1
       enumList:
       - UNCLAIMED
@@ -26952,6 +26887,7 @@ x-validations:
       validValues:
       - ROUTE_ID
       - ROUTE_DIRECTION
+      - ROUTE_NAME
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_0_TICKET_INFO
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -26963,7 +26899,7 @@ x-validations:
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='INFO')]"
       subTags: "$.list[*].descriptor.code"
       validValues:
-      - PARENT_ITEM_ID
+      - PARENT_ID
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_1
       validTags:
@@ -26991,12 +26927,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
     - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
       attr: "$.context.domain"
@@ -27173,6 +27103,7 @@ x-validations:
       enumList:
       - ROUTE
       - TRIP
+      - TICKET
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
       - METRO
@@ -27230,7 +27161,7 @@ x-validations:
       attr: "$.message.order.quote.breakup[*].title"
       _RETURN_: attr are present && attr all in enumList
       enumList:
-      - BASE_PRICE
+      - BASE_FARE
       - REFUND
       - CANCELLATION_CHARGES
       - OFFER
@@ -27314,13 +27245,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_AMOUNT_46
       attr: "$.message.order.payments[*].params.amount"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - METRO
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_DURATION_47
-      attr: "$.message.order.cancellation_terms[*].cancel_by.duration"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -27748,6 +27672,7 @@ x-validations:
       validValues:
       - ROUTE_ID
       - ROUTE_DIRECTION
+      - ROUTE_NAME
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_0_TICKET_INFO
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -27759,7 +27684,7 @@ x-validations:
       _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='INFO')]"
       subTags: "$.list[*].descriptor.code"
       validValues:
-      - PARENT_ITEM_ID
+      - PARENT_ID
       _RETURN_: subTags all in validValues
     - _NAME_: validate_tag_1
       validTags:
