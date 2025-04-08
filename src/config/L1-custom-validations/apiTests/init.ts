@@ -43,8 +43,9 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   console.log("inside init L1 custom vals");
 
   let onSearchItems: any = await RedisService.getKey(
-    `${transaction_id}:${provider}:onSearchItems`
+    `${transaction_id}:onSearchItems`
   );
+  console.log("on_search", onSearchItems);
 
   if (!onSearchItems) return false;
 
@@ -69,7 +70,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
       );
     });
   });
-  
+
   console.log("Final item validation result:", validItems);
   return validItems;
 }

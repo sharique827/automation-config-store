@@ -1,9 +1,7 @@
 import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
-export function onSearch(
-  payload : any
-): validationOutput {
+export function onSearch(payload: any): validationOutput {
   // Extract payload, context, domain and action
   const context = payload?.context;
   const domain = context?.domain;
@@ -16,23 +14,23 @@ export function onSearch(
   // Initialize results array
   const results: validationOutput = [];
 
-    providers.forEach((provider: any) => {
-      const items = provider?.items;
-      const fulfillments = provider?.fulfillments
-      RedisService.setKey(
-        `${transaction_id}:${provider}:onSearchItems`,
-        JSON.stringify({ items })
-      );
+  providers.forEach((provider: any) => {
+    const items = provider?.items;
+    const fulfillments = provider?.fulfillments;
+    RedisService.setKey(
+      `${transaction_id}:onSearchItems`,
+      JSON.stringify(items)
+    );
 
-      RedisService.setKey(
-        `${transaction_id}:${provider}:onSearchFulfillments`,
-        JSON.stringify({ fulfillments })
-      );
-    });
-    // If no issues found, return a success result
-    if (results.length === 0) {
-      results.push({ valid: true, code: 200 });
-    }
-  
+    RedisService.setKey(
+      `${transaction_id}:onSearchFulfillments`,
+      JSON.stringify(fulfillments)
+    );
+  });
+  // If no issues found, return a success result
+  if (results.length === 0) {
+    results.push({ valid: true, code: 200 });
+  }
+
   return results;
 }
