@@ -8,7 +8,7 @@ export async function onInit(payload: any): Promise<validationOutput> {
   const domain = context?.domain;
   const action = context?.action;
   const transaction_id = context?.transaction_id;
-  const items = payload?.message?.items;
+  const items = payload?.message?.order?.items;
   const quote = payload?.message?.order?.quote;
   const fulfillments = payload?.message?.order?.fulfillments;
   console.log(`Running validations for ${domain}/${action}`);

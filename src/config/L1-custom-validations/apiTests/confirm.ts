@@ -99,7 +99,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
 
   try {
     const onInitQuote = JSON.parse(onInitQuoteRaw);
-    const storedPrice = onInitQuote?.price?.value;
+    const storedPrice = onInitQuote?.quote?.price?.value;
     console.log("Stored Quote Price from Redis:", storedPrice);
 
     const isEqual = parseFloat(quotePrice) === parseFloat(storedPrice);
