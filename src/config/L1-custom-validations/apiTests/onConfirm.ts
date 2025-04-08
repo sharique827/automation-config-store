@@ -58,14 +58,14 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   const quotePrice = payload?.message?.order?.quote?.price;
   if (!quotePrice) return false;
 
-  const onInitQuoteRaw = await RedisService.getKey(`${transaction_id}:onInitQuote`);
-  if (!onInitQuoteRaw) return true;
+  const confirmQuoteRaw = await RedisService.getKey(`${transaction_id}:confirmQuote`);
+  if (!confirmQuoteRaw) return true;
 
   try {
-    const onInitQuote = JSON.parse(onInitQuoteRaw);
-    return quotePrice === onInitQuote?.price;
+    const confirmQuote = JSON.parse(confirmQuoteRaw);
+    return quotePrice === confirmQuote?.price;
   } catch (error) {
-    console.error("Error parsing onInitQuote from Redis:", error);
+    console.error("Error parsing confirmQuote from Redis:", error);
     return false;
   }
 }
@@ -79,27 +79,27 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
 
   if (!Array.isArray(items) || !transaction_id) return false;
 
-  const onInitItemsRaw = await RedisService.getKey(`${transaction_id}:onInitItems`);
-  if (!onInitItemsRaw) return false;
+  const confirmItemsRaw = await RedisService.getKey(`${transaction_id}:confirmItems`);
+  if (!confirmItemsRaw) return false;
 
   try {
-    const parsed = JSON.parse(onInitItemsRaw);
-    const onInitItems = parsed?.items;
-    if (!Array.isArray(onInitItems)) return false;
+    const parsed = JSON.parse(confirmItemsRaw);
+    const confirmItems = parsed?.items;
+    if (!Array.isArray(confirmItems)) return false;
 
     return items.every((item) =>
-      onInitItems.some(
-        (onInitItem) =>
-          item.id === onInitItem.id &&
+      confirmItems.some(
+        (confirmItem) =>
+          item.id === confirmItem.id &&
           JSON.stringify(item.fulfillment_id || []) ===
-            JSON.stringify(onInitItem.fulfillment_id || []) &&
+            JSON.stringify(confirmItem.fulfillment_id || []) &&
           JSON.stringify(item.fulfillment_ids || []) ===
-            JSON.stringify(onInitItem.fulfillment_ids || []) &&
-          item.category_id === onInitItem.category_id
+            JSON.stringify(confirmItem.fulfillment_ids || []) &&
+          item.category_id === confirmItem.category_id
       )
     );
   } catch (error) {
-    console.error("Error parsing onInitItems from Redis:", error);
+    console.error("Error parsing confirmItems from Redis:", error);
     return false;
   }
 }
@@ -113,23 +113,23 @@ async function validateFulfillments(payload: Record<string, any>): Promise<boole
 
   if (!Array.isArray(fulfillments) || !transaction_id) return false;
 
-  const onInitFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:onInitFulfillments`);
-  if (!onInitFulfillmentsRaw) return false;
+  const confirmFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:confirmFulfillments`);
+  if (!confirmFulfillmentsRaw) return false;
 
   try {
-    const parsed = JSON.parse(onInitFulfillmentsRaw);
-    const onInitFulfillments = parsed?.fulfillments;
-    if (!Array.isArray(onInitFulfillments)) return false;
+    const parsed = JSON.parse(confirmFulfillmentsRaw);
+    const confirmFulfillments = parsed?.fulfillments;
+    if (!Array.isArray(confirmFulfillments)) return false;
 
     return fulfillments.every((fulfillment) =>
-      onInitFulfillments.some(
-        (onInitFulfillment) =>
-          fulfillment.id === onInitFulfillment.id &&
-          fulfillment.type === onInitFulfillment.type
+      confirmFulfillments.some(
+        (confirmFulfillment) =>
+          fulfillment.id === confirmFulfillment.id &&
+          fulfillment.type === confirmFulfillment.type
       )
     );
   } catch (error) {
-    console.error("Error parsing onInitFulfillments from Redis:", error);
+    console.error("Error parsing confirmFulfillments from Redis:", error);
     return false;
   }
 }

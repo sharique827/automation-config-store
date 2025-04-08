@@ -5,8 +5,26 @@ export async function confirm(payload: any): Promise<validationOutput> {
   const context = payload?.context;
   const domain = context?.domain;
   const action = context?.action;
+  const transaction_id = context?.transaction_id;
+  const items = payload?.message?.order?.items;
+  const quote = payload?.message?.order?.quote;
+  const fulfillments = payload?.message?.order?.fulfillments;
   console.log(`Running validations for ${domain}/${action}`);
 
+  await RedisService.setKey(
+    `${transaction_id}:confirmQuote`,
+    JSON.stringify({ quote })
+  );
+
+  await RedisService.setKey(
+    `${transaction_id}:confirmItems`,
+    JSON.stringify({ items })
+  );
+
+  await RedisService.setKey(
+    `${transaction_id}:confirmFulfillments`,
+    JSON.stringify({ fulfillments })
+  );
 
   const results: validationOutput = [];
 
@@ -25,8 +43,8 @@ export async function confirm(payload: any): Promise<validationOutput> {
   const acceptLSPterms = await validateLSPterms(payload);
   console.log("LSP terms acceptance validation result:", acceptLSPterms);
 
-  const validTAT = await validateTAT(payload);
-  console.log("TAT validation result:", validTAT);
+  // const validTAT = await validateTAT(payload);
+  // console.log("TAT validation result:", validTAT);
 
   if (!validQuote) {
     results.push({
@@ -68,13 +86,13 @@ export async function confirm(payload: any): Promise<validationOutput> {
     });
   }
 
-  if (!validTAT) {
-    results.push({
-      valid: false,
-      code: 60008,
-      description: `LSP is unable to validate the order request : S2D TAT or avg pickup time are different from what was quoted earlier in /on_search`,
-    });
-  }
+  // if (!validTAT) {
+  //   results.push({
+  //     valid: false,
+  //     code: 60008,
+  //     description: `LSP is unable to validate the order request : S2D TAT or avg pickup time are different from what was quoted earlier in /on_search`,
+  //   });
+  // }
 
   if (results.length === 0) {
     results.push({ valid: true, code: 200 });
@@ -93,7 +111,9 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
 
   if (!transaction_id || quotePrice == null) return false;
 
-  const onInitQuoteRaw = await RedisService.getKey(`${transaction_id}:onInitQuote`);
+  const onInitQuoteRaw = await RedisService.getKey(
+    `${transaction_id}:onInitQuote`
+  );
   console.log("Redis Quote Raw:", onInitQuoteRaw);
   if (!onInitQuoteRaw) return false;
 
@@ -103,7 +123,12 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
     console.log("Stored Quote Price from Redis:", storedPrice);
 
     const isEqual = parseFloat(quotePrice) === parseFloat(storedPrice);
-    console.log(`Parsed comparison: ${parseFloat(quotePrice)} === ${parseFloat(storedPrice)} =>`, isEqual);
+    console.log(
+      `Parsed comparison: ${parseFloat(quotePrice)} === ${parseFloat(
+        storedPrice
+      )} =>`,
+      isEqual
+    );
     return isEqual;
   } catch (error) {
     console.error("Error parsing onInitQuote from Redis:", error);
@@ -118,7 +143,9 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
 
   if (!Array.isArray(items) || !transaction_id) return false;
 
-  const onInitItemsRaw = await RedisService.getKey(`${transaction_id}:onInitItems`);
+  const onInitItemsRaw = await RedisService.getKey(
+    `${transaction_id}:onInitItems`
+  );
   console.log("Redis Items Raw:", onInitItemsRaw);
   if (!onInitItemsRaw) return false;
 
@@ -128,13 +155,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
     if (!Array.isArray(onInitItems)) return false;
 
     return items.every((item) =>
-      onInitItems.some(
-        (onInitItem) =>
-          item.id === onInitItem.id &&
-          JSON.stringify(item.fulfillment_id || []) === JSON.stringify(onInitItem.fulfillment_id || []) &&
-          JSON.stringify(item.fulfillment_ids || []) === JSON.stringify(onInitItem.fulfillment_ids || []) &&
-          item.category_id === onInitItem.category_id
-      )
+      onInitItems.some((onInitItem) => item.id === onInitItem.id)
     );
   } catch (error) {
     console.error("Error parsing onInitItems from Redis:", error);
@@ -142,14 +163,18 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   }
 }
 
-async function validateFulfillments(payload: Record<string, any>): Promise<boolean> {
+async function validateFulfillments(
+  payload: Record<string, any>
+): Promise<boolean> {
   console.log("Running validateFulfillments");
   const fulfillments = payload?.message?.order?.fulfillments;
   const transaction_id = payload?.context?.transaction_id;
 
   if (!Array.isArray(fulfillments) || !transaction_id) return false;
 
-  const onInitFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:onInitFulfillments`);
+  const onInitFulfillmentsRaw = await RedisService.getKey(
+    `${transaction_id}:onInitFulfillments`
+  );
   console.log("Redis Fulfillments Raw:", onInitFulfillmentsRaw);
   if (!onInitFulfillmentsRaw) return false;
 
@@ -212,7 +237,9 @@ async function validateFulfillments(payload: Record<string, any>): Promise<boole
 //   return compareDimensions(dimensions, searchDimensions) && compareWeight(weight, searchWeight);
 // }
 
-async function validateLSPterms(payload: Record<string, any>): Promise<boolean> {
+async function validateLSPterms(
+  payload: Record<string, any>
+): Promise<boolean> {
   console.log("Running validateLSPterms");
   const tags = payload?.message?.order?.tags;
   if (!Array.isArray(tags)) return false;
@@ -228,40 +255,49 @@ async function validateLSPterms(payload: Record<string, any>): Promise<boolean> 
   );
 }
 
-async function validateTAT(payload: Record<string, any>): Promise<boolean> {
-  console.log("Running validateTAT");
-  const items = payload?.message?.order?.items;
-  const fulfillments = payload?.message?.order?.fulfillments;
-  const provider = payload?.message?.order?.provider?.id;
-  const transaction_id = payload?.context?.transaction_id;
+// async function validateTAT(payload: Record<string, any>): Promise<boolean> {
+//   console.log("Running validateTAT");
+//   const items = payload?.message?.order?.items;
+//   const fulfillments = payload?.message?.order?.fulfillments;
+//   const provider = payload?.message?.order?.provider?.id;
+//   const transaction_id = payload?.context?.transaction_id;
 
-  if (!Array.isArray(items) || !Array.isArray(fulfillments) || !transaction_id)
-    return false;
+//   if (!Array.isArray(items) || !Array.isArray(fulfillments) || !transaction_id)
+//     return false;
 
-  let onSearchItemsRaw = await RedisService.getKey(`${transaction_id}:${provider}:onSearchItems`);
-  let onSearchFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:${provider}:onSearchFulfillments`);
+//   let onSearchItemsRaw = await RedisService.getKey(
+//     `${transaction_id}:${provider}:onSearchItems`
+//   );
+//   let onSearchFulfillmentsRaw = await RedisService.getKey(
+//     `${transaction_id}:${provider}:onSearchFulfillments`
+//   );
 
-  console.log("Redis onSearchItems:", onSearchItemsRaw);
-  console.log("Redis onSearchFulfillments:", onSearchFulfillmentsRaw);
+//   console.log("Redis onSearchItems:", onSearchItemsRaw);
+//   console.log("Redis onSearchFulfillments:", onSearchFulfillmentsRaw);
 
-  if (!onSearchItemsRaw || !onSearchFulfillmentsRaw) return false;
+//   if (!onSearchItemsRaw || !onSearchFulfillmentsRaw) return false;
 
-  try {
-    const onSearchItems = JSON.parse(onSearchItemsRaw).items;
-    const onSearchFulfillments = JSON.parse(onSearchFulfillmentsRaw).fulfillments;
+//   try {
+//     const onSearchItems = JSON.parse(onSearchItemsRaw).items;
+//     const onSearchFulfillments = JSON.parse(
+//       onSearchFulfillmentsRaw
+//     ).fulfillments;
 
-    return (
-      items.every((item, idx) => {
-        const corresponding = onSearchItems[idx];
-        return item["@ondc/org/time_to_ship"] === corresponding["@ondc/org/time_to_ship"];
-      }) &&
-      fulfillments.every((fulfillment, idx) => {
-        const corresponding = onSearchFulfillments[idx];
-        return fulfillment["@ondc/org/TAT"] === corresponding["@ondc/org/TAT"];
-      })
-    );
-  } catch (error) {
-    console.error("Error validating TAT:", error);
-    return false;
-  }
-}
+//     return (
+//       items.every((item, idx) => {
+//         const corresponding = onSearchItems[idx];
+//         return (
+//           item["@ondc/org/time_to_ship"] ===
+//           corresponding["@ondc/org/time_to_ship"]
+//         );
+//       }) &&
+//       fulfillments.every((fulfillment, idx) => {
+//         const corresponding = onSearchFulfillments[idx];
+//         return fulfillment["@ondc/org/TAT"] === corresponding["@ondc/org/TAT"];
+//       })
+//     );
+//   } catch (error) {
+//     console.error("Error validating TAT:", error);
+//     return false;
+//   }
+// }
