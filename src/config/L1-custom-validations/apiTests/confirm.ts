@@ -2,13 +2,11 @@ import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
 export async function confirm(payload: any): Promise<validationOutput> {
-  // Extract payload, context, domain and action
   const context = payload?.context;
   const domain = context?.domain;
   const action = context?.action;
   console.log(`Running validations for ${domain}/${action}`);
 
-  // Initialize results array
   const results: validationOutput = [];
 
   const validQuote = await validateQuote(payload);
@@ -17,7 +15,7 @@ export async function confirm(payload: any): Promise<validationOutput> {
   const validOrderDimensions = await validateOrderDimensions(payload);
   const acceptLSPterms = await validateLSPterms(payload);
   const validTAT = await validateTAT(payload);
-  //validate quote
+
   if (!validQuote) {
     results.push({
       valid: false,
@@ -26,7 +24,6 @@ export async function confirm(payload: any): Promise<validationOutput> {
     });
   }
 
-  //validate items
   if (!validItems) {
     results.push({
       valid: false,
@@ -35,7 +32,6 @@ export async function confirm(payload: any): Promise<validationOutput> {
     });
   }
 
-  //validate fulfillments
   if (!validFulfillments) {
     results.push({
       valid: false,
@@ -44,7 +40,6 @@ export async function confirm(payload: any): Promise<validationOutput> {
     });
   }
 
-  //validate order dimensions
   if (!validOrderDimensions) {
     results.push({
       valid: false,
@@ -53,7 +48,6 @@ export async function confirm(payload: any): Promise<validationOutput> {
     });
   }
 
-  //validate LSP terms
   if (!acceptLSPterms) {
     results.push({
       valid: false,
@@ -62,7 +56,6 @@ export async function confirm(payload: any): Promise<validationOutput> {
     });
   }
 
-  //validate S2D TAT and avg pickup time
   if (!validTAT) {
     results.push({
       valid: false,
@@ -71,7 +64,6 @@ export async function confirm(payload: any): Promise<validationOutput> {
     });
   }
 
-  // If no issues found, return a success result
   if (results.length === 0) {
     results.push({ valid: true, code: 200 });
   }
@@ -79,38 +71,27 @@ export async function confirm(payload: any): Promise<validationOutput> {
   return results;
 }
 
-/**
- * Validates that the quote object is valid
- *
- * @param payload The request payload
- * @returns boolean indicating if validation passed
- */
 async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   const transaction_id = payload?.context?.transaction_id;
-  if (!transaction_id) return false; // Ensure transaction_id is valid
+  if (!transaction_id) return false;
 
   const quotePrice = payload?.message?.order?.quote?.price;
-  if (!quotePrice) return false; // Ensure quotePrice is present
+  if (!quotePrice) return false;
 
   await RedisService.setKey(
     `${transaction_id}:confirmQuote`,
     JSON.stringify({ quotePrice })
   );
+
   const onInitQuoteRaw = await RedisService.getKey(
     `${transaction_id}:onInitQuote`
   );
-  if (!onInitQuoteRaw) return true; // If no initial quote, assume validation passes
+  if (!onInitQuoteRaw) return true;
 
   const onInitQuote = JSON.parse(onInitQuoteRaw);
-  return quotePrice !== onInitQuote?.price;
+  return quotePrice === onInitQuote?.price;
 }
 
-/**
- * Validates that the items object is valid
- *
- * @param payload The request payload
- * @returns boolean indicating if validation passed
- */
 async function validateItems(payload: Record<string, any>): Promise<boolean> {
   const items = payload?.message?.order?.items;
   const transaction_id = payload?.context?.transaction_id;
@@ -118,6 +99,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
     `${transaction_id}:confirmItems`,
     JSON.stringify({ items })
   );
+
   if (!Array.isArray(items) || !transaction_id) return false;
 
   let onInitItems: any = await RedisService.getKey(
@@ -148,12 +130,6 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   );
 }
 
-/**
- * Validates that the fulfillments object is valid
- *
- * @param payload The request payload
- * @returns boolean indicating if validation passed
- */
 async function validateFulfillments(
   payload: Record<string, any>
 ): Promise<boolean> {
@@ -189,42 +165,29 @@ async function validateFulfillments(
   );
 }
 
-/**
- * Validates that the order dimensions and weight are valid
- *
- * @param payload The request payload
- * @returns boolean indicating if validation passed
- */
 async function validateOrderDimensions(
   payload: Record<string, any>
 ): Promise<boolean> {
   const payloadDetails = payload.message.order["@ondc/org/payload_details"];
   const dimensions = payloadDetails?.dimensions;
   const weight = payloadDetails?.weight;
-
-  if (!dimensions || !weight) return false;
-
   const transaction_id = payload?.context?.transaction_id;
-  let searchDetails: any;
+
+  if (!dimensions || !weight || !transaction_id) return false;
 
   let searchDimensions = await RedisService.getKey(
     `${transaction_id}:orderDimensions`
   );
   let searchWeight = await RedisService.getKey(`${transaction_id}:orderWeight`);
+
   try {
-    searchDimensions = JSON.parse(searchDimensions);
-    searchDimensions = searchDimensions.dimensions;
-    searchWeight = JSON.parse(searchWeight);
-    searchWeight = searchWeight.weight;
+    searchDimensions = JSON.parse(searchDimensions).dimensions;
+    searchWeight = JSON.parse(searchWeight).weight;
   } catch (error) {
     console.error("Error parsing order details from Redis:", error);
     return false;
   }
-  searchDetails.dimensions = searchDimensions;
-  searchDetails.weight = searchWeight;
-  if (!searchDetails) return false;
 
-  // Function to compare dimensions object
   function compareDimensions(obj1: any, obj2: any): boolean {
     return (
       obj1?.length?.unit === obj2?.length?.unit &&
@@ -236,26 +199,17 @@ async function validateOrderDimensions(
     );
   }
 
-  // Function to compare weight object
   function compareWeight(obj1: any, obj2: any): boolean {
     return obj1?.unit === obj2?.unit && obj1?.value === obj2?.value;
   }
 
   return (
-    compareDimensions(dimensions, searchDetails.dimensions) &&
-    compareWeight(weight, searchDetails.weight)
+    compareDimensions(dimensions, searchDimensions) &&
+    compareWeight(weight, searchWeight)
   );
 }
 
-/**
- * Validates that the LSP terms have been accepted
- *
- * @param payload The request payload
- * @returns boolean indicating if validation passed
- */
-async function validateLSPterms(
-  payload: Record<string, any>
-): Promise<boolean> {
+async function validateLSPterms(payload: Record<string, any>): Promise<boolean> {
   const tags = payload?.message?.order?.tags;
 
   if (!Array.isArray(tags)) return false;
@@ -271,12 +225,6 @@ async function validateLSPterms(
   );
 }
 
-/**
- * Validate S2D TAT and avg pickup time from on_search
- *
- * @param payload The request payload
- * @returns boolean indicating if validation passed
- */
 async function validateTAT(payload: Record<string, any>): Promise<boolean> {
   const items = payload?.message?.order?.items;
   const fulfillments = payload?.message?.order?.fulfillments;
@@ -286,47 +234,32 @@ async function validateTAT(payload: Record<string, any>): Promise<boolean> {
   if (!Array.isArray(items) || !Array.isArray(fulfillments) || !transaction_id)
     return false;
 
-  let onSearchItems: any = await RedisService.getKey(
+  let onSearchItemsRaw: any = await RedisService.getKey(
     `${transaction_id}:${provider}:onSearchItems`
   );
-  let onSearchFulfillments: any = await RedisService.getKey(
+  let onSearchFulfillmentsRaw: any = await RedisService.getKey(
     `${transaction_id}:${provider}:onSearchFulfillments`
   );
 
-  if (!onSearchItems || !onSearchFulfillments) return false;
+  if (!onSearchItemsRaw || !onSearchFulfillmentsRaw) return false;
 
   try {
-    onSearchItems = JSON.parse(onSearchItems.items);
-    onSearchFulfillments = JSON.parse(onSearchFulfillments.fulfillments);
-    if (!Array.isArray(onSearchItems) || !Array.isArray(onSearchFulfillments))
-      return false;
+    const onSearchItems = JSON.parse(onSearchItemsRaw).items;
+    const onSearchFulfillments = JSON.parse(onSearchFulfillmentsRaw).fulfillments;
+
+    return items.every((item, idx) => {
+      const corresponding = onSearchItems[idx];
+      return (
+        item["@ondc/org/time_to_ship"] === corresponding["@ondc/org/time_to_ship"]
+      );
+    }) && fulfillments.every((fulfillment, idx) => {
+      const corresponding = onSearchFulfillments[idx];
+      return (
+        fulfillment["@ondc/org/TAT"] === corresponding["@ondc/org/TAT"]
+      );
+    });
   } catch (error) {
-    console.error("Error parsing data from Redis:", error);
+    console.error("Error validating TAT:", error);
     return false;
   }
-
-  const onSearchItemMap = new Map(
-    onSearchItems.map((item) => [item.id, item.time])
-  );
-  const onSearchFulfillmentMap = new Map(
-    onSearchFulfillments.map((f) => [f.id, f.start?.time?.duration])
-  );
-
-  const itemsValid = items.every((item) => {
-    const onSearchTime = onSearchItemMap.get(item.id);
-    return (
-      onSearchTime &&
-      item.time?.label === onSearchTime.label &&
-      item.time?.duration === onSearchTime.duration &&
-      item.time?.timestamp === onSearchTime.timestamp
-    );
-  });
-
-  const fulfillmentsValid = fulfillments.every((f) => {
-    if (f.type !== "Delivery") return true; // Only validate 'Delivery' type fulfillments
-    const onSearchDuration = onSearchFulfillmentMap.get(f.id);
-    return onSearchDuration && f.start?.time?.duration === onSearchDuration;
-  });
-
-  return itemsValid && fulfillmentsValid;
 }
