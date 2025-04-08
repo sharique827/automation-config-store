@@ -19,12 +19,12 @@ export function onSearch(payload: any): validationOutput {
     const fulfillments = provider?.fulfillments;
     RedisService.setKey(
       `${transaction_id}:onSearchItems`,
-      JSON.stringify(items)
+      JSON.stringify({items})
     );
 
     RedisService.setKey(
       `${transaction_id}:onSearchFulfillments`,
-      JSON.stringify(fulfillments)
+      JSON.stringify({fulfillments})
     );
   });
   // If no issues found, return a success result
