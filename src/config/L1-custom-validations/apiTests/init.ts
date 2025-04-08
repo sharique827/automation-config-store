@@ -16,7 +16,7 @@ export async function init(payload: any): Promise<validationOutput> {
       results.push({
         valid: false,
         code: 66002,
-        description: `LSP is unable to validate the order request : Selected item does not exist in the catalog provided in /on_search`,
+        description: `LSP is unable to validate the order request : Selected item does not match in the catalog provided in /on_search`,
       });
     }
 
@@ -91,10 +91,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
         console.log("Against onSearchItem:", onSearchItem.id);
         return (
           item.id === onSearchItem.id &&
-          JSON.stringify(item.fulfillment_id || []) ===
-            JSON.stringify(onSearchItem.fulfillment_id || []) &&
-          JSON.stringify(item.fulfillment_ids || []) ===
-            JSON.stringify(onSearchItem.fulfillment_ids || []) &&
+          item.fulfillment_id === onSearchItem.fulfillment_id &&
           item.category_id === onSearchItem.category_id
         );
       });
