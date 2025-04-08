@@ -38,7 +38,7 @@ export function init(payload: any): validationOutput {
 async function validateItems(payload: Record<string, any>): Promise<boolean> {
   const items = payload?.message?.order?.items;
   const transaction_id = payload?.context?.transaction_id;
-  const provider = payload?.messsage?.order?.provider?.id;
+  const provider = payload?.message?.order?.provider?.id;
   if (!Array.isArray(items) || !transaction_id) return false;
   console.log("inside init L1 custom vals");
 
@@ -56,16 +56,18 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
     return false;
   }
 
-  return items.every((item) =>
-    onSearchItems.some((onSearchItem) => {
-      console.log(item.id, onSearchItem.iditem.id === onSearchItem.id);
-
-      item.id === onSearchItem.id &&
+  return items.every((item) => {
+    console.log("Checking item:", item.id);
+    return onSearchItems.some((onSearchItem) => {
+      console.log("Against onSearchItem:", onSearchItem.id);
+      return (
+        item.id === onSearchItem.id &&
         JSON.stringify(item.fulfillment_id || []) ===
           JSON.stringify(onSearchItem.fulfillment_id || []) &&
         JSON.stringify(item.fulfillment_ids || []) ===
           JSON.stringify(onSearchItem.fulfillment_ids || []) &&
-        item.category_id === onSearchItem.category_id;
-    })
-  );
+        item.category_id === onSearchItem.category_id
+      );
+    });
+  });
 }
