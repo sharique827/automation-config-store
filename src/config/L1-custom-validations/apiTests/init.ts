@@ -71,7 +71,10 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
     }
 
     try {
-      onSearchItems = JSON.parse(onSearchItems.items);
+      onSearchItems = JSON.parse(onSearchItems);
+      onSearchItems = onSearchItems.items
+      console.log(items);
+      
     } catch (error) {
       console.warn("Error parsing onSearchItems from Redis:", error);
       return false;

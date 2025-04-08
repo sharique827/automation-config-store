@@ -101,7 +101,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   );
   if (!onInitQuoteRaw) return true; // If no initial quote, assume validation passes
 
-  const onInitQuote = JSON.parse(onInitQuoteRaw.quote);
+  const onInitQuote = JSON.parse(onInitQuoteRaw);
   return quotePrice !== onInitQuote?.price;
 }
 
@@ -127,7 +127,8 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   if (!onInitItems) return false;
 
   try {
-    onInitItems = JSON.parse(onInitItems.items);
+    onInitItems = JSON.parse(onInitItems);
+    onInitItems = onInitItems.items;
     if (!Array.isArray(onInitItems)) return false;
   } catch (error) {
     console.error("Error parsing onInitItems from Redis:", error);
@@ -171,7 +172,8 @@ async function validateFulfillments(
   if (!onInitFulfillments) return false;
 
   try {
-    onInitFulfillments = JSON.parse(onInitFulfillments.fulfillments);
+    onInitFulfillments = JSON.parse(onInitFulfillments);
+    onInitFulfillments = onInitFulfillments.fulfillments;
     if (!Array.isArray(onInitFulfillments)) return false;
   } catch (error) {
     console.error("Error parsing onInitFulfillments from Redis:", error);
@@ -210,8 +212,10 @@ async function validateOrderDimensions(
   );
   let searchWeight = await RedisService.getKey(`${transaction_id}:orderWeight`);
   try {
-    searchDimensions = JSON.parse(searchDimensions.dimensions);
-    searchWeight = JSON.parse(searchWeight.weight);
+    searchDimensions = JSON.parse(searchDimensions);
+    searchDimensions = searchDimensions.dimensions;
+    searchWeight = JSON.parse(searchWeight);
+    searchWeight = searchWeight.weight;
   } catch (error) {
     console.error("Error parsing order details from Redis:", error);
     return false;

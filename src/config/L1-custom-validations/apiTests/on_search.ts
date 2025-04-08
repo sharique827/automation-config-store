@@ -14,19 +14,20 @@ export async function onSearch(payload: any): Promise<validationOutput> {
   // Initialize results array
   const results: validationOutput = [];
 
-  providers.forEach((provider: any) => {
+  for (const provider of providers) {
     const items = provider?.items;
     const fulfillments = provider?.fulfillments;
+  
     await RedisService.setKey(
       `${transaction_id}:onSearchItems`,
-      JSON.stringify({items})
+      JSON.stringify({ items })
     );
-
+  
     await RedisService.setKey(
       `${transaction_id}:onSearchFulfillments`,
-      JSON.stringify({fulfillments})
+      JSON.stringify({ fulfillments })
     );
-  });
+  }
   // If no issues found, return a success result
   if (results.length === 0) {
     results.push({ valid: true, code: 200 });
