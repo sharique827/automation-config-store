@@ -23886,6 +23886,7 @@ x-validations:
       - _NAME_: validate_tag_0
         validTags:
           - state
+          - rider_details
           - linked_provider
           - linked_order
           - linked_order_item
@@ -23900,6 +23901,14 @@ x-validations:
         validValues:
           - ready_to_ship
           - order_ready
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_0_rider_details
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='rider_details')]
+        subTags: $.list[*].code
+        validValues:
+          - name
+          - phone
+          - vehicle_registration
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_0_linked_provider
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='linked_provider')]
@@ -26587,6 +26596,7 @@ x-validations:
         validValues:
           - name
           - phone
+          - vehicle_registration
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_fulfillment_delay
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfillment_delay')]
