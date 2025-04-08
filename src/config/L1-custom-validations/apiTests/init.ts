@@ -61,7 +61,6 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
       `${transaction_id}:onSearchItems`
     );
 
-
     if (!onSearchItems) {
       console.warn(
         "No items found in Redis for transaction_id:",
@@ -72,9 +71,8 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
 
     try {
       onSearchItems = JSON.parse(onSearchItems);
-      onSearchItems = onSearchItems.items
+      onSearchItems = onSearchItems.items;
       console.log(items);
-      
     } catch (error) {
       console.warn("Error parsing onSearchItems from Redis:", error);
       return false;
@@ -87,16 +85,48 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
 
     const validItems = items.every((item) => {
       console.log("Checking item:", item.id);
-      return onSearchItems.some((onSearchItem) => {
+
+      const matchFound = onSearchItems.some((onSearchItem) => {
         console.log("Against onSearchItem:", onSearchItem.id);
+
+        const idMatch = item.id === onSearchItem.id;
+        const fulfillmentIdMatch =
+          item.fulfillment_id === onSearchItem.fulfillment_id;
+        const fulfillmentIdsMatch =
+          JSON.stringify(item.fulfillment_ids || []) ===
+          JSON.stringify(onSearchItem.fulfillment_ids || []);
+        const categoryMatch = item.category_id === onSearchItem.category_id;
+
+        if (!idMatch)
+          console.log(`id mismatch: ${item.id} ≠ ${onSearchItem.id}`);
+        if (!fulfillmentIdMatch)
+          console.log(
+            `fulfillment_id mismatch: ${item.fulfillment_id} ≠ ${onSearchItem.fulfillment_id}`
+          );
+        if (!fulfillmentIdsMatch)
+          console.log(
+            `fulfillment_ids mismatch: ${JSON.stringify(
+              item.fulfillment_ids
+            )} ≠ ${JSON.stringify(onSearchItem.fulfillment_ids)}`
+          );
+        if (!categoryMatch)
+          console.log(
+            `category_id mismatch: ${item.category_id} ≠ ${onSearchItem.category_id}`
+          );
+
         return (
-          item.id === onSearchItem.id &&
-          item.fulfillment_id === onSearchItem.fulfillment_id &&
-          item.category_id === onSearchItem.category_id
+          idMatch && fulfillmentIdMatch && fulfillmentIdsMatch && categoryMatch
         );
       });
-    });
 
+      if (!matchFound) {
+        console.log(`No match found for item ${item.id}`);
+      } else {
+        console.log(`Match found for item ${item.id}`);
+      }
+
+      return matchFound;
+    });
     console.log("Final item validation result:", validItems);
     return validItems;
   } catch (error) {
