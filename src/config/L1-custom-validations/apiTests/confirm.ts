@@ -78,56 +78,51 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   const quotePrice = payload?.message?.order?.quote?.price;
   if (!quotePrice) return false;
 
-  await RedisService.setKey(
-    `${transaction_id}:confirmQuote`,
-    JSON.stringify({ quotePrice })
-  );
-
   const onInitQuoteRaw = await RedisService.getKey(
-    `${transaction_id}:onInitQuote`
+    `${transaction_id}:confirmQuote`
   );
-  if (!onInitQuoteRaw) return true;
+  if (!onInitQuoteRaw) return false; // ✅ Null check added
 
-  const onInitQuote = JSON.parse(onInitQuoteRaw);
-  return quotePrice === onInitQuote?.price;
+  try {
+    const onInitQuote = JSON.parse(onInitQuoteRaw);
+    return quotePrice === onInitQuote?.price;
+  } catch (error) {
+    console.error("Error parsing onInitQuote from Redis:", error);
+    return false;
+  }
 }
 
 async function validateItems(payload: Record<string, any>): Promise<boolean> {
   const items = payload?.message?.order?.items;
   const transaction_id = payload?.context?.transaction_id;
-  await RedisService.setKey(
-    `${transaction_id}:confirmItems`,
-    JSON.stringify({ items })
-  );
 
   if (!Array.isArray(items) || !transaction_id) return false;
 
-  let onInitItems: any = await RedisService.getKey(
-    `${transaction_id}:onInitItems`
+  const onInitItemsRaw = await RedisService.getKey(
+    `${transaction_id}:confirmItems`
   );
-
-  if (!onInitItems) return false;
+  if (!onInitItemsRaw) return false; // ✅ Null check added
 
   try {
-    onInitItems = JSON.parse(onInitItems);
-    onInitItems = onInitItems.items;
+    const parsed = JSON.parse(onInitItemsRaw);
+    const onInitItems = parsed?.items;
     if (!Array.isArray(onInitItems)) return false;
+
+    return items.every((item) =>
+      onInitItems.some(
+        (onInitItem) =>
+          item.id === onInitItem.id &&
+          JSON.stringify(item.fulfillment_id || []) ===
+            JSON.stringify(onInitItem.fulfillment_id || []) &&
+          JSON.stringify(item.fulfillment_ids || []) ===
+            JSON.stringify(onInitItem.fulfillment_ids || []) &&
+          item.category_id === onInitItem.category_id
+      )
+    );
   } catch (error) {
     console.error("Error parsing onInitItems from Redis:", error);
     return false;
   }
-
-  return items.every((item) =>
-    onInitItems.some(
-      (onInitItem) =>
-        item.id === onInitItem.id &&
-        JSON.stringify(item.fulfillment_id || []) ===
-          JSON.stringify(onInitItem.fulfillment_id || []) &&
-        JSON.stringify(item.fulfillment_ids || []) ===
-          JSON.stringify(onInitItem.fulfillment_ids || []) &&
-        item.category_id === onInitItem.category_id
-    )
-  );
 }
 
 async function validateFulfillments(
@@ -135,34 +130,30 @@ async function validateFulfillments(
 ): Promise<boolean> {
   const fulfillments = payload?.message?.order?.fulfillments;
   const transaction_id = payload?.context?.transaction_id;
-  await RedisService.setKey(
-    `${transaction_id}:confirmFulfillments`,
-    JSON.stringify({ fulfillments })
-  );
+
   if (!Array.isArray(fulfillments) || !transaction_id) return false;
 
-  let onInitFulfillments: any = await RedisService.getKey(
-    `${transaction_id}:onInitFulfillments`
+  const onInitFulfillmentsRaw = await RedisService.getKey(
+    `${transaction_id}:confirmFulfillments`
   );
-
-  if (!onInitFulfillments) return false;
+  if (!onInitFulfillmentsRaw) return false; // ✅ Null check added
 
   try {
-    onInitFulfillments = JSON.parse(onInitFulfillments);
-    onInitFulfillments = onInitFulfillments.fulfillments;
+    const parsed = JSON.parse(onInitFulfillmentsRaw);
+    const onInitFulfillments = parsed?.fulfillments;
     if (!Array.isArray(onInitFulfillments)) return false;
+
+    return fulfillments.every((fulfillment) =>
+      onInitFulfillments.some(
+        (onInitFulfillment) =>
+          fulfillment.id === onInitFulfillment.id &&
+          fulfillment.type === onInitFulfillment.type
+      )
+    );
   } catch (error) {
     console.error("Error parsing onInitFulfillments from Redis:", error);
     return false;
   }
-
-  return fulfillments.every((fulfillment) =>
-    onInitFulfillments.some(
-      (onInitFulfillment) =>
-        fulfillment.id === onInitFulfillment.id &&
-        fulfillment.type === onInitFulfillment.type
-    )
-  );
 }
 
 async function validateOrderDimensions(
@@ -179,7 +170,7 @@ async function validateOrderDimensions(
     `${transaction_id}:orderDimensions`
   );
   let searchWeight = await RedisService.getKey(`${transaction_id}:orderWeight`);
-
+  if (!searchDimensions || !searchWeight) return false;
   try {
     searchDimensions = JSON.parse(searchDimensions).dimensions;
     searchWeight = JSON.parse(searchWeight).weight;
@@ -209,7 +200,9 @@ async function validateOrderDimensions(
   );
 }
 
-async function validateLSPterms(payload: Record<string, any>): Promise<boolean> {
+async function validateLSPterms(
+  payload: Record<string, any>
+): Promise<boolean> {
   const tags = payload?.message?.order?.tags;
 
   if (!Array.isArray(tags)) return false;
@@ -245,19 +238,23 @@ async function validateTAT(payload: Record<string, any>): Promise<boolean> {
 
   try {
     const onSearchItems = JSON.parse(onSearchItemsRaw).items;
-    const onSearchFulfillments = JSON.parse(onSearchFulfillmentsRaw).fulfillments;
+    const onSearchFulfillments = JSON.parse(
+      onSearchFulfillmentsRaw
+    ).fulfillments;
 
-    return items.every((item, idx) => {
-      const corresponding = onSearchItems[idx];
-      return (
-        item["@ondc/org/time_to_ship"] === corresponding["@ondc/org/time_to_ship"]
-      );
-    }) && fulfillments.every((fulfillment, idx) => {
-      const corresponding = onSearchFulfillments[idx];
-      return (
-        fulfillment["@ondc/org/TAT"] === corresponding["@ondc/org/TAT"]
-      );
-    });
+    return (
+      items.every((item, idx) => {
+        const corresponding = onSearchItems[idx];
+        return (
+          item["@ondc/org/time_to_ship"] ===
+          corresponding["@ondc/org/time_to_ship"]
+        );
+      }) &&
+      fulfillments.every((fulfillment, idx) => {
+        const corresponding = onSearchFulfillments[idx];
+        return fulfillment["@ondc/org/TAT"] === corresponding["@ondc/org/TAT"];
+      })
+    );
   } catch (error) {
     console.error("Error validating TAT:", error);
     return false;
