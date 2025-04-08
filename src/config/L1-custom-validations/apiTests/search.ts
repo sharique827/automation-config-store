@@ -1,7 +1,7 @@
 import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
-export function search(payload: any): validationOutput {
+export async function search(payload: any): Promise<validationOutput> {
   // Extract payload, context, domain and action
 
   const context = payload.context;
@@ -15,12 +15,12 @@ export function search(payload: any): validationOutput {
 
   // Initialize results array
   const results: validationOutput = [];
-  RedisService.setKey(
+  await RedisService.setKey(
     `${transaction_id}:orderDimensions`,
     JSON.stringify({ dimensions })
   );
 
-  RedisService.setKey(
+  await RedisService.setKey(
     `${transaction_id}:orderWeight`,
     JSON.stringify({ weight })
   );

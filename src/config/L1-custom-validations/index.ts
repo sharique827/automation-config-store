@@ -16,19 +16,19 @@ export async function performL1CustomValidations(
 
   switch (action) {
     case "search":
-      return search(payload);
+      return await search(payload);
     case "on_search":
-      return onSearch(payload);
+      return await onSearch(payload);
     case "init":
       return await init(payload);
     case "on_init":
-      return onInit(payload);
+      return await onInit(payload);
     case "confirm":
-      return confirm(payload);
+      return await confirm(payload);
     case "on_confirm":
-      return confirm(payload);
+      return await confirm(payload);
     case "cancel":
-      return cancel(payload);
+      return await cancel(payload);
     default: // Fixed default case
       return [
         {

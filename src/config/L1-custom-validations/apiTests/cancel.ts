@@ -1,7 +1,7 @@
 import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
-export function cancel(payload: any): validationOutput {
+export async function cancel(payload: any): Promise<validationOutput> {
   // Extract payload, context, domain and action
   const context = payload?.context;
   const domain = context?.domain;

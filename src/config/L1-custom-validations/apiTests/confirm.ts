@@ -1,7 +1,7 @@
 import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
-export function confirm(payload: any): validationOutput {
+export async function confirm(payload: any): Promise<validationOutput> {
   // Extract payload, context, domain and action
   const context = payload?.context;
   const domain = context?.domain;
@@ -11,12 +11,12 @@ export function confirm(payload: any): validationOutput {
   // Initialize results array
   const results: validationOutput = [];
 
-  const validQuote = validateQuote(payload);
-  const validItems = validateItems(payload);
-  const validFulfillments = validateFulfillments(payload);
-  const validOrderDimensions = validateOrderDimensions(payload);
-  const acceptLSPterms = validateLSPterms(payload);
-  const validTAT = validateTAT(payload);
+  const validQuote = await validateQuote(payload);
+  const validItems = await validateItems(payload);
+  const validFulfillments = await validateFulfillments(payload);
+  const validOrderDimensions = await validateOrderDimensions(payload);
+  const acceptLSPterms = await validateLSPterms(payload);
+  const validTAT = await validateTAT(payload);
   //validate quote
   if (!validQuote) {
     results.push({
@@ -92,7 +92,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   const quotePrice = payload?.message?.order?.quote?.price;
   if (!quotePrice) return false; // Ensure quotePrice is present
 
-  RedisService.setKey(
+  await RedisService.setKey(
     `${transaction_id}:confirmQuote`,
     JSON.stringify({ quotePrice })
   );
@@ -101,7 +101,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   );
   if (!onInitQuoteRaw) return true; // If no initial quote, assume validation passes
 
-  const onInitQuote = JSON.parse(onInitQuoteRaw);
+  const onInitQuote = JSON.parse(onInitQuoteRaw.quote);
   return quotePrice !== onInitQuote?.price;
 }
 
@@ -114,7 +114,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
 async function validateItems(payload: Record<string, any>): Promise<boolean> {
   const items = payload?.message?.order?.items;
   const transaction_id = payload?.context?.transaction_id;
-  RedisService.setKey(
+  await RedisService.setKey(
     `${transaction_id}:confirmItems`,
     JSON.stringify({ items })
   );
@@ -127,7 +127,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   if (!onInitItems) return false;
 
   try {
-    onInitItems = JSON.parse(onInitItems);
+    onInitItems = JSON.parse(onInitItems.items);
     if (!Array.isArray(onInitItems)) return false;
   } catch (error) {
     console.error("Error parsing onInitItems from Redis:", error);
@@ -158,7 +158,7 @@ async function validateFulfillments(
 ): Promise<boolean> {
   const fulfillments = payload?.message?.order?.fulfillments;
   const transaction_id = payload?.context?.transaction_id;
-  RedisService.setKey(
+  await RedisService.setKey(
     `${transaction_id}:confirmFulfillments`,
     JSON.stringify({ fulfillments })
   );
@@ -171,7 +171,7 @@ async function validateFulfillments(
   if (!onInitFulfillments) return false;
 
   try {
-    onInitFulfillments = JSON.parse(onInitFulfillments);
+    onInitFulfillments = JSON.parse(onInitFulfillments.fulfillments);
     if (!Array.isArray(onInitFulfillments)) return false;
   } catch (error) {
     console.error("Error parsing onInitFulfillments from Redis:", error);
@@ -203,18 +203,22 @@ async function validateOrderDimensions(
   if (!dimensions || !weight) return false;
 
   const transaction_id = payload?.context?.transaction_id;
-  let searchDetails: any = await RedisService.getKey(
-    `${transaction_id}:orderDetails`
+  let searchDetails: any;
+
+  let searchDimensions = await RedisService.getKey(
+    `${transaction_id}:orderDimensions`
   );
-
-  if (!searchDetails) return false;
-
+  let searchWeight = await RedisService.getKey(`${transaction_id}:orderWeight`);
   try {
-    searchDetails = JSON.parse(searchDetails);
+    searchDimensions = JSON.parse(searchDimensions.dimensions);
+    searchWeight = JSON.parse(searchWeight.weight);
   } catch (error) {
     console.error("Error parsing order details from Redis:", error);
     return false;
   }
+  searchDetails.dimensions = searchDimensions;
+  searchDetails.weight = searchWeight;
+  if (!searchDetails) return false;
 
   // Function to compare dimensions object
   function compareDimensions(obj1: any, obj2: any): boolean {
@@ -288,8 +292,8 @@ async function validateTAT(payload: Record<string, any>): Promise<boolean> {
   if (!onSearchItems || !onSearchFulfillments) return false;
 
   try {
-    onSearchItems = JSON.parse(onSearchItems);
-    onSearchFulfillments = JSON.parse(onSearchFulfillments);
+    onSearchItems = JSON.parse(onSearchItems.items);
+    onSearchFulfillments = JSON.parse(onSearchFulfillments.fulfillments);
     if (!Array.isArray(onSearchItems) || !Array.isArray(onSearchFulfillments))
       return false;
   } catch (error) {

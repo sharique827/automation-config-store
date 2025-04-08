@@ -61,7 +61,6 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
       `${transaction_id}:onSearchItems`
     );
 
-    console.log("Fetched onSearchItems from Redis:", onSearchItems);
 
     if (!onSearchItems) {
       console.warn(
@@ -72,7 +71,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
     }
 
     try {
-      onSearchItems = JSON.parse(onSearchItems);
+      onSearchItems = JSON.parse(onSearchItems.items);
     } catch (error) {
       console.warn("Error parsing onSearchItems from Redis:", error);
       return false;

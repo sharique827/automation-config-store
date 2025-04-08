@@ -1,7 +1,7 @@
 import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
-export function onConfirm(payload: any): validationOutput {
+export async function onConfirm(payload: any): Promise<validationOutput> {
   // Extract payload, context, domain and action
   const context = payload?.context;
   const domain = context?.domain;
@@ -11,9 +11,9 @@ export function onConfirm(payload: any): validationOutput {
   // Initialize results array
   const results: validationOutput = [];
 
-  const validQuote = validateQuote(payload);
-  const validItems = validateItems(payload);
-  const validFulfillments = validateFulfillments(payload);
+  const validQuote = await validateQuote(payload);
+  const validItems = await validateItems(payload);
+  const validFulfillments = await validateFulfillments(payload);
 
   //validate quote
   if (!validQuote) {
@@ -91,7 +91,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   if (!onInitItems) return false;
 
   try {
-    onInitItems = JSON.parse(onInitItems);
+    onInitItems = JSON.parse(onInitItems.items);
     if (!Array.isArray(onInitItems)) return false;
   } catch (error) {
     console.error("Error parsing onInitItems from Redis:", error);
@@ -132,7 +132,7 @@ async function validateFulfillments(
   if (!onInitFulfillments) return false;
 
   try {
-    onInitFulfillments = JSON.parse(onInitFulfillments);
+    onInitFulfillments = JSON.parse(onInitFulfillments.fulfillments);
     if (!Array.isArray(onInitFulfillments)) return false;
   } catch (error) {
     console.error("Error parsing onInitFulfillments from Redis:", error);
