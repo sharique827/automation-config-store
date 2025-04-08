@@ -90,32 +90,32 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
         console.log("Against onSearchItem:", onSearchItem.id);
 
         const idMatch = item.id === onSearchItem.id;
-        const fulfillmentIdMatch =
-          item.fulfillment_id === onSearchItem.fulfillment_id;
-        const fulfillmentIdsMatch =
-          JSON.stringify(item.fulfillment_ids || []) ===
-          JSON.stringify(onSearchItem.fulfillment_ids || []);
+        // const fulfillmentIdMatch =
+        //   item.fulfillment_id === onSearchItem.fulfillment_id;
+        // const fulfillmentIdsMatch =
+        //   JSON.stringify(item.fulfillment_ids || []) ===
+        //   JSON.stringify(onSearchItem.fulfillment_ids || []);
         const categoryMatch = item.category_id === onSearchItem.category_id;
 
         if (!idMatch)
           console.log(`id mismatch: ${item.id} ≠ ${onSearchItem.id}`);
-        if (!fulfillmentIdMatch)
-          console.log(
-            `fulfillment_id mismatch: ${item.fulfillment_id} ≠ ${onSearchItem.fulfillment_id}`
-          );
-        if (!fulfillmentIdsMatch)
-          console.log(
-            `fulfillment_ids mismatch: ${JSON.stringify(
-              item.fulfillment_ids
-            )} ≠ ${JSON.stringify(onSearchItem.fulfillment_ids)}`
-          );
+        // if (!fulfillmentIdMatch)
+        //   console.log(
+        //     `fulfillment_id mismatch: ${item.fulfillment_id} ≠ ${onSearchItem.fulfillment_id}`
+        //   );
+        // if (!fulfillmentIdsMatch)
+        //   console.log(
+        //     `fulfillment_ids mismatch: ${JSON.stringify(
+        //       item.fulfillment_ids
+        //     )} ≠ ${JSON.stringify(onSearchItem.fulfillment_ids)}`
+        //   );
         if (!categoryMatch)
           console.log(
             `category_id mismatch: ${item.category_id} ≠ ${onSearchItem.category_id}`
           );
 
         return (
-          idMatch && fulfillmentIdMatch && fulfillmentIdsMatch && categoryMatch
+          idMatch  && categoryMatch
         );
       });
 
