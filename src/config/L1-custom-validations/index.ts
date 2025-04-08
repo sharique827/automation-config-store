@@ -6,12 +6,12 @@ import { onInit } from "./apiTests/on_init";
 import { confirm } from "./apiTests/confirm";
 import { cancel } from "./apiTests/cancel";
 
-export function performL1CustomValidations(
+export async function performL1CustomValidations(
   payload: any,
   action: string,
   allErrors = false,
   externalData = {}
-): validationOutput {
+): Promise<validationOutput> {
   console.log("Performing custom L1 validations for action: " + action);
 
   switch (action) {
@@ -20,7 +20,7 @@ export function performL1CustomValidations(
     case "on_search":
       return onSearch(payload);
     case "init":
-      return init(payload);
+      return await init(payload);
     case "on_init":
       return onInit(payload);
     case "confirm":
