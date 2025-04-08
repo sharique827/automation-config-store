@@ -2,31 +2,39 @@ import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
 export async function init(payload: any): Promise<validationOutput> {
-  // Extract payload, context, domain and action
-  const context = payload?.context;
-  const domain = context?.domain;
-  const action = context?.action;
-  console.log(`Running validations for ${domain}/${action}`);
-
-  // Initialize results array
   const results: validationOutput = [];
 
-  //validate items
-  if (!(await validateItems(payload))) {
+  try {
+    const context = payload?.context;
+    const domain = context?.domain;
+    const action = context?.action;
+    console.log(`Running validations for ${domain}/${action}`);
+
+    const isValidItems = await validateItems(payload);
+
+    if (!isValidItems) {
+      results.push({
+        valid: false,
+        code: 66002,
+        description: `LSP is unable to validate the order request : Selected item does not exist in the catalog provided in /on_search`,
+      });
+    }
+
+    if (results.length === 0) {
+      results.push({ valid: true, code: 200 });
+    }
+
+    console.log("Validation Results:", results);
+    return results;
+  } catch (error) {
+    console.error("Error during init validation:", error);
     results.push({
       valid: false,
-      code: 66002,
-      description: `LSP is unable to validate the order request : Selected item does not exist in the catalog provided in /on_search`,
+      code: 500,
+      description: "An unexpected error occurred during validation.",
     });
+    return results;
   }
-
-  // If no issues found, return a success result
-  if (results.length === 0) {
-    results.push({ valid: true, code: 200 });
-  }
-  console.log(results);
-
-  return results;
 }
 
 /**
@@ -36,41 +44,64 @@ export async function init(payload: any): Promise<validationOutput> {
  * @returns boolean indicating if validation passed
  */
 async function validateItems(payload: Record<string, any>): Promise<boolean> {
-  const items = payload?.message?.order?.items;
-  const transaction_id = payload?.context?.transaction_id;
-  const provider = payload?.message?.order?.provider?.id;
-  if (!Array.isArray(items) || !transaction_id) return false;
-  console.log("inside init L1 custom vals");
-
-  let onSearchItems: any = await RedisService.getKey(
-    `${transaction_id}:onSearchItems`
-  );
-  console.log("on_search", onSearchItems);
-
-  if (!onSearchItems) return false;
-
   try {
-    onSearchItems = JSON.parse(onSearchItems);
-    if (!Array.isArray(onSearchItems)) return false;
+    const items = payload?.message?.order?.items;
+    const transaction_id = payload?.context?.transaction_id;
+
+    if (!Array.isArray(items) || !transaction_id) {
+      console.warn(
+        "Invalid payload structure: items or transaction_id missing"
+      );
+      return false;
+    }
+
+    console.log("Inside validateItems: L1 custom vals");
+
+    let onSearchItems: any = await RedisService.getKey(
+      `${transaction_id}:onSearchItems`
+    );
+
+    console.log("Fetched onSearchItems from Redis:", onSearchItems);
+
+    if (!onSearchItems) {
+      console.warn(
+        "No items found in Redis for transaction_id:",
+        transaction_id
+      );
+      return false;
+    }
+
+    try {
+      onSearchItems = JSON.parse(onSearchItems);
+    } catch (error) {
+      console.warn("Error parsing onSearchItems from Redis:", error);
+      return false;
+    }
+
+    if (!Array.isArray(onSearchItems)) {
+      console.error("Parsed onSearchItems is not an array");
+      return false;
+    }
+
+    const validItems = items.every((item) => {
+      console.log("Checking item:", item.id);
+      return onSearchItems.some((onSearchItem) => {
+        console.log("Against onSearchItem:", onSearchItem.id);
+        return (
+          item.id === onSearchItem.id &&
+          JSON.stringify(item.fulfillment_id || []) ===
+            JSON.stringify(onSearchItem.fulfillment_id || []) &&
+          JSON.stringify(item.fulfillment_ids || []) ===
+            JSON.stringify(onSearchItem.fulfillment_ids || []) &&
+          item.category_id === onSearchItem.category_id
+        );
+      });
+    });
+
+    console.log("Final item validation result:", validItems);
+    return validItems;
   } catch (error) {
-    console.error("Error parsing onInitItems from Redis:", error);
+    console.error("Unexpected error in validateItems:", error);
     return false;
   }
-  const validItems = items.every((item) => {
-    console.log("Checking item:", item.id);
-    return onSearchItems.some((onSearchItem) => {
-      console.log("Against onSearchItem:", onSearchItem.id);
-      return (
-        item.id === onSearchItem.id &&
-        JSON.stringify(item.fulfillment_id || []) ===
-          JSON.stringify(onSearchItem.fulfillment_id || []) &&
-        JSON.stringify(item.fulfillment_ids || []) ===
-          JSON.stringify(onSearchItem.fulfillment_ids || []) &&
-        item.category_id === onSearchItem.category_id
-      );
-    });
-  });
-
-  console.log("Final item validation result:", validItems);
-  return validItems;
 }
