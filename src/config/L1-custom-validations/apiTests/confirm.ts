@@ -6,15 +6,27 @@ export async function confirm(payload: any): Promise<validationOutput> {
   const domain = context?.domain;
   const action = context?.action;
   console.log(`Running validations for ${domain}/${action}`);
+  console.log("Payload received:", JSON.stringify(payload, null, 2));
 
   const results: validationOutput = [];
 
   const validQuote = await validateQuote(payload);
+  console.log("Quote validation result:", validQuote);
+
   const validItems = await validateItems(payload);
+  console.log("Items validation result:", validItems);
+
   const validFulfillments = await validateFulfillments(payload);
+  console.log("Fulfillments validation result:", validFulfillments);
+
   const validOrderDimensions = await validateOrderDimensions(payload);
+  console.log("Order Dimensions validation result:", validOrderDimensions);
+
   const acceptLSPterms = await validateLSPterms(payload);
+  console.log("LSP terms acceptance validation result:", acceptLSPterms);
+
   const validTAT = await validateTAT(payload);
+  console.log("TAT validation result:", validTAT);
 
   if (!validQuote) {
     results.push({
@@ -72,20 +84,27 @@ export async function confirm(payload: any): Promise<validationOutput> {
 }
 
 async function validateQuote(payload: Record<string, any>): Promise<boolean> {
+  console.log("Running validateQuote");
   const transaction_id = payload?.context?.transaction_id;
-  if (!transaction_id) return false;
+  const quotePrice = payload?.message?.order?.quote?.price?.value;
 
-  const quotePrice = payload?.message?.order?.quote?.price;
-  if (!quotePrice) return false;
+  console.log("Transaction ID:", transaction_id);
+  console.log("Incoming Quote Price:", quotePrice);
 
-  const onInitQuoteRaw = await RedisService.getKey(
-    `${transaction_id}:confirmQuote`
-  );
-  if (!onInitQuoteRaw) return false; // ✅ Null check added
+  if (!transaction_id || quotePrice == null) return false;
+
+  const onInitQuoteRaw = await RedisService.getKey(`${transaction_id}:confirmQuote`);
+  console.log("Redis Quote Raw:", onInitQuoteRaw);
+  if (!onInitQuoteRaw) return false;
 
   try {
     const onInitQuote = JSON.parse(onInitQuoteRaw);
-    return quotePrice === onInitQuote?.price;
+    const storedPrice = onInitQuote?.price?.value;
+    console.log("Stored Quote Price from Redis:", storedPrice);
+
+    const isEqual = parseFloat(quotePrice) === parseFloat(storedPrice);
+    console.log(`Parsed comparison: ${parseFloat(quotePrice)} === ${parseFloat(storedPrice)} =>`, isEqual);
+    return isEqual;
   } catch (error) {
     console.error("Error parsing onInitQuote from Redis:", error);
     return false;
@@ -93,15 +112,15 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
 }
 
 async function validateItems(payload: Record<string, any>): Promise<boolean> {
+  console.log("Running validateItems");
   const items = payload?.message?.order?.items;
   const transaction_id = payload?.context?.transaction_id;
 
   if (!Array.isArray(items) || !transaction_id) return false;
 
-  const onInitItemsRaw = await RedisService.getKey(
-    `${transaction_id}:confirmItems`
-  );
-  if (!onInitItemsRaw) return false; // ✅ Null check added
+  const onInitItemsRaw = await RedisService.getKey(`${transaction_id}:confirmItems`);
+  console.log("Redis Items Raw:", onInitItemsRaw);
+  if (!onInitItemsRaw) return false;
 
   try {
     const parsed = JSON.parse(onInitItemsRaw);
@@ -112,10 +131,8 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
       onInitItems.some(
         (onInitItem) =>
           item.id === onInitItem.id &&
-          JSON.stringify(item.fulfillment_id || []) ===
-            JSON.stringify(onInitItem.fulfillment_id || []) &&
-          JSON.stringify(item.fulfillment_ids || []) ===
-            JSON.stringify(onInitItem.fulfillment_ids || []) &&
+          JSON.stringify(item.fulfillment_id || []) === JSON.stringify(onInitItem.fulfillment_id || []) &&
+          JSON.stringify(item.fulfillment_ids || []) === JSON.stringify(onInitItem.fulfillment_ids || []) &&
           item.category_id === onInitItem.category_id
       )
     );
@@ -125,18 +142,16 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   }
 }
 
-async function validateFulfillments(
-  payload: Record<string, any>
-): Promise<boolean> {
+async function validateFulfillments(payload: Record<string, any>): Promise<boolean> {
+  console.log("Running validateFulfillments");
   const fulfillments = payload?.message?.order?.fulfillments;
   const transaction_id = payload?.context?.transaction_id;
 
   if (!Array.isArray(fulfillments) || !transaction_id) return false;
 
-  const onInitFulfillmentsRaw = await RedisService.getKey(
-    `${transaction_id}:confirmFulfillments`
-  );
-  if (!onInitFulfillmentsRaw) return false; // ✅ Null check added
+  const onInitFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:confirmFulfillments`);
+  console.log("Redis Fulfillments Raw:", onInitFulfillmentsRaw);
+  if (!onInitFulfillmentsRaw) return false;
 
   try {
     const parsed = JSON.parse(onInitFulfillmentsRaw);
@@ -156,9 +171,8 @@ async function validateFulfillments(
   }
 }
 
-async function validateOrderDimensions(
-  payload: Record<string, any>
-): Promise<boolean> {
+async function validateOrderDimensions(payload: Record<string, any>): Promise<boolean> {
+  console.log("Running validateOrderDimensions");
   const payloadDetails = payload.message.order["@ondc/org/payload_details"];
   const dimensions = payloadDetails?.dimensions;
   const weight = payloadDetails?.weight;
@@ -166,11 +180,12 @@ async function validateOrderDimensions(
 
   if (!dimensions || !weight || !transaction_id) return false;
 
-  let searchDimensions = await RedisService.getKey(
-    `${transaction_id}:orderDimensions`
-  );
+  let searchDimensions = await RedisService.getKey(`${transaction_id}:orderDimensions`);
   let searchWeight = await RedisService.getKey(`${transaction_id}:orderWeight`);
+  console.log("Redis Dimensions:", searchDimensions);
+  console.log("Redis Weight:", searchWeight);
   if (!searchDimensions || !searchWeight) return false;
+
   try {
     searchDimensions = JSON.parse(searchDimensions).dimensions;
     searchWeight = JSON.parse(searchWeight).weight;
@@ -194,17 +209,12 @@ async function validateOrderDimensions(
     return obj1?.unit === obj2?.unit && obj1?.value === obj2?.value;
   }
 
-  return (
-    compareDimensions(dimensions, searchDimensions) &&
-    compareWeight(weight, searchWeight)
-  );
+  return compareDimensions(dimensions, searchDimensions) && compareWeight(weight, searchWeight);
 }
 
-async function validateLSPterms(
-  payload: Record<string, any>
-): Promise<boolean> {
+async function validateLSPterms(payload: Record<string, any>): Promise<boolean> {
+  console.log("Running validateLSPterms");
   const tags = payload?.message?.order?.tags;
-
   if (!Array.isArray(tags)) return false;
 
   return tags.some(
@@ -219,6 +229,7 @@ async function validateLSPterms(
 }
 
 async function validateTAT(payload: Record<string, any>): Promise<boolean> {
+  console.log("Running validateTAT");
   const items = payload?.message?.order?.items;
   const fulfillments = payload?.message?.order?.fulfillments;
   const provider = payload?.message?.order?.provider?.id;
@@ -227,28 +238,22 @@ async function validateTAT(payload: Record<string, any>): Promise<boolean> {
   if (!Array.isArray(items) || !Array.isArray(fulfillments) || !transaction_id)
     return false;
 
-  let onSearchItemsRaw: any = await RedisService.getKey(
-    `${transaction_id}:${provider}:onSearchItems`
-  );
-  let onSearchFulfillmentsRaw: any = await RedisService.getKey(
-    `${transaction_id}:${provider}:onSearchFulfillments`
-  );
+  let onSearchItemsRaw = await RedisService.getKey(`${transaction_id}:${provider}:onSearchItems`);
+  let onSearchFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:${provider}:onSearchFulfillments`);
+
+  console.log("Redis onSearchItems:", onSearchItemsRaw);
+  console.log("Redis onSearchFulfillments:", onSearchFulfillmentsRaw);
 
   if (!onSearchItemsRaw || !onSearchFulfillmentsRaw) return false;
 
   try {
     const onSearchItems = JSON.parse(onSearchItemsRaw).items;
-    const onSearchFulfillments = JSON.parse(
-      onSearchFulfillmentsRaw
-    ).fulfillments;
+    const onSearchFulfillments = JSON.parse(onSearchFulfillmentsRaw).fulfillments;
 
     return (
       items.every((item, idx) => {
         const corresponding = onSearchItems[idx];
-        return (
-          item["@ondc/org/time_to_ship"] ===
-          corresponding["@ondc/org/time_to_ship"]
-        );
+        return item["@ondc/org/time_to_ship"] === corresponding["@ondc/org/time_to_ship"];
       }) &&
       fulfillments.every((fulfillment, idx) => {
         const corresponding = onSearchFulfillments[idx];
