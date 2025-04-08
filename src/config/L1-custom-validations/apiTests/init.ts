@@ -24,6 +24,7 @@ export function init(payload: any): validationOutput {
   if (results.length === 0) {
     results.push({ valid: true, code: 200 });
   }
+  console.log(results);
 
   return results;
 }
@@ -39,6 +40,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   const transaction_id = payload?.context?.transaction_id;
   const provider = payload?.messsage?.order?.provider?.id;
   if (!Array.isArray(items) || !transaction_id) return false;
+  console.log("inside init L1 custom vals");
 
   let onSearchItems: any = await RedisService.getKey(
     `${transaction_id}:${provider}:onSearchItems`
@@ -55,14 +57,15 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   }
 
   return items.every((item) =>
-    onSearchItems.some(
-      (onSearchItem) =>
-        item.id === onSearchItem.id &&
+    onSearchItems.some((onSearchItem) => {
+      console.log(item.id, onSearchItem.iditem.id === onSearchItem.id);
+
+      item.id === onSearchItem.id &&
         JSON.stringify(item.fulfillment_id || []) ===
           JSON.stringify(onSearchItem.fulfillment_id || []) &&
         JSON.stringify(item.fulfillment_ids || []) ===
           JSON.stringify(onSearchItem.fulfillment_ids || []) &&
-        item.category_id === onSearchItem.category_id
-    )
+        item.category_id === onSearchItem.category_id;
+    })
   );
 }
