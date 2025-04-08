@@ -1,7 +1,7 @@
 import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
-export function init(payload: any): validationOutput {
+export async function init(payload: any): Promise<validationOutput> {
   // Extract payload, context, domain and action
   const context = payload?.context;
   const domain = context?.domain;
@@ -12,7 +12,7 @@ export function init(payload: any): validationOutput {
   const results: validationOutput = [];
 
   //validate items
-  if (!validateItems(payload)) {
+  if (!(await validateItems(payload))) {
     results.push({
       valid: false,
       code: 66002,
@@ -55,8 +55,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
     console.error("Error parsing onInitItems from Redis:", error);
     return false;
   }
-
-  return items.every((item) => {
+  const validItems = items.every((item) => {
     console.log("Checking item:", item.id);
     return onSearchItems.some((onSearchItem) => {
       console.log("Against onSearchItem:", onSearchItem.id);
@@ -70,4 +69,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
       );
     });
   });
+  
+  console.log("Final item validation result:", validItems);
+  return validItems;
 }
