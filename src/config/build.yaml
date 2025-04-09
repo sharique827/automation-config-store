@@ -27066,6 +27066,8 @@ x-validations:
           - linked_order_diff
           - linked_order_diff_proof
           - precancel_state
+          - fulfillment_delay
+          - fulfillment_proof
         tagPath: $.message.order.fulfillments[*].tags[*].code
         _CONTINUE_: '!(tagPath are present)'
         _RETURN_: tagPath all in validTags
@@ -27226,6 +27228,23 @@ x-validations:
           - fulfillment_state
           - updated_at
         _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_2_fulfillment_delay
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfillment_delay')]
+        subTags: $.list[*].code
+        validValues:
+          - state
+          - reason_id
+          - timestamp
+          - attempt
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_2_fulfillment_proof
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfillment_proof')]
+        subTags: $.list[*].code
+        validValues:
+          - state
+          - type
+          - url
+        _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_3
         validTags:
           - diff_dim
@@ -27373,6 +27392,7 @@ x-validations:
           $.message.order.fulfillments[?(@.type=='Delivery')].end.location.address.city
         _RETURN_: endLocation are present
   _SESSION_DATA_: {}
+
 
 
 
