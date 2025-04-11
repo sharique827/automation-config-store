@@ -24670,9 +24670,6 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_ID_15
         attr: $.message.order.provider.id
         _RETURN_: attr are present
-      - _NAME_: REQUIRED_MESSAGE_ID_16
-        attr: $.message.order.provider.locations[*].id
-        _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_ID_17
         attr: $.message.order.items[*].id
         _RETURN_: attr are present
@@ -26041,9 +26038,6 @@ x-validations:
           - Cancelled
       - _NAME_: REQUIRED_MESSAGE_ID_15
         attr: $.message.order.provider.id
-        _RETURN_: attr are present
-      - _NAME_: REQUIRED_MESSAGE_ID_16
-        attr: $.message.order.provider.locations[*].id
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_ID_17
         attr: $.message.order.items[*].id
