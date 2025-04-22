@@ -23613,9 +23613,6 @@ x-validations:
     - _NAME_: REQUIRED_CONTEXT_BPP_URI_13
       attr: "$.context.bpp_uri"
       _RETURN_: attr are present
-    - _NAME_: REQUIRED_MESSAGE_ORDER_ID_14
-      attr: "$.message.order_id"
-      _RETURN_: attr are present
     - _NAME_: REQUIRED_CONTEXT_CODE_15
       attr: "$.context.location.country.code"
       _RETURN_: attr are present
@@ -23994,37 +23991,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_ID_39
       attr: "$.message.catalog.providers[*].id"
-      _RETURN_: attr are present
-      useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_ID_40
-      attr: "$.message.catalog.providers[*].categories[*].id"
-      _RETURN_: attr are present
-      useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_CODE_41
-      attr: "$.message.catalog.providers[*].categories[*].descriptor.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - TICKET
-      - PASS
-      useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_START_42
-      attr: "$.message.catalog.providers[*].time.range.start"
-      _RETURN_: attr are present
-      useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_END_43
-      attr: "$.message.catalog.providers[*].time.range.end"
       _RETURN_: attr are present
       useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
       useCode:
@@ -24594,27 +24560,6 @@ x-validations:
       useCode:
       - BUS
       _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_CATEGORY_IDS_57
-      attr: "$.message.order.items[*].category_ids[*]"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_LABEL_58
-      attr: "$.message.order.items[*].time.label"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_DURATION_59
-      attr: "$.message.order.items[*].time.duration"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_ID_60
       attr: "$.message.order.provider.id"
       _RETURN_: attr are present
@@ -24624,20 +24569,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_NAME_61
       attr: "$.message.order.provider.descriptor.name"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_START_62
-      attr: "$.message.order.provider.time.range.start"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_END_63
-      attr: "$.message.order.provider.time.range.end"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -24729,20 +24660,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_COUNT_76
       attr: "$.message.order.quote.breakup[*].item.quantity.selected.count"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_URL_77
-      attr: "$.message.order.cancellation_terms[*].external_ref.url"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_MIMETYPE_78
-      attr: "$.message.order.cancellation_terms[*].external_ref.mimetype"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -25227,27 +25144,6 @@ x-validations:
       useCode:
       - BUS
       _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_CATEGORY_IDS_60
-      attr: "$.message.order.items[*].category_ids[*]"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_LABEL_61
-      attr: "$.message.order.items[*].time.label"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_DURATION_62
-      attr: "$.message.order.items[*].time.duration"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_FULFILLMENT_IDS_63
       attr: "$.message.order.items[*].fulfillment_ids[*]"
       _RETURN_: attr are present
@@ -25264,20 +25160,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_NAME_65
       attr: "$.message.order.provider.descriptor.name"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_START_66
-      attr: "$.message.order.provider.time.range.start"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_END_67
-      attr: "$.message.order.provider.time.range.end"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -25411,20 +25293,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_86
       attr: "$.message.order.payments[*].params.bank_account_number"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_URL_87
-      attr: "$.message.order.cancellation_terms[*].external_ref.url"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_MIMETYPE_88
-      attr: "$.message.order.cancellation_terms[*].external_ref.mimetype"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -25911,27 +25779,6 @@ x-validations:
       useCode:
       - BUS
       _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_CATEGORY_IDS_72
-      attr: "$.message.order.items[*].category_ids[*]"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_LABEL_73
-      attr: "$.message.order.items[*].time.label"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_DURATION_74
-      attr: "$.message.order.items[*].time.duration"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_ID_75
       attr: "$.message.order.provider.id"
       _RETURN_: attr are present
@@ -25941,20 +25788,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_NAME_76
       attr: "$.message.order.provider.descriptor.name"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_START_77
-      attr: "$.message.order.provider.time.range.start"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_END_78
-      attr: "$.message.order.provider.time.range.end"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -26114,20 +25947,6 @@ x-validations:
       useCode:
       - BUS
       _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_URL_101
-      attr: "$.message.order.cancellation_terms[*].external_ref.url"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_MIMETYPE_102
-      attr: "$.message.order.cancellation_terms[*].external_ref.mimetype"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_CREATED_AT_103
       attr: "$.message.order.created_at"
       _RETURN_: attr are present
@@ -26223,15 +26042,6 @@ x-validations:
       _RETURN_: attr are present && attr all in enumList
       enumList:
       - IND
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_CONTEXT_CODE_2
-      attr: "$.context.location.city.code"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - std:080
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
       - BUS
@@ -26385,27 +26195,6 @@ x-validations:
       useCode:
       - BUS
       _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_CATEGORY_IDS_23
-      attr: "$.message.order.items[*].category_ids[*]"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_LABEL_24
-      attr: "$.message.order.items[*].time.label"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_DURATION_25
-      attr: "$.message.order.items[*].time.duration"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_ID_26
       attr: "$.message.order.provider.id"
       _RETURN_: attr are present
@@ -26422,20 +26211,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_URL_28
       attr: "$.message.order.provider.descriptor.images[*].url"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_START_29
-      attr: "$.message.order.provider.time.range.start"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_END_30
-      attr: "$.message.order.provider.time.range.end"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -26569,29 +26344,8 @@ x-validations:
       useCode:
       - BUS
       _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_URL_46
-      attr: "$.message.order.cancellation_terms[*].external_ref.url"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_MIMETYPE_47
-      attr: "$.message.order.cancellation_terms[*].external_ref.mimetype"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_CANCELLED_BY_48
       attr: "$.message.order.cancellation.cancelled_by"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_TIME_49
-      attr: "$.message.order.cancellation.time"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -26757,12 +26511,6 @@ x-validations:
     - _NAME_: REQUIRED_MESSAGE_FULFILLMENT_IDS_21
       attr: "$.message.order.items[*].fulfillment_ids[*]"
       _RETURN_: attr are present
-    - _NAME_: REQUIRED_MESSAGE_LABEL_22
-      attr: "$.message.order.items[*].time.label"
-      _RETURN_: attr are present
-    - _NAME_: REQUIRED_MESSAGE_DURATION_23
-      attr: "$.message.order.items[*].time.duration"
-      _RETURN_: attr are present
     - _NAME_: REQUIRED_MESSAGE_ID_24
       attr: "$.message.order.provider.id"
       _RETURN_: attr are present
@@ -26782,25 +26530,11 @@ x-validations:
     - _NAME_: REQUIRED_MESSAGE_NAME_28
       attr: "$.message.order.fulfillments[*].stops[*].instructions.name"
       _RETURN_: attr are present
-    - _NAME_: REQUIRED_MESSAGE_NAME_29
-      attr: "$.message.order.fulfillments[*].stops[*].location.descriptor.name"
-      _RETURN_: attr are present
     - _NAME_: REQUIRED_MESSAGE_CODE_30
       attr: "$.message.order.fulfillments[*].stops[*].location.descriptor.code"
       _RETURN_: attr are present
     - _NAME_: REQUIRED_MESSAGE_GPS_31
       attr: "$.message.order.fulfillments[*].stops[*].location.gps"
-      _RETURN_: attr are present
-    - _NAME_: REQUIRED_MESSAGE_TYPE_32
-      attr: "$.message.order.fulfillments[*].stops[*].authorization.type"
-      _RETURN_: attr are present && attr all in enumList
-      enumList:
-      - QR
-    - _NAME_: REQUIRED_MESSAGE_TOKEN_33
-      attr: "$.message.order.fulfillments[*].stops[*].authorization.token"
-      _RETURN_: attr are present
-    - _NAME_: REQUIRED_MESSAGE_VALID_TO_34
-      attr: "$.message.order.fulfillments[*].stops[*].authorization.valid_to"
       _RETURN_: attr are present
     - _NAME_: REQUIRED_MESSAGE_ID_35
       attr: "$.message.order.fulfillments[*].id"
@@ -27404,27 +27138,6 @@ x-validations:
       useCode:
       - BUS
       _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_CATEGORY_IDS_70
-      attr: "$.message.order.items[*].category_ids[*]"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_LABEL_71
-      attr: "$.message.order.items[*].time.label"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_DURATION_72
-      attr: "$.message.order.items[*].time.duration"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_ID_73
       attr: "$.message.order.provider.id"
       _RETURN_: attr are present
@@ -27441,20 +27154,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_URL_75
       attr: "$.message.order.provider.descriptor.images[*].url"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_START_76
-      attr: "$.message.order.provider.time.range.start"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_END_77
-      attr: "$.message.order.provider.time.range.end"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
@@ -27612,20 +27311,6 @@ x-validations:
       _CONTINUE_: "!(useCasePath all in useCode)"
     - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_99
       attr: "$.message.order.payments[*].params.bank_account_number"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_URL_100
-      attr: "$.message.order.cancellation_terms[*].external_ref.url"
-      _RETURN_: attr are present
-      useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-      useCode:
-      - BUS
-      _CONTINUE_: "!(useCasePath all in useCode)"
-    - _NAME_: REQUIRED_MESSAGE_MIMETYPE_101
-      attr: "$.message.order.cancellation_terms[*].external_ref.mimetype"
       _RETURN_: attr are present
       useCasePath: "$.message.order.fulfillments[*].vehicle.category"
       useCode:
