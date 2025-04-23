@@ -55,7 +55,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   const transaction_id = payload?.context?.transaction_id;
   if (!transaction_id) return false;
 
-  const quotePrice = payload?.message?.order?.quote?.price;
+  const quotePrice = payload?.message?.order?.quote?.price.value;;
   let isSurgeFee = false;
 
   const quoteBreakup = payload?.message?.order?.quote?.breakup;
@@ -74,13 +74,14 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   const confirmQuoteRaw = await RedisService.getKey(
     `${transaction_id}:confirmQuote`
   );
+  const storedPrice = confirmQuoteRaw?.quote?.price?.value;
   if (!confirmQuoteRaw) return true;
   try {
-    const confirmQuote = JSON.parse(confirmQuoteRaw);
-    const isEqual = parseFloat(quotePrice) === parseFloat(confirmQuote);
+    
+    const isEqual = parseFloat(quotePrice) === parseFloat(storedPrice);
     console.log(
       `Parsed comparison: ${parseFloat(quotePrice)} === ${parseFloat(
-        confirmQuote
+        storedPrice
       )} =>`,
       isEqual
     );
