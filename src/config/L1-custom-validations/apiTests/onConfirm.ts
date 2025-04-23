@@ -77,7 +77,14 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   if (!confirmQuoteRaw) return true;
   try {
     const confirmQuote = JSON.parse(confirmQuoteRaw);
-    return quotePrice === confirmQuote?.price;
+    const isEqual = parseFloat(quotePrice) === parseFloat(confirmQuote);
+    console.log(
+      `Parsed comparison: ${parseFloat(quotePrice)} === ${parseFloat(
+        confirmQuote
+      )} =>`,
+      isEqual
+    );
+    return isEqual;
   } catch (error) {
     console.error("Error parsing confirmQuote from Redis:", error);
     return false;
