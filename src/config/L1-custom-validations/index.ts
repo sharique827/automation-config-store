@@ -4,6 +4,7 @@ import { onSearch } from "./apiTests/on_search";
 import { init } from "./apiTests/init";
 import { onInit } from "./apiTests/on_init";
 import { confirm } from "./apiTests/confirm";
+import { onConfirm } from "./apiTests/onConfirm";
 import { cancel } from "./apiTests/cancel";
 
 export async function performL1CustomValidations(
@@ -26,7 +27,7 @@ export async function performL1CustomValidations(
     case "confirm":
       return await confirm(payload);
     case "on_confirm":
-      return await confirm(payload);
+      return await onConfirm(payload);
     case "cancel":
       return await cancel(payload);
     default: // Fixed default case

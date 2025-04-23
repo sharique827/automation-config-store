@@ -61,13 +61,13 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   const quoteBreakup = payload?.message?.order?.quote?.breakup;
   quoteBreakup.forEach((breakup: any) => {
     console.log(breakup["@ondc/org/title_type"]);
-    
+
     if (breakup["@ondc/org/title_type"] === "surge") {
       isSurgeFee = true;
     }
   });
   console.log(isSurgeFee);
-  
+
   if (isSurgeFee) return true;
   if (!quotePrice) return false;
 
