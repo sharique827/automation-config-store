@@ -56,13 +56,25 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   if (!transaction_id) return false;
 
   const quotePrice = payload?.message?.order?.quote?.price;
+  let isSurgeFee = false;
+
+  const quoteBreakup = payload?.message?.order?.quote?.breakup;
+  quoteBreakup.array.forEach((breakup: { [x: string]: any }) => {
+    if (breakup["@ondc/org/title_type"] === "surge") {
+      isSurgeFee = true;
+    }
+  });
   if (!quotePrice) return false;
 
-  const confirmQuoteRaw = await RedisService.getKey(`${transaction_id}:confirmQuote`);
+  const confirmQuoteRaw = await RedisService.getKey(
+    `${transaction_id}:confirmQuote`
+  );
   if (!confirmQuoteRaw) return true;
 
   try {
     const confirmQuote = JSON.parse(confirmQuoteRaw);
+
+    if (isSurgeFee) return true;
     return quotePrice === confirmQuote?.price;
   } catch (error) {
     console.error("Error parsing confirmQuote from Redis:", error);
@@ -79,7 +91,9 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
 
   if (!Array.isArray(items) || !transaction_id) return false;
 
-  const confirmItemsRaw = await RedisService.getKey(`${transaction_id}:confirmItems`);
+  const confirmItemsRaw = await RedisService.getKey(
+    `${transaction_id}:confirmItems`
+  );
   if (!confirmItemsRaw) return false;
 
   try {
@@ -107,13 +121,17 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
 /**
  * Validates that the fulfillments object is valid
  */
-async function validateFulfillments(payload: Record<string, any>): Promise<boolean> {
+async function validateFulfillments(
+  payload: Record<string, any>
+): Promise<boolean> {
   const fulfillments = payload?.message?.order?.fulfillments;
   const transaction_id = payload?.context?.transaction_id;
 
   if (!Array.isArray(fulfillments) || !transaction_id) return false;
 
-  const confirmFulfillmentsRaw = await RedisService.getKey(`${transaction_id}:confirmFulfillments`);
+  const confirmFulfillmentsRaw = await RedisService.getKey(
+    `${transaction_id}:confirmFulfillments`
+  );
   if (!confirmFulfillmentsRaw) return false;
 
   try {
