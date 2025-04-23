@@ -22903,6 +22903,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_25
         attr: $.message.order.quote.breakup[*].price.currency
         _RETURN_: attr are present
@@ -23141,6 +23142,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
         enumPath: $.message.order.quote.breakup[*]['@ondc/org/title_type']
         _CONTINUE_: '!(enumPath are present)'
         _RETURN_: enumPath all in enumList
@@ -23882,6 +23884,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
         enumPath: $.message.order.quote.breakup[*]['@ondc/org/title_type']
         _CONTINUE_: '!(enumPath are present)'
         _RETURN_: enumPath all in enumList
@@ -24421,6 +24424,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_40
         attr: $.message.order.quote.breakup[*].price.currency
         _RETURN_: attr are present
@@ -24481,6 +24485,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
         enumPath: $.message.order.quote.breakup[*]['@ondc/org/title_type']
         _CONTINUE_: '!(enumPath are present)'
         _RETURN_: enumPath all in enumList
@@ -24716,6 +24721,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_25
         attr: $.message.order.quote.breakup[*].price.currency
         _RETURN_: attr are present
@@ -25070,6 +25076,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
         enumPath: $.message.order.quote.breakup[*]['@ondc/org/title_type']
         _CONTINUE_: '!(enumPath are present)'
         _RETURN_: enumPath all in enumList
@@ -25474,6 +25481,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_27
         attr: $.message.order.quote.breakup[*].price.currency
         _RETURN_: attr are present
@@ -25756,6 +25764,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
         enumPath: $.message.order.quote.breakup[*]['@ondc/org/title_type']
         _CONTINUE_: '!(enumPath are present)'
         _RETURN_: enumPath all in enumList
@@ -26087,6 +26096,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_25
         attr: $.message.order.quote.breakup[*].price.currency
         _RETURN_: attr are present
@@ -26453,6 +26463,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
         enumPath: $.message.order.quote.breakup[*]['@ondc/org/title_type']
         _CONTINUE_: '!(enumPath are present)'
         _RETURN_: enumPath all in enumList
@@ -26734,6 +26745,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_25
         attr: $.message.order.quote.breakup[*].price.currency
         _RETURN_: attr are present
@@ -27016,6 +27028,7 @@ x-validations:
           - tax_diff
           - discount
           - cod
+          - surge
         enumPath: $.message.order.quote.breakup[*]['@ondc/org/title_type']
         _CONTINUE_: '!(enumPath are present)'
         _RETURN_: enumPath all in enumList
@@ -27394,6 +27407,7 @@ x-validations:
           $.message.order.fulfillments[?(@.type=='Delivery')].end.location.address.city
         _RETURN_: endLocation are present
   _SESSION_DATA_: {}
+
 
 
 
