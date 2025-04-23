@@ -59,7 +59,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   let isSurgeFee = false;
 
   const quoteBreakup = payload?.message?.order?.quote?.breakup;
-  quoteBreakup.array.forEach((breakup: { [x: string]: any }) => {
+  quoteBreakup.forEach((breakup: any) => {
     if (breakup["@ondc/org/title_type"] === "surge") {
       isSurgeFee = true;
     }
@@ -70,11 +70,9 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
     `${transaction_id}:confirmQuote`
   );
   if (!confirmQuoteRaw) return true;
-
+  if (isSurgeFee) return true;
   try {
     const confirmQuote = JSON.parse(confirmQuoteRaw);
-
-    if (isSurgeFee) return true;
     return quotePrice === confirmQuote?.price;
   } catch (error) {
     console.error("Error parsing confirmQuote from Redis:", error);
