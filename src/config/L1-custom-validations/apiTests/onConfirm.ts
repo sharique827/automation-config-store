@@ -52,35 +52,45 @@ export async function onConfirm(payload: any): Promise<validationOutput> {
  * Validates that the quote object is valid
  */
 async function validateQuote(payload: Record<string, any>): Promise<boolean> {
+  console.log("Running validateConfirmQuote");
+
   const transaction_id = payload?.context?.transaction_id;
+  const quotePrice = payload?.message?.order?.quote?.price?.value;
+  const quoteBreakup = payload?.message?.order?.quote?.breakup;
+
+  console.log("Transaction ID:", transaction_id);
+  console.log("Incoming Quote Price:", quotePrice);
+
   if (!transaction_id) return false;
 
-  const quotePrice = payload?.message?.order?.quote?.price.value;;
+  // Check for surge fee
   let isSurgeFee = false;
-
-  const quoteBreakup = payload?.message?.order?.quote?.breakup;
-  quoteBreakup.forEach((breakup: any) => {
-    console.log(breakup["@ondc/org/title_type"]);
-
+  quoteBreakup?.forEach((breakup: any) => {
+    console.log("Breakup Type:", breakup["@ondc/org/title_type"]);
     if (breakup["@ondc/org/title_type"] === "surge") {
       isSurgeFee = true;
     }
   });
-  console.log(isSurgeFee);
 
+  console.log("Is Surge Fee Present?", isSurgeFee);
   if (isSurgeFee) return true;
-  if (!quotePrice) return false;
+
+  if (quotePrice == null) return false;
 
   const confirmQuoteRaw = await RedisService.getKey(
     `${transaction_id}:confirmQuote`
   );
-  const storedPrice = confirmQuoteRaw?.quote?.price?.value;
-  if (!confirmQuoteRaw) return true;
+  console.log("Redis Quote Raw:", confirmQuoteRaw);
+  if (!confirmQuoteRaw) return true; // Allow if Redis data not found
+
   try {
-    
+    const confirmQuote = JSON.parse(confirmQuoteRaw);
+    const storedPrice = confirmQuote?.quote?.price?.value;
+    console.log("Stored Quote Price from Redis:", storedPrice);
+
     const isEqual = parseFloat(quotePrice) === parseFloat(storedPrice);
     console.log(
-      `Parsed comparison: ${parseFloat(quotePrice)} === ${parseFloat(
+      `Price comparison: ${parseFloat(quotePrice)} === ${parseFloat(
         storedPrice
       )} =>`,
       isEqual
