@@ -19363,7 +19363,7 @@ x-attributes:
                   description: false
               vehicle:
                 registration:
-                  required: mandatory
+                  required: optional
                   type: string
                   owner: BPP
                   usage: false
@@ -26220,9 +26220,6 @@ x-validations:
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_END_57
         attr: $.message.order.fulfillments[*].end.time.range.end
-        _RETURN_: attr are present
-      - _NAME_: REQUIRED_MESSAGE_REGISTRATION
-        attr: $.message.order.fulfillments[*].vehicle.registration
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_59
         attr: $.message.order.billing.name
