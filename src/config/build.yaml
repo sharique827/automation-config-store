@@ -26509,6 +26509,7 @@ x-validations:
           - fulfillment_proof
           - linked_order_diff
           - linked_order_diff_proof
+          - tracking
         tagPath: $.message.order.fulfillments[*].tags[*].code
         _CONTINUE_: '!(tagPath are present)'
         _RETURN_: tagPath all in validTags
