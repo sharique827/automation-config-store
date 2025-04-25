@@ -25820,6 +25820,7 @@ x-validations:
           - precancel_state
           - linked_provider
           - linked_order
+          - rto_verification
           - linked_order_item
           - cod_settlement_detail
           - cod_collection_detail
@@ -25871,6 +25872,13 @@ x-validations:
           - breadth
           - height
           - shipment_type
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_2_rto_verification
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='rto_verification')]
+        subTags: $.list[*].code
+        validValues:
+          - code
+          - short_desc
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_linked_order_item
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='linked_order_item')]
@@ -27436,8 +27444,6 @@ x-validations:
           $.message.order.fulfillments[?(@.type=='Delivery')].end.location.address.city
         _RETURN_: endLocation are present
   _SESSION_DATA_: {}
-
-
 
 
 
