@@ -62,20 +62,18 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   console.log("Incoming Quote Price:", quotePrice);
 
   if (!transaction_id) return false;
+  if (quotePrice == null) return false;
 
-  // Check for surge fee
-  let isSurgeFee = false;
+  // Extract surge fee if present
+  let surgeFee = 0;
   quoteBreakup?.forEach((breakup: any) => {
     console.log("Breakup Type:", breakup["@ondc/org/title_type"]);
     if (breakup["@ondc/org/title_type"] === "surge") {
-      isSurgeFee = true;
+      surgeFee += parseFloat(breakup.price?.value || "0");
     }
   });
 
-  console.log("Is Surge Fee Present?", isSurgeFee);
-  if (isSurgeFee) return true;
-
-  if (quotePrice == null) return false;
+  console.log("Surge Fee Amount:", surgeFee);
 
   const confirmQuoteRaw = await RedisService.getKey(
     `${transaction_id}:confirmQuote`
@@ -88,11 +86,15 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
     const storedPrice = confirmQuote?.quote?.price?.value;
     console.log("Stored Quote Price from Redis:", storedPrice);
 
-    const isEqual = parseFloat(quotePrice) === parseFloat(storedPrice);
+    if (storedPrice == null) return false;
+
+    // If surge fee is present, adjust the current quotePrice
+    const adjustedQuotePrice = parseFloat(quotePrice) - surgeFee;
+    console.log("Adjusted Incoming Quote Price:", adjustedQuotePrice);
+
+    const isEqual = adjustedQuotePrice === parseFloat(storedPrice);
     console.log(
-      `Price comparison: ${parseFloat(quotePrice)} === ${parseFloat(
-        storedPrice
-      )} =>`,
+      `Price comparison: ${adjustedQuotePrice} === ${parseFloat(storedPrice)} =>`,
       isEqual
     );
     return isEqual;
@@ -121,8 +123,21 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
     const confirmItems = parsed?.items;
     if (!Array.isArray(confirmItems)) return false;
 
-    return items.every((item) =>
-      confirmItems.some(
+    return items.every((item) => {
+      const isSurgeItem = item.tags?.some(
+        (tag: { code: string; list: any[] }) =>
+          tag.code === "type" &&
+          tag.list?.some((listItem) => listItem.value === "surge")
+      );
+
+      // If surge item, skip checking
+      if (isSurgeItem) {
+        console.log(`Skipping validation for surge item: ${item.id}`);
+        return true;
+      }
+
+      // Otherwise, validate normally
+      return confirmItems.some(
         (confirmItem) =>
           item.id === confirmItem.id &&
           JSON.stringify(item.fulfillment_id || []) ===
@@ -130,8 +145,8 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
           JSON.stringify(item.fulfillment_ids || []) ===
             JSON.stringify(confirmItem.fulfillment_ids || []) &&
           item.category_id === confirmItem.category_id
-      )
-    );
+      );
+    });
   } catch (error) {
     console.error("Error parsing confirmItems from Redis:", error);
     return false;
