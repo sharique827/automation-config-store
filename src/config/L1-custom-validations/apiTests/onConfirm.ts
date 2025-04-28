@@ -64,16 +64,29 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   if (!transaction_id) return false;
   if (quotePrice == null) return false;
 
-  // Extract surge fee if present
   let surgeFee = 0;
+
+  // First, find all surge items
   quoteBreakup?.forEach((breakup: any) => {
-    console.log("Breakup Type:", breakup["@ondc/org/title_type"]);
     if (breakup["@ondc/org/title_type"] === "surge") {
-      surgeFee += parseFloat(breakup.price?.value || "0");
+      const itemId = breakup["@ondc/org/item_id"];
+      const surgeValue = parseFloat(breakup.price?.value || "0");
+
+      // Find tax for this item_id
+      const taxEntry = quoteBreakup.find(
+        (b: any) =>
+          b["@ondc/org/title_type"] === "tax" &&
+          b["@ondc/org/item_id"] === itemId
+      );
+      const taxValue = taxEntry ? parseFloat(taxEntry.price?.value || "0") : 0;
+
+      console.log(`Surge Item ID: ${itemId}, Surge: ${surgeValue}, Tax: ${taxValue}`);
+
+      surgeFee += surgeValue + taxValue;
     }
   });
 
-  console.log("Surge Fee Amount:", surgeFee);
+  console.log("Total Surge Fee (including tax):", surgeFee);
 
   const confirmQuoteRaw = await RedisService.getKey(
     `${transaction_id}:confirmQuote`
@@ -88,7 +101,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
 
     if (storedPrice == null) return false;
 
-    // If surge fee is present, adjust the current quotePrice
+    // Adjust the incoming quote price
     const adjustedQuotePrice = parseFloat(quotePrice) - surgeFee;
     console.log("Adjusted Incoming Quote Price:", adjustedQuotePrice);
 
@@ -103,7 +116,6 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
     return false;
   }
 }
-
 /**
  * Validates that the items object is valid
  */
