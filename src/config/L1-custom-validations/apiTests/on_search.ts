@@ -471,21 +471,25 @@ export default async function onSearch(
               base_item,
               default_selection_calculated,
               default_selection_actual,
+            }: {
+              base_item: string;
+              default_selection_calculated: { min: number; max: number };
+              default_selection_actual: { min: number; max: number };
             }) => {
-              if (
-                default_selection_calculated.min !==
-                default_selection_actual.min ||
-                default_selection_calculated.max !==
-                default_selection_actual.max
-              ) {
+              const calcMin = default_selection_calculated?.min;
+              const calcMax = default_selection_calculated?.max;
+              const actualMin = default_selection_actual?.min;
+              const actualMax = default_selection_actual?.max;
+          
+              if (calcMin !== actualMin || calcMax !== actualMax) {
                 addError(
                   20006,
-                  `Provided default_selection calculated incorrectly for base_item ${base_item}, ` +
-                  `Calculated: min=${default_selection_calculated.min}, max=${default_selection_calculated.max}. ` +
-                  `Given: min=${default_selection_actual.min}, max=${default_selection_actual.max}`
+                  `Provided default_selection calculated incorrectly for base_item "${base_item}". ` +
+                  `Calculated: min=${calcMin}, max=${calcMax}. ` +
+                  `Given: min=${actualMin}, max=${actualMax}`
                 );
               } else {
-                console.info(`Base item ${base_item} values match. No error.`);
+                console.info(`Base item "${base_item}" values match. No error.`);
               }
             }
           );
