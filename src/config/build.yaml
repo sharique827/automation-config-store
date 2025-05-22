@@ -2275,7 +2275,8 @@ components:
           required:
             - id
             - created_at
-            - updated_at   
+            - updated_at  
+      additionalProperties: false       
     IssueResolution:
       description: Describes the issue resolution for the issue raised by a Complainant
       type: object
@@ -3211,7 +3212,8 @@ components:
         type:
           type: string
         link:
-          type: string    
+          type: string 
+             
     SelectedODRs:
       type: object
       properties:
@@ -3221,7 +3223,8 @@ components:
         odrs:
           type: array
           items:
-            $ref: '#/components/schemas/ODR'           
+            $ref: '#/components/schemas/ODR'   
+      additionalProperties: false              
     Scalar:
       description: An object representing a scalar quantity.
       type: object
