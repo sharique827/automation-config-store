@@ -1138,6 +1138,7 @@ components:
               $ref: '#/components/schemas/Contact'
             org:
               type: object 
+      additionalProperties: false       
     Action:
       type: object
       additionalProperties: false
@@ -1189,7 +1190,8 @@ components:
         # tags:
         #   type: array
         #   items:
-        #     $ref: '#/components/schemas/TagGroup'       
+        #     $ref: '#/components/schemas/TagGroup' 
+      additionalProperties: false        
     Billing:
       description: Describes a billing event
       type: object
@@ -1424,6 +1426,7 @@ components:
                 - phone
       required:
         - contact 
+      additionalProperties: false  
     ComplainantAction:
       type: object
       properties:
@@ -1709,6 +1712,7 @@ components:
           type: string
         answer:
           type: string  
+      additionalProperties: false     
     Feedback:
       description: Feedback for a service
       type: object
@@ -1717,7 +1721,7 @@ components:
           $ref: '#/components/schemas/FeedbackForm'
         feedback_url:
           $ref: '#/components/schemas/FeedbackUrl'
-      additionalProperties: false
+      additionalProperties: false     
     FeedbackForm:
       description: >-
         Describes a feedback form that a Seller App can send to get feedback
@@ -1949,7 +1953,9 @@ components:
             - CASCADED-COUNTERPARTY-NP-GRO
       required:
         - contact
-        - gro_type    
+        - gro_type 
+
+      additionalProperties: false      
     Image:
       description: >-
         Image of an object. <br/><br/> A url based image will look like
@@ -1962,7 +1968,8 @@ components:
           type: string
           format: uri
         size_type:
-          type: string     
+          type: string 
+      additionalProperties: false        
     Intent:
       description: Intent of a user. Used for searching for services
       type: object
@@ -2316,6 +2323,7 @@ components:
       required:
         - short_desc
         - action_triggered    
+      additionalProperties: false   
     IssueSource:
       description: source of the issue
       type: object
@@ -2339,6 +2347,7 @@ components:
             - CONSUMER
             - SELLER
             - INTERFACING-NP
+      additionalProperties: false       
     IssueActions:
       description: >
         Status of the issue updated by respondent or the complainant
@@ -2355,6 +2364,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RespondentAction'
+      additionalProperties: false      
     IssueCategory:
       description: >
         Identifies what is the category of this issue
@@ -2511,7 +2521,8 @@ components:
         - short_desc
         - url
         - pricing_model
-        - resolution_ratings     
+        - resolution_ratings    
+      additionalProperties: false   
     Offer:
       description: Describes an offer
       type: object
@@ -2743,6 +2754,7 @@ components:
           type: string
         merchant_order_id:
           type: string   
+      additionalProperties: false     
     Page:
       description: Describes a page in a search result
       type: object
@@ -3108,6 +3120,7 @@ components:
             the next level the value of this field should be incremented by 1 it
             will upgrade it indicates to the next sub-level.
           type: integer   
+      additionalProperties: false    
     ResolutionProvider:
       description: >-
         Describes the details of the entity that provides the resolution for the
@@ -3157,6 +3170,7 @@ components:
           format: date-time
         message_id:
           type: string
+      additionalProperties: false    
     ResolutionSupport:
       description: >
         Any one of these resolution support deatils are mandatory to be speficed
@@ -3213,7 +3227,7 @@ components:
           type: string
         link:
           type: string 
-             
+      additionalProperties: false       
     SelectedODRs:
       type: object
       properties:
@@ -3380,6 +3394,7 @@ components:
       properties:
         id:
           type: string
+      additionalProperties: false     
     Tag:
       description: >-
         Describes a tag. This is a simple key-value store which is used to
