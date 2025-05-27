@@ -1141,7 +1141,6 @@ components:
       additionalProperties: false       
     Action:
       type: object
-      additionalProperties: false
       properties:
         id:
           description: Describes id of the action
@@ -1642,6 +1641,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TagGroup'
+           
       additionalProperties: false
     Dimensions:
       description: Describes the dimensions of a real-world object
@@ -2244,9 +2244,19 @@ components:
         source_id:
           description: Describes the source of the issue
           type: string
-        complainant_id:
+        complaint_id:
           description: Describes the complainant id
           type: string
+        respondent_ids:
+          description: Describes the respondent id
+          type: array
+          items:
+            type: string
+        resolver_ids:
+          description: Describes the resolver id
+          type: array
+          items:
+            type: string     
         descriptor:
           $ref: '#/components/schemas/Descriptor' 
         last_action_id:
@@ -2265,8 +2275,11 @@ components:
             - THUMBS-DOWN
         resolution_provider:
           $ref: '#/components/schemas/ResolutionProvider'
-        resolution:
-          $ref: '#/components/schemas/IssueResolution'
+        resolutions:
+          description: Describes the actions taken on the issue
+          type: array
+          items:
+            $ref: '#/components/schemas/IssueResolution'
         additional_info_required:
           type: array
           items:
@@ -2282,7 +2295,7 @@ components:
           required:
             - id
             - created_at
-            - updated_at  
+            - updated_at     
       additionalProperties: false       
     IssueResolution:
       description: Describes the issue resolution for the issue raised by a Complainant
@@ -2320,6 +2333,26 @@ components:
             - REJECT
         refund_amount:
           type: string
+        id:
+          description: unique identifier of the issue resolution
+          type: string
+        proposed_by:
+          type: string  
+        updated_at:
+          description: timestamp for the capturing the time an issue resolution was last updated
+          type: string
+          format: date-time
+        descriptor:
+          $ref: '#/components/schemas/Descriptor'
+        tags:
+          $ref: '#/components/schemas/Tag1'
+        ref_id:
+          description: Describes the reference id
+          type: string
+        ref_type:
+          description: Describes the type of reference
+          type: string   
+
       required:
         - short_desc
         - action_triggered    
@@ -3440,7 +3473,7 @@ components:
             group display value.
           type: boolean
       additionalProperties: false
-    TagGroup:
+    TagGroup: 
       description: >-
         A collection of tag objects with group level attributes. For detailed
         documentation on the Tags and Tag Groups schema go to
@@ -3490,6 +3523,29 @@ components:
           items:
             $ref: '#/components/schemas/Tag'
       additionalProperties: false
+    Tag1:
+      type: array
+      items:
+        type: object
+        properties:
+          descriptor:
+            type: object
+          list:
+            type: array
+            items:
+              type: object
+              properties:
+                descriptor:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                  additionalProperties: false
+                value:
+                  type: string
+              additionalProperties: false
+        additionalProperties: false
+     
     Time:
       description: >-
         Describes time in its various forms. It can be a single point in time;
@@ -28431,9 +28487,9 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_SOURCE_ID
         attr: $.message.issue.source_id
         _RETURN_: attr are present
-      - _NAME_: REQUIRED_MESSAGE_COMPLAINANT_ID
-        attr: $.message.issue.complainant_id
-        _RETURN_: attr are present
+      # - _NAME_: REQUIRED_MESSAGE_COMPLAINANT_ID
+      #   attr: $.message.issue.complainant_id
+      #   _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CODE
         attr: $.message.issue.descriptor.code
         _RETURN_: attr are present
@@ -28614,9 +28670,9 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_SOURCE_ID
         attr: $.message.issue.source_id
         _RETURN_: attr are present
-      - _NAME_: REQUIRED_MESSAGE_COMPLAINANT_ID
-        attr: $.message.issue.complainant_id
-        _RETURN_: attr are present
+      # - _NAME_: REQUIRED_MESSAGE_COMPLAINANT_ID
+      #   attr: $.message.issue.complainant_id
+      #   _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CODE
         attr: $.message.issue.descriptor.code
         _RETURN_: attr are present
