@@ -2244,7 +2244,7 @@ components:
         source_id:
           description: Describes the source of the issue
           type: string
-        complaint_id:
+        complainant_id:
           description: Describes the complainant id
           type: string
         respondent_ids:
