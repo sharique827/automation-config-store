@@ -50,13 +50,6 @@ const winstonLogger = winston.createLogger({
 	transports: [
 		// Console transport with colorized output
 		new winston.transports.Console(),
-		new winston.transports.DailyRotateFile({
-			dirname: "logs", // Log files directory
-			filename: "application-%DATE%.log", // Log file naming pattern
-			datePattern: "YYYY-MM-DD", // Date pattern for log file rotation
-			maxFiles: "30d", // Retain logs for 30 days
-			zippedArchive: true, // Compress archived log files
-		}),
 	],
 });
 
