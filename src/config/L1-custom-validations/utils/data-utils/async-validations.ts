@@ -17,7 +17,7 @@ export function validateAsyncContext(
 ) {
 	const flowPayloads = transactionData.apiList;
 
-	const allResponse = flowPayloads.map((payload) => payload.response);
+	const allResponse = flowPayloads.map((payload: any) => payload.response);
 
 	if (
 		requestProperties.difficulty.stopAfterFirstNack &&
@@ -31,7 +31,7 @@ export function validateAsyncContext(
 
 	const sortedContexts = flowPayloads
 		.sort(
-			(a, b) =>
+			(a: any, b: any) =>
 				new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
 		)
 		.reverse();
@@ -40,7 +40,7 @@ export function validateAsyncContext(
 	const predecessorName = getAsyncPredecessor(subjectAction);
 	if (predecessorName) {
 		const predecessor = sortedContexts.find(
-			(context) => context.action === predecessorName
+			(context: any) => context.action === predecessorName
 		);
 		if (!predecessor) {
 			return {
@@ -56,8 +56,8 @@ export function validateAsyncContext(
 			};
 		}
 		const filteredContexts = sortedContexts
-			.filter((c) => JSON.stringify(c) !== JSON.stringify(predecessor))
-			.map((c) => c.messageId);
+			.filter((c: any) => JSON.stringify(c) !== JSON.stringify(predecessor))
+			.map((c: any) => c.messageId);
 		if (filteredContexts.includes(subject.message_id)) {
 			return {
 				valid: false,
@@ -89,8 +89,8 @@ function validateTransactionId(action: string, sortedContexts: ApiData[]) {
 		transactionPartners
 	);
 	const notFound = transactionPartners.filter(
-		(partner) =>
-			!transactionContexts.some((context) => context.action === partner)
+		(partner: any) =>
+			!transactionContexts.some((context: any) => context.action === partner)
 	);
 	if (notFound.length > 0) {
 		return {
