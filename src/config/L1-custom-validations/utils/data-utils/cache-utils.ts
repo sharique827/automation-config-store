@@ -1,6 +1,6 @@
 import { RedisService } from "ondc-automation-cache-lib";
-import { BecknContext } from "../../models/beckn-types";
-import { SessionData } from "../../types/session-types";
+import { BecknContext } from "../../../../../template/automation-api-service/src/models/beckn-types";
+import { SessionData } from "../../../../../template/automation-api-service/src/types/session-types";
 import logger from "../logger";
 
 export async function saveContextData(

@@ -1,13 +1,13 @@
 import {
 	apiProperties,
 	supportedActions,
-} from "../../config/supported-actions";
-import { BecknContext } from "../../models/beckn-types";
+} from "../../../../../template/automation-api-service/src/config/supported-actions";
+import { BecknContext } from "../../../../../template/automation-api-service/src/models/beckn-types";
 import {
 	ApiData,
 	RequestProperties,
 	TransactionCache,
-} from "../../types/cache-types";
+} from "../../../../../template/automation-api-service/src/types/cache-types";
 import logger from "../logger";
 
 export function validateAsyncContext(

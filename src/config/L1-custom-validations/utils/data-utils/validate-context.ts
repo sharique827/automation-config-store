@@ -1,8 +1,8 @@
-import { BecknContext } from "../../models/beckn-types";
+import { BecknContext } from "../../../../../template/automation-api-service/src/models/beckn-types";
 import { validateAsyncContext } from "./async-validations";
 import logger from "../logger";
-import { RequestProperties, TransactionCache } from "../../types/cache-types";
-import { TransactionCacheService } from "../../services/session-service-rewrite";
+import { RequestProperties, TransactionCache } from "../../../../../template/automation-api-service/src/types/cache-types";
+import { TransactionCacheService } from "../../../../../template/automation-api-service/src/services/session-service-rewrite";
 
 export async function performContextValidations(
 	context: BecknContext,

@@ -1,7 +1,7 @@
 import logger from "./logger";
 import { createAuthorizationHeader } from "ondc-crypto-sdk-nodejs";
 import axios from "axios";
-import { config } from "../config/registryGatewayConfig";
+import { config } from "../../../../../template/automation-api-service/src/config/registryGatewayConfig";
 
 const createAuthHeader = async (payload: any) => {
 	try {
