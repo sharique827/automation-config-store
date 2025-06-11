@@ -1,7 +1,7 @@
 import logger from "./logger";
 import { createAuthorizationHeader } from "ondc-crypto-sdk-nodejs";
 import axios from "axios";
-import { config } from "../../../../../template/automation-api-service/src/config/registryGatewayConfig";
+import { config } from "../../../../template/automation-api-service/src/config/registryGatewayConfig";
 
 const createAuthHeader = async (payload: any) => {
 	try {
@@ -67,7 +67,7 @@ async function performLookup(subId: string, ukId: string) {
 		ukId: ukId,
 	};
 	try {
-		const response = await axios.post(url, data, {
+		const response: any = await axios.post(url, data, {
 			headers: {
 				"Content-Type": "application/json",
 			},

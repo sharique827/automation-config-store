@@ -1,4 +1,4 @@
-import { BecknContext } from "../models/beckn-types";
+import { BecknContext } from "../../../../template/automation-api-service/src/models/beckn-types";
 import logger from "./logger";
 
 export function computeSubscriberUri(
