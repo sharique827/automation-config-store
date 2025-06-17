@@ -28529,6 +28529,7 @@ x-validations:
           - CLOSED
           - PROCESSING
           - RESOLVED
+          - INFO_PROVIDED
         enumPath: $.message.issue.status
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
