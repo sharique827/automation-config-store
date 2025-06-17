@@ -719,6 +719,7 @@ const validateTags = async (
   result: ValidationError[]
 ): Promise<void> => {
   try {
+    console.log("🚀 ~ tags:", JSON.stringify(tags, null, 2));
     if (tags?.length) {
       const bppTermsTag = tags.find((tag: any) => tag.code === "bpp_terms");
       if (bppTermsTag) {
@@ -811,7 +812,9 @@ const validateTags = async (
         
       }
 
-      const bapTermsTag = tags.find((tag: any) => tag.code === "bap_terms");      
+      const bapTermsTag = tags.find((tag: any) => tag.code === "bap_terms");
+      console.log("🚀 ~ bapTermsTag:", JSON.stringify(bapTermsTag))
+      
       if (bapTermsTag) {
         if (!isTagsValid(tags, "bap_terms")) {
           addError(
@@ -852,6 +855,9 @@ const validateTags = async (
       }
 
       const onInitTags = await getRedisValue(`${txnId}_on_init_tags`);
+      console.log(
+      JSON.stringify(onInitTags, null, 2)
+    )
       if (onInitTags && bppTermsTag) {
         const initBppTerms = onInitTags.find(
           (tag: any) => tag.code === "bpp_terms"
