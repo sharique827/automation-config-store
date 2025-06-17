@@ -2213,7 +2213,7 @@ components:
          description: will give bref about refs 
          type: array
          items:
-          - type: object
+            type: object
             properties:
               ref_id:
                 type: string
