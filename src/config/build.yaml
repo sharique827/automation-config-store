@@ -24111,70 +24111,136 @@ x-validations:
           - POST-FULFILLMENT
       - _NAME_: REQUIRED_MESSAGE_NAME_68
         attr: $.message.order['@ondc/org/linked_order'].items[*].descriptor.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_COUNT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.count
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.measure.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_71
         attr: >-
           $.message.order['@ondc/org/linked_order'].items[*].quantity.measure.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_72
         attr: $.message.order['@ondc/org/linked_order'].items[*].price.currency
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_73
         attr: $.message.order['@ondc/org/linked_order'].items[*].price.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_74
         attr: $.message.order['@ondc/org/linked_order'].provider.descriptor.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_75
         attr: $.message.order['@ondc/org/linked_order'].provider.address.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_BUILDING_76
         attr: $.message.order['@ondc/org/linked_order'].provider.address.building
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_LOCALITY_77
         attr: $.message.order['@ondc/org/linked_order'].provider.address.locality
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CITY_78
         attr: $.message.order['@ondc/org/linked_order'].provider.address.city
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_STATE_79
         attr: $.message.order['@ondc/org/linked_order'].provider.address.state
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_AREA_CODE_80
         attr: $.message.order['@ondc/org/linked_order'].provider.address.area_code
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_ID_81
         attr: $.message.order['@ondc/org/linked_order'].order.id
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_82
         attr: $.message.order['@ondc/org/linked_order'].order.weight.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_83
         attr: $.message.order['@ondc/org/linked_order'].order.weight.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_84
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.length.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_85
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.length.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_86
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.breadth.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_87
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.breadth.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_88
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.height.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_89
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.height.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CREATED_AT_90
         attr: $.message.order.created_at
@@ -26026,73 +26092,142 @@ x-validations:
           - POST-FULFILLMENT
       - _NAME_: REQUIRED_MESSAGE_CATEGORY_ID_69
         attr: $.message.order['@ondc/org/linked_order'].items[*].category_id
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_70
         attr: $.message.order['@ondc/org/linked_order'].items[*].descriptor.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_COUNT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.count
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.measure.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_73
         attr: >-
           $.message.order['@ondc/org/linked_order'].items[*].quantity.measure.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_74
         attr: $.message.order['@ondc/org/linked_order'].items[*].price.currency
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_75
         attr: $.message.order['@ondc/org/linked_order'].items[*].price.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_76
         attr: $.message.order['@ondc/org/linked_order'].provider.descriptor.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_77
         attr: $.message.order['@ondc/org/linked_order'].provider.address.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_BUILDING_78
         attr: $.message.order['@ondc/org/linked_order'].provider.address.building
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_LOCALITY_79
         attr: $.message.order['@ondc/org/linked_order'].provider.address.locality
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CITY_80
         attr: $.message.order['@ondc/org/linked_order'].provider.address.city
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_STATE_81
         attr: $.message.order['@ondc/org/linked_order'].provider.address.state
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_AREA_CODE_82
         attr: $.message.order['@ondc/org/linked_order'].provider.address.area_code
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_ID_83
         attr: $.message.order['@ondc/org/linked_order'].order.id
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_84
         attr: $.message.order['@ondc/org/linked_order'].order.weight.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_85
         attr: $.message.order['@ondc/org/linked_order'].order.weight.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_86
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.length.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_87
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.length.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_88
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.breadth.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_89
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.breadth.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_90
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.height.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_91
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.height.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CREATED_AT_92
         attr: $.message.order.created_at
@@ -26727,12 +26862,21 @@ x-validations:
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CATEGORY_ID_48
         attr: $.message.order['@ondc/org/linked_order'].items[*].category_id
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_49
         attr: $.message.order['@ondc/org/linked_order'].items[*].descriptor.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_COUNT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.count
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.measure.unit
@@ -27469,73 +27613,142 @@ x-validations:
           - POST-FULFILLMENT
       - _NAME_: REQUIRED_MESSAGE_CATEGORY_ID_73
         attr: $.message.order['@ondc/org/linked_order'].items[*].category_id
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_74
         attr: $.message.order['@ondc/org/linked_order'].items[*].descriptor.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_COUNT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.count
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.measure.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_77
         attr: >-
           $.message.order['@ondc/org/linked_order'].items[*].quantity.measure.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_78
         attr: $.message.order['@ondc/org/linked_order'].items[*].price.currency
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_79
         attr: $.message.order['@ondc/org/linked_order'].items[*].price.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_80
         attr: $.message.order['@ondc/org/linked_order'].provider.descriptor.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_81
         attr: $.message.order['@ondc/org/linked_order'].provider.address.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_BUILDING_82
         attr: $.message.order['@ondc/org/linked_order'].provider.address.building
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_LOCALITY_83
         attr: $.message.order['@ondc/org/linked_order'].provider.address.locality
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CITY_84
         attr: $.message.order['@ondc/org/linked_order'].provider.address.city
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_STATE_85
         attr: $.message.order['@ondc/org/linked_order'].provider.address.state
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_AREA_CODE_86
         attr: $.message.order['@ondc/org/linked_order'].provider.address.area_code
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_ID_87
         attr: $.message.order['@ondc/org/linked_order'].order.id
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_88
         attr: $.message.order['@ondc/org/linked_order'].order.weight.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_89
         attr: $.message.order['@ondc/org/linked_order'].order.weight.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_90
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.length.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_91
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.length.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_92
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.breadth.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_93
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.breadth.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_94
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.height.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_95
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.height.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UPDATED_AT_96
         attr: $.message.order.updated_at
@@ -28045,73 +28258,142 @@ x-validations:
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CATEGORY_ID_46
         attr: $.message.order['@ondc/org/linked_order'].items[*].category_id
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_47
         attr: $.message.order['@ondc/org/linked_order'].items[*].descriptor.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_COUNT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.count
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT
         attr: $.message.order['@ondc/org/linked_order'].items[*].quantity.measure.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_50
         attr: >-
           $.message.order['@ondc/org/linked_order'].items[*].quantity.measure.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_51
         attr: $.message.order['@ondc/org/linked_order'].items[*].price.currency
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_52
         attr: $.message.order['@ondc/org/linked_order'].items[*].price.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_53
         attr: $.message.order['@ondc/org/linked_order'].provider.descriptor.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_NAME_54
         attr: $.message.order['@ondc/org/linked_order'].provider.address.name
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_BUILDING_55
         attr: $.message.order['@ondc/org/linked_order'].provider.address.building
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_LOCALITY_56
         attr: $.message.order['@ondc/org/linked_order'].provider.address.locality
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CITY_57
         attr: $.message.order['@ondc/org/linked_order'].provider.address.city
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_STATE_58
         attr: $.message.order['@ondc/org/linked_order'].provider.address.state
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_AREA_CODE_59
         attr: $.message.order['@ondc/org/linked_order'].provider.address.area_code
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_ID_60
         attr: $.message.order['@ondc/org/linked_order'].order.id
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_61
         attr: $.message.order['@ondc/org/linked_order'].order.weight.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_62
         attr: $.message.order['@ondc/org/linked_order'].order.weight.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_63
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.length.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_64
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.length.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_65
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.breadth.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_66
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.breadth.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UNIT_67
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.height.unit
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_68
         attr: $.message.order['@ondc/org/linked_order'].order.dimensions.height.value
+        fulfillmentType: $.message.order.fulfillments[*].type
+        fulType: ["Batch"]
+        _CONTINUE_: '!(fulfillmentType any in fulType)'
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_UPDATED_AT_69
         attr: $.message.order.updated_at
