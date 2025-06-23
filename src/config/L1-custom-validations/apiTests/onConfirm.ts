@@ -1,7 +1,7 @@
 import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
-export async function onConfirm(payload: any): Promise<validationOutput> {
+export async function onConfirm(payload: any, subUrl: string): Promise<validationOutput> {
   const context = payload?.context;
   const domain = context?.domain;
   const action = context?.action;
@@ -9,9 +9,9 @@ export async function onConfirm(payload: any): Promise<validationOutput> {
 
   const results: validationOutput = [];
 
-  const validQuote = await validateQuote(payload);
-  const validItems = await validateItems(payload);
-  const validFulfillments = await validateFulfillments(payload);
+  const validQuote = await validateQuote(payload, subUrl);
+  const validItems = await validateItems(payload, subUrl);
+  const validFulfillments = await validateFulfillments(payload, subUrl);
 
   // Validate quote
   if (!validQuote) {
@@ -51,7 +51,7 @@ export async function onConfirm(payload: any): Promise<validationOutput> {
 /**
  * Validates that the quote object is valid
  */
-async function validateQuote(payload: Record<string, any>): Promise<boolean> {
+async function validateQuote(payload: Record<string, any>, subUrl:string): Promise<boolean> {
   console.log("Running validateConfirmQuote");
 
   const transaction_id = payload?.context?.transaction_id;
@@ -89,7 +89,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   console.log("Total Surge Fee (including tax):", surgeFee);
 
   const confirmQuoteRaw = await RedisService.getKey(
-    `${transaction_id}:confirmQuote`
+    `${subUrl}:${transaction_id}:confirmQuote`
   );
   console.log("Redis Quote Raw:", confirmQuoteRaw);
   if (!confirmQuoteRaw) return true; // Allow if Redis data not found
@@ -119,14 +119,14 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
 /**
  * Validates that the items object is valid
  */
-async function validateItems(payload: Record<string, any>): Promise<boolean> {
+async function validateItems(payload: Record<string, any>, subUrl:string): Promise<boolean> {
   const items = payload?.message?.order?.items;
   const transaction_id = payload?.context?.transaction_id;
 
   if (!Array.isArray(items) || !transaction_id) return false;
 
   const confirmItemsRaw = await RedisService.getKey(
-    `${transaction_id}:confirmItems`
+    `${subUrl}:${transaction_id}:confirmItems`
   );
   if (!confirmItemsRaw) return false;
 
@@ -169,7 +169,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
  * Validates that the fulfillments object is valid
  */
 async function validateFulfillments(
-  payload: Record<string, any>
+  payload: Record<string, any>, subUrl: string
 ): Promise<boolean> {
   const fulfillments = payload?.message?.order?.fulfillments;
   const transaction_id = payload?.context?.transaction_id;
@@ -177,7 +177,7 @@ async function validateFulfillments(
   if (!Array.isArray(fulfillments) || !transaction_id) return false;
 
   const confirmFulfillmentsRaw = await RedisService.getKey(
-    `${transaction_id}:confirmFulfillments`
+    `${subUrl}:${transaction_id}:confirmFulfillments`
   );
   if (!confirmFulfillmentsRaw) return false;
 

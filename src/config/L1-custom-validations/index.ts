@@ -10,6 +10,7 @@ import { cancel } from "./apiTests/cancel";
 export async function performL1CustomValidations(
   payload: any,
   action: string,
+  subUrl: string,
   allErrors = false,
   externalData = {}
 ): Promise<validationOutput> {
@@ -17,19 +18,19 @@ export async function performL1CustomValidations(
 
   switch (action) {
     case "search":
-      return await search(payload);
+      return await search(payload, subUrl);
     case "on_search":
-      return await onSearch(payload);
+      return await onSearch(payload, subUrl);
     case "init":
-      return await init(payload);
+      return await init(payload, subUrl);
     case "on_init":
-      return await onInit(payload);
+      return await onInit(payload, subUrl);
     case "confirm":
-      return await confirm(payload);
+      return await confirm(payload, subUrl);
     case "on_confirm":
-      return await onConfirm(payload);
+      return await onConfirm(payload, subUrl);
     case "cancel":
-      return await cancel(payload);
+      return await cancel(payload, subUrl);
     default: // Fixed default case
       return [
         {
