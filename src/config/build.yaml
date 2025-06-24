@@ -27301,7 +27301,7 @@ x-validations:
         endLocation: >-
           $.message.order.fulfillments[?(@.type=='Delivery')].end.location.address.city
         fulfillmentType: $.message.order.fulfillments[*].type
-        fulfillmentState: $.message.order.fulfillments[*].descriptor.code
+        fulfillmentState: $.message.order.fulfillments[*].state.descriptor.code
         fulType: ["Batch"]
         fulState: ["Agent-assigned"]
         _CONTINUE_: "(fulfillmentType any in fulType) && (fulfillmentState all in fulState)"
@@ -28906,7 +28906,7 @@ x-validations:
         endLocation: >-
           $.message.order.fulfillments[?(@.type=='Delivery')].end.location.address.city
         fulfillmentType: $.message.order.fulfillments[*].type
-        fulfillmentState: $.message.order.fulfillments[*].descriptor.code
+        fulfillmentState: $.message.order.fulfillments[*].state.descriptor.code
         fulType: ["Batch"]
         fulState: ["Agent-assigned"]
         _CONTINUE_: "(fulfillmentType any in fulType) && (fulfillmentState all in fulState)"
