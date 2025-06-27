@@ -1,7 +1,7 @@
 import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
-export async function init(payload: any): Promise<validationOutput> {
+export async function init(payload: any, subUrl: string): Promise<validationOutput> {
   const results: validationOutput = [];
 
   try {
@@ -10,7 +10,7 @@ export async function init(payload: any): Promise<validationOutput> {
     const action = context?.action;
     console.log(`Running validations for ${domain}/${action}`);
 
-    const isValidItems = await validateItems(payload);
+    const isValidItems = await validateItems(payload, subUrl);
 
     if (!isValidItems) {
       results.push({
@@ -43,7 +43,7 @@ export async function init(payload: any): Promise<validationOutput> {
  * @param payload The request payload
  * @returns boolean indicating if validation passed
  */
-async function validateItems(payload: Record<string, any>): Promise<boolean> {
+async function validateItems(payload: Record<string, any>, subUrl: string): Promise<boolean> {
   try {
     const items = payload?.message?.order?.items;
     const transaction_id = payload?.context?.transaction_id;
@@ -58,7 +58,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
     console.log("Inside validateItems: L1 custom vals");
 
     let onSearchItems: any = await RedisService.getKey(
-      `${transaction_id}:onSearchItems`
+      `${subUrl}:${transaction_id}:onSearchItems`
     );
 
     if (!onSearchItems) {

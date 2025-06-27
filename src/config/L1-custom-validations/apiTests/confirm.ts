@@ -1,7 +1,10 @@
 import { RedisService } from "ondc-automation-cache-lib";
 import { validationOutput } from "../types";
 
-export async function confirm(payload: any): Promise<validationOutput> {
+export async function confirm(
+  payload: any,
+  subUrl: string
+): Promise<validationOutput> {
   const context = payload?.context;
   const domain = context?.domain;
   const action = context?.action;
@@ -12,35 +15,35 @@ export async function confirm(payload: any): Promise<validationOutput> {
   console.log(`Running validations for ${domain}/${action}`);
 
   await RedisService.setKey(
-    `${transaction_id}:confirmQuote`,
+    `${subUrl}:${transaction_id}:confirmQuote`,
     JSON.stringify({ quote })
   );
 
   await RedisService.setKey(
-    `${transaction_id}:confirmItems`,
+    `${subUrl}:${transaction_id}:confirmItems`,
     JSON.stringify({ items })
   );
 
   await RedisService.setKey(
-    `${transaction_id}:confirmFulfillments`,
+    `${subUrl}:${transaction_id}:confirmFulfillments`,
     JSON.stringify({ fulfillments })
   );
 
   const results: validationOutput = [];
 
-  const validQuote = await validateQuote(payload);
+  const validQuote = await validateQuote(payload, subUrl);
   console.log("Quote validation result:", validQuote);
 
-  const validItems = await validateItems(payload);
+  const validItems = await validateItems(payload, subUrl);
   console.log("Items validation result:", validItems);
 
-  const validFulfillments = await validateFulfillments(payload);
+  const validFulfillments = await validateFulfillments(payload, subUrl);
   console.log("Fulfillments validation result:", validFulfillments);
 
   // const validOrderDimensions = await validateOrderDimensions(payload);
   // console.log("Order Dimensions validation result:", validOrderDimensions);
 
-  const acceptLSPterms = await validateLSPterms(payload);
+  const acceptLSPterms = await validateLSPterms(payload, subUrl);
   console.log("LSP terms acceptance validation result:", acceptLSPterms);
 
   // const validTAT = await validateTAT(payload);
@@ -101,7 +104,10 @@ export async function confirm(payload: any): Promise<validationOutput> {
   return results;
 }
 
-async function validateQuote(payload: Record<string, any>): Promise<boolean> {
+async function validateQuote(
+  payload: Record<string, any>,
+  subUrl: string
+): Promise<boolean> {
   console.log("Running validateQuote");
   const transaction_id = payload?.context?.transaction_id;
   const quotePrice = payload?.message?.order?.quote?.price?.value;
@@ -112,7 +118,7 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   if (!transaction_id || quotePrice == null) return false;
 
   const onInitQuoteRaw = await RedisService.getKey(
-    `${transaction_id}:onInitQuote`
+    `${subUrl}:${transaction_id}:onInitQuote`
   );
   console.log("Redis Quote Raw:", onInitQuoteRaw);
   if (!onInitQuoteRaw) return false;
@@ -136,7 +142,10 @@ async function validateQuote(payload: Record<string, any>): Promise<boolean> {
   }
 }
 
-async function validateItems(payload: Record<string, any>): Promise<boolean> {
+async function validateItems(
+  payload: Record<string, any>,
+  subUrl: string
+): Promise<boolean> {
   console.log("Running validateItems");
   const items = payload?.message?.order?.items;
   const transaction_id = payload?.context?.transaction_id;
@@ -144,7 +153,7 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
   if (!Array.isArray(items) || !transaction_id) return false;
 
   const onInitItemsRaw = await RedisService.getKey(
-    `${transaction_id}:onInitItems`
+    `${subUrl}:${transaction_id}:onInitItems`
   );
   console.log("Redis Items Raw:", onInitItemsRaw);
   if (!onInitItemsRaw) return false;
@@ -164,7 +173,8 @@ async function validateItems(payload: Record<string, any>): Promise<boolean> {
 }
 
 async function validateFulfillments(
-  payload: Record<string, any>
+  payload: Record<string, any>,
+  subUrl: string
 ): Promise<boolean> {
   console.log("Running validateFulfillments");
   const fulfillments = payload?.message?.order?.fulfillments;
@@ -173,7 +183,7 @@ async function validateFulfillments(
   if (!Array.isArray(fulfillments) || !transaction_id) return false;
 
   const onInitFulfillmentsRaw = await RedisService.getKey(
-    `${transaction_id}:onInitFulfillments`
+    `${subUrl}:${transaction_id}:onInitFulfillments`
   );
   console.log("Redis Fulfillments Raw:", onInitFulfillmentsRaw);
   if (!onInitFulfillmentsRaw) return false;
@@ -205,8 +215,8 @@ async function validateFulfillments(
 
 //   if (!dimensions || !weight || !transaction_id) return false;
 
-//   let searchDimensions = await RedisService.getKey(`${transaction_id}:orderDimensions`);
-//   let searchWeight = await RedisService.getKey(`${transaction_id}:orderWeight`);
+//   let searchDimensions = await RedisService.getKey(`${subUrl}:${transaction_id}:orderDimensions`);
+//   let searchWeight = await RedisService.getKey(`${subUrl}:${transaction_id}:orderWeight`);
 //   console.log("Redis Dimensions:", searchDimensions);
 //   console.log("Redis Weight:", searchWeight);
 //   if (!searchDimensions || !searchWeight) return false;
@@ -238,7 +248,8 @@ async function validateFulfillments(
 // }
 
 async function validateLSPterms(
-  payload: Record<string, any>
+  payload: Record<string, any>,
+  subUrl: string
 ): Promise<boolean> {
   console.log("Running validateLSPterms");
   const tags = payload?.message?.order?.tags;
@@ -266,10 +277,10 @@ async function validateLSPterms(
 //     return false;
 
 //   let onSearchItemsRaw = await RedisService.getKey(
-//     `${transaction_id}:${provider}:onSearchItems`
+//     `${subUrl}:${transaction_id}:${provider}:onSearchItems`
 //   );
 //   let onSearchFulfillmentsRaw = await RedisService.getKey(
-//     `${transaction_id}:${provider}:onSearchFulfillments`
+//     `${subUrl}:${transaction_id}:${provider}:onSearchFulfillments`
 //   );
 
 //   console.log("Redis onSearchItems:", onSearchItemsRaw);
