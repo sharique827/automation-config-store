@@ -196,7 +196,7 @@ export default async function search(payload: any): Promise<ValidationOutput> {
         addError(40000, "tags must be a non-empty array");
       } else {
         const validTagCodes = [
-          "bnp_features",
+          "bap_features",
           "catalog_full",
           "catalog_inc",
           "bap_terms",
