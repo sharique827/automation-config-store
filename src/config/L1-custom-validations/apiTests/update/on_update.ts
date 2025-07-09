@@ -215,9 +215,8 @@ export const checkOnUpdate = async (
         result.push({
           valid: false,
           code: 23001,
-          description: `Different sizes: Object has ${
-            Object.keys(itemsIdList).length
-          } items, Map has ${itemsMap.size}`,
+          description: `Different sizes: Object has ${Object.keys(itemsIdList).length
+            } items, Map has ${itemsMap.size}`,
         });
       }
 
@@ -1075,7 +1074,7 @@ export const checkOnUpdate = async (
           );
           const returnCancelFulfillments = _.filter(
             on_update.fulfillments,
-            (item) => item.type === "Return" || item.type === "Cancel"
+            (item) => item.type === "Return"
           );
           if (
             apiSeq === ApiSequence.ON_UPDATE_PICKED ||
@@ -1110,66 +1109,6 @@ export const checkOnUpdate = async (
         });
       }
 
-      // Check quote trail items for 6-b
-      try {
-        let cancelFulfillmentsArray = _.filter(on_update.fulfillments, {
-          type: "Cancel",
-        });
-        if (cancelFulfillmentsArray.length !== 0) {
-          const cancelFulfillments = cancelFulfillmentsArray[0];
-          const quoteTrailItems = cancelFulfillments.tags.filter(
-            (tag: any) => tag.code === "quote_trail"
-          );
-          if (quoteTrailItems.length !== 0) {
-            if (apiSeq === ApiSequence.ON_UPDATE_INTERIM_REVERSE_QC) {
-              quoteTrailItems.forEach((item: any) => {
-                quoteTrailItemsSet.add(item);
-              });
-              await RedisService.setKey(
-                `${transaction_id}_quoteTrailItemsSet`,
-                JSON.stringify([...quoteTrailItemsSet]),
-                TTL_IN_SECONDS
-              );
-            }
-            const storedQuoteTrailItemsSet = new Set(
-              (await getRedisValue(transaction_id, "quoteTrailItemsSet")) || []
-            );
-            storedQuoteTrailItemsSet.forEach((obj1: any) => {
-              const exist = quoteTrailItems.some((obj2: any) =>
-                _.isEqual(obj1, obj2)
-              );
-              if (!exist) {
-                result.push({
-                  valid: false,
-                  code: 20006,
-                  description: `Missing fulfillments/Cancel/tags/quote_trail as compared to previous calls`,
-                });
-              }
-            });
-          } else {
-            result.push({
-              valid: false,
-              code: 20006,
-              description: `Fulfillments/Cancel/tags/quote_trail is missing in ${apiSeq}`,
-            });
-          }
-        } else {
-          result.push({
-            valid: false,
-            code: 20006,
-            description: `Fulfillments/Cancel is missing in ${apiSeq}`,
-          });
-        }
-      } catch (error: any) {
-        console.error(
-          `Error occurred while checking for quote_trail in /${apiSeq}`
-        );
-        result.push({
-          valid: false,
-          code: 23001,
-          description: `Error checking quote trail items in /${apiSeq}: ${error.message}`,
-        });
-      }
       // Reason_id mapping for return_request in 6-b
       try {
         console.info(`Reason_id mapping for return_request`);
@@ -1234,7 +1173,7 @@ export const checkOnUpdate = async (
         // Check order state
         try {
           const orderState = await getRedisValue(transaction_id, "orderState");
-          if (data.state !== orderState) {
+          if (data.state != orderState) {
             result.push({
               valid: false,
               code: 20007,
@@ -1495,3 +1434,4 @@ export const checkOnUpdate = async (
     ];
   }
 };
+

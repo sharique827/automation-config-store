@@ -36,6 +36,7 @@ export const updateRouter = async (data: any) => {
   let apiSeq = "update";
   let result: any = [];
 
+  // Fetch settlement details set
   let settlementDetailSet = await fetchRedisSet(
     transaction_id,
     "settlementDetailSet"
@@ -128,3 +129,4 @@ export const onUpdateRouter = async (data: any) => {
 
   return result;
 };
+

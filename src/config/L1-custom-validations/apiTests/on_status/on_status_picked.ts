@@ -13,12 +13,12 @@ import {
   compareObjects,
   compareQuoteObjects,
   sumQuoteBreakUp,
+  areGSTNumbersMatching,
   compareCoordinates,
   payment_status,
 } from "../../utils/helper";
 import { FLOW } from "../../utils/enums";
 import { contextChecker } from "../../utils/contextUtils";
-import { validateOfferQuoteBreakup } from "./on_status_pending";
 
 // Minimal interface for validation error
 interface ValidationError {
@@ -45,6 +45,8 @@ const addError = (description: string, code: number): ValidationError => ({
   code,
   description,
 });
+
+
 
 async function validateOrder(
   order: any,
@@ -99,31 +101,29 @@ async function validateOrder(
     );
   }
   const provider = order?.provider || {};
-  if (Array.isArray(provider.creds) && provider.creds.length > 0) {
-    const currentCred = provider.creds[0];
-    const { id, descriptor } = currentCred;
-
-    if (id && descriptor?.code && descriptor?.short_desc) {
-      const stored = await RedisService.getKey(
-        `${transaction_id}_${constants.ON_SEARCH}_credsDescriptor`
-      );
-      const storedCreds = stored ? JSON.parse(stored) : [];
-
-      const isMatchFound = storedCreds.some(
-        (storedCred: any) =>
-          storedCred.id === id &&
-          storedCred.descriptor?.code === descriptor.code &&
-          storedCred.descriptor?.short_desc === descriptor.short_desc
-      );
-
-      if (storedCreds.length > 0 && !isMatchFound) {
-        addError(
-          `Order validation failure: Credential (id + descriptor) in /${constants.ON_CONFIRM} does not match /${constants.ON_SEARCH}`,
-          23003
-        );
+    if (Array.isArray(provider.creds) && provider.creds.length > 0) {
+        const currentCred = provider.creds[0];
+        const { id, descriptor } = currentCred;
+  
+        if (id && descriptor?.code && descriptor?.short_desc) {
+          const stored = await RedisService.getKey(`${transaction_id}_${constants.ON_SEARCH}_credsDescriptor`);
+          const storedCreds = stored ? JSON.parse(stored) : [];
+  
+          const isMatchFound = storedCreds.some((storedCred: any) =>
+            storedCred.id === id &&
+            storedCred.descriptor?.code === descriptor.code &&
+            storedCred.descriptor?.short_desc === descriptor.short_desc
+          );
+  
+          if (storedCreds.length > 0 && !isMatchFound ) {
+            addError(
+        
+                `Order validation failure: Credential (id + descriptor) in /${constants.ON_CONFIRM} does not match /${constants.ON_SEARCH}`,
+                23003,
+            );
+          }
+        }
       }
-    }
-  }
   await RedisService.setKey(
     `${transaction_id}_orderState`,
     JSON.stringify(order.state),
@@ -138,13 +138,18 @@ async function validateFulfillments(
   fulfillmentsItemsSet: Set<any>,
   result: ValidationError[]
 ): Promise<void> {
-  const [itemFlfllmntsRaw, buyerGpsRaw, buyerAddrRaw, providerAddrRaw] =
-    await Promise.all([
-      RedisService.getKey(`${transaction_id}_itemFlfllmnts`),
-      RedisService.getKey(`${transaction_id}_buyerGps`),
-      RedisService.getKey(`${transaction_id}_buyerAddr`),
-      RedisService.getKey(`${transaction_id}_providerAddr`),
-    ]);
+  const [
+    itemFlfllmntsRaw,
+    buyerGpsRaw,
+    buyerAddrRaw,
+    providerAddrRaw
+
+  ] = await Promise.all([
+    RedisService.getKey(`${transaction_id}_itemFlfllmnts`),
+    RedisService.getKey(`${transaction_id}_buyerGps`),
+    RedisService.getKey(`${transaction_id}_buyerAddr`),
+    RedisService.getKey(`${transaction_id}_providerAddr`),
+  ]);
   const itemFlfllmnts = itemFlfllmntsRaw ? JSON.parse(itemFlfllmntsRaw) : null;
   const providerAddr = providerAddrRaw ? JSON.parse(providerAddrRaw) : null;
   const buyerGps = buyerGpsRaw ? JSON.parse(buyerGpsRaw) : null;
@@ -289,7 +294,7 @@ async function validateFulfillments(
           )
         );
       }
-      if (
+if (
         ff.start?.location?.gps &&
         !compareCoordinates(ff.start.location.gps, providerAddr?.location?.gps)
       ) {
@@ -303,11 +308,8 @@ async function validateFulfillments(
 
       if (
         !providerAddr ||
-        (!_.isEqual(
-          ff.start?.location?.descriptor?.name,
-          providerAddr?.location?.descriptor?.name
-        ) &&
-          ff?.type == "Delivery")
+        !_.isEqual(ff.start?.location?.descriptor?.name, providerAddr?.location?.descriptor?.name) &&
+        ff?.type == "Delivery"
       ) {
         result.push(
           addError(
@@ -662,29 +664,31 @@ async function validatePayment(
     );
   }
 
-  const settlement_details: any =
-    order?.payment["@ondc/org/settlement_details"];
-
-  const storedSettlementRaw = await RedisService.getKey(
-    `${transaction_id}_settlementDetailSet`
-  );
-
-  const storedSettlementSet = storedSettlementRaw
-    ? JSON.parse(storedSettlementRaw)
-    : null;
-
-  storedSettlementSet?.forEach((obj1: any) => {
-    const exist = settlement_details.some((obj2: any) => _.isEqual(obj1, obj2));
-    if (!exist) {
-      result.push({
-        valid: false,
-        code: 20006,
-        description: `Missing payment/@ondc/org/settlement_details as compared to previous calls or not captured correctly: ${JSON.stringify(
-          obj1
-        )}`,
-      });
-    }
-  });
+   const settlement_details: any =
+      order?.payment["@ondc/org/settlement_details"];
+    
+    
+      const storedSettlementRaw = await RedisService.getKey(`${transaction_id}_settlementDetailSet`); 
+    
+      const storedSettlementSet = storedSettlementRaw 
+        ? JSON.parse(storedSettlementRaw)
+        : null;
+      
+    
+        storedSettlementSet?.forEach((obj1: any) => {
+                const exist = settlement_details.some((obj2: any) =>
+                  _.isEqual(obj1, obj2)
+                );
+                if (!exist) {
+                  result.push({
+                    valid: false,
+                    code: 20006,
+                    description: `Missing payment/@ondc/org/settlement_details as compared to previous calls or not captured correctly: ${JSON.stringify(
+                      obj1
+                    )}`,
+                  });
+                }
+              });
 }
 
 async function validateQuote(
@@ -701,8 +705,6 @@ async function validateQuote(
       )
     );
   }
-
-  validateOfferQuoteBreakup(order, result);
 
   const quoteObjRaw = await RedisService.getKey(`${transaction_id}_quoteObj`);
   const previousQuote = quoteObjRaw ? JSON.parse(quoteObjRaw) : null;
@@ -755,6 +757,25 @@ async function validateTags(
     `${transaction_id}_${ApiSequence.ON_SEARCH}np_type`
   );
 
+  // if (np_type_arr.length === 0) {
+  //   result.push(
+  //     addError(
+  //       `np_type not found in ${constants.ON_STATUS}_${state}`,
+  //       ERROR_CODES.INVALID_RESPONSE
+  //     )
+  //   );
+  // } else {
+  //   const np_type = np_type_arr[0].value;
+  //   if (np_type !== np_type_on_search) {
+  //     result.push(
+  //       addError(
+  //         `np_type of ${constants.ON_SEARCH} is not same to np_type of ${constants.ON_STATUS}_${state}`,
+  //         ERROR_CODES.INVALID_RESPONSE
+  //       )
+  //     );
+  //   }
+  // }
+
   let tax_number = "";
   let provider_tax_number = "";
   list.forEach((item: any) => {
@@ -803,6 +824,23 @@ async function validateTags(
     }
   });
 
+  // if (!tax_number) {
+  //   result.push(
+  //     addError(
+  //       `tax_number must be present for ${constants.ON_STATUS}_${state}`,
+  //       ERROR_CODES.INVALID_RESPONSE
+  //     )
+  //   );
+  // }
+  // if (!provider_tax_number) {
+  //   result.push(
+  //     addError(
+  //       `provider_tax_number must be present for ${constants.ON_STATUS}_${state}`,
+  //       ERROR_CODES.INVALID_RESPONSE
+  //     )
+  //   );
+  // }
+
   if (tax_number.length === 15 && provider_tax_number.length === 10) {
     const pan_id = tax_number.slice(2, 12);
     if (pan_id !== provider_tax_number && np_type_on_search === "ISN") {
@@ -827,14 +865,14 @@ async function validateTags(
   );
   const confirm_tags = confirm_tagsRaw ? JSON.parse(confirm_tagsRaw) : null;
   if (order.tags && confirm_tags) {
-    // if (!areGSTNumbersMatching(confirm_tags, order.tags, "bpp_terms")) {
-    //   result.push(
-    //     addError(
-    //       `Tags should have same and valid gst_number as passed in /${constants.CONFIRM}`,
-    //       ERROR_CODES.INVALID_RESPONSE
-    //     )
-    //   );
-    // }
+    if (!areGSTNumbersMatching(confirm_tags, order.tags, "bpp_terms")) {
+      result.push(
+        addError(
+          `Tags should have same and valid gst_number as passed in /${constants.CONFIRM}`,
+          ERROR_CODES.INVALID_RESPONSE
+        )
+      );
+    }
   }
 }
 async function validateItems(
@@ -861,8 +899,13 @@ async function validateItems(
       RedisService.getKey(`${transactionId}_itemFlfllmnts`),
       RedisService.getKey(`${transactionId}_itemsIdList`),
     ];
+   
+   
 
-    const [itemFlfllmntsRaw, itemsIdListRaw] = await Promise.all(redisKeys);
+    const [
+      itemFlfllmntsRaw,
+      itemsIdListRaw,
+    ] = await Promise.all(redisKeys);
 
     const itemFlfllmnts = itemFlfllmntsRaw
       ? JSON.parse(itemFlfllmntsRaw)
@@ -874,73 +917,11 @@ async function validateItems(
       const item = items[i];
       const itemId = item.id;
 
-      if (items[i].tags) {
-        items[i].tags.forEach((tag: any, idx: number) => {
-          const itemId = items[i].id;
-
-          if (!tag.code || typeof tag.code !== "string") {
-            result.push({
-              valid: false,
-              code: 20006,
-              description: `Item ID ${itemId} — Tag[${idx}] missing or invalid 'code'.`,
-            });
-            return;
-          }
-
-          if (!Array.isArray(tag.list)) {
-            result.push({
-              valid: false,
-              code: 20006,
-              description: `Item ID ${itemId} — Tag[${idx}] missing or invalid 'list'.`,
-            });
-            return;
-          }
-
-          const typeEntry = tag.list.find(
-            (entry: any) => entry.code === "type"
-          );
-          const valueEntry = tag.list.find(
-            (entry: any) => entry.code === "value"
-          );
-
-          if (!typeEntry || !typeEntry.value) {
-            result.push({
-              valid: false,
-              code: 20006,
-              description: `Item ID ${itemId} — Tag[${idx}] missing or invalid 'type' entry.`,
-            });
-          }
-
-          if (!valueEntry || !valueEntry.value) {
-            result.push({
-              valid: false,
-              code: 20006,
-              description: `Item ID ${itemId} — Tag[${idx}] missing or invalid 'value' entry.`,
-            });
-          }
-
-          if (
-            tag.code === "verify" &&
-            typeEntry?.value === "IMEI" &&
-            valueEntry?.value
-          ) {
-            const imei = valueEntry.value;
-            if (!/^\d{15}$/.test(imei)) {
-              result.push({
-                valid: false,
-                code: 20006,
-                description: `Item ID ${itemId} — Tag[${idx}] has invalid IMEI '${imei}'. Must be a 15-digit number.`,
-              });
-            }
-          }
-        });
-      }
-
       // Check if item ID exists
       if (!itemId) {
         result.push({
           valid: false,
-          code: 20006,
+          code: 20000,
           description: `items[${i}].id is missing in /${currentApi}`,
         });
         continue;
@@ -950,11 +931,15 @@ async function validateItems(
       if (!itemFlfllmnts || !(itemId in itemFlfllmnts)) {
         result.push({
           valid: false,
-          code: 20006,
+          code: 20000,
           description: `Item Id ${itemId} does not exist in /${previousApi}`,
         });
         continue;
       }
+
+     
+
+    
     }
 
     return result;
@@ -964,7 +949,7 @@ async function validateItems(
     );
     result.push({
       valid: false,
-      code: 20006,
+      code: 20000,
       description: `Error occurred while validating items in /${currentApi}`,
     });
     return result;
@@ -979,24 +964,28 @@ const checkOnStatusPicked = async (
   const result: ValidationError[] = [];
 
   try {
-    const { context, message } = data;
-    try {
-      await contextChecker(
-        context,
-        result,
-        constants.ON_STATUS_PICKED,
-        constants.ON_STATUS_PACKED,
-        true
-      );
-    } catch (err: any) {
-      result.push(addError(`Error checking context: ${err.message}`, 20006));
+   
 
-      return result;
-    }
+    const { context, message } = data;
+     try {
+               await contextChecker(context, result, constants.ON_STATUS_PICKED, constants.ON_STATUS_PACKED, true);
+             } catch (err: any) {
+               result.push(
+        addError(
+                       `Error checking context: ${err.message}`,
+                       20000
+                     )
+               )
+               
+               return result;
+             }
+   
 
     const flow = (await RedisService.getKey("flow")) || "2";
     const { transaction_id } = context;
     const order = message.order;
+
+   
 
     await Promise.all([
       validateOrder(order, transaction_id, state, result),

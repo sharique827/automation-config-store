@@ -1,9 +1,7 @@
 import _ from "lodash";
 import { RedisService } from "ondc-automation-cache-lib";
 import constants from "../../utils/constants";
-import {
-  isPresentInRedisSet,
-} from "../../utils/helper";
+import { isPresentInRedisSet } from "../../utils/helper";
 import { return_request_reasonCodes } from "../../utils/constants/reasonCode";
 import { contextChecker } from "../../utils/contextUtils";
 
@@ -95,7 +93,7 @@ export const checkUpdate = async (
             ...settlementDetailSet,
           ];
 
-          
+
           await RedisService.setKey(
             `${context.transaction_id}_prevPayment`,
             JSON.stringify(prevPayment),
@@ -115,7 +113,7 @@ export const checkUpdate = async (
             settlement_details?.[0]?.settlement_amount &&
             quoteTrailSum &&
             Number(settlement_details?.[0]?.settlement_amount) !==
-              Number(quoteTrailSum)
+            Number(quoteTrailSum)
           ) {
             result.push(
               addError(
@@ -137,7 +135,7 @@ export const checkUpdate = async (
       try {
         console.info(`Checking for return_request object in /${apiSeq}`);
         let return_request_obj = null;
-        let isExchange = false;
+        let isReplace = false;
         update.fulfillments.forEach((item: any) => {
           item.tags?.forEach(async (tag: any) => {
             if (tag.code === "return_request") {
@@ -170,8 +168,6 @@ export const checkUpdate = async (
                 "item_quantity",
                 "reason_id",
                 "reason_desc",
-                "condition_id",
-                "condition_desc",
               ];
               for (const field of mandatoryFields) {
                 if (!fields[field] || fields[field].trim() === "") {
@@ -245,8 +241,7 @@ export const checkUpdate = async (
               ) {
                 result.push(
                   addError(
-                    `Invalid reason_id: ${
-                      fields.reason_id
+                    `Invalid reason_id: ${fields.reason_id
                     }. Must be one of ${return_request_reasonCodes.join(
                       ", "
                     )} in ${apiSeq}`,
@@ -309,11 +304,11 @@ export const checkUpdate = async (
                   );
                 }
               }
-              if (fields.exchange) {
-                if (fields.exchange == "yes") {
-                  isExchange = true;
+              if (fields.replace) {
+                if (fields.replace == "yes") {
+                  isReplace = true;
                   await RedisService.setKey(
-                    `${context.transaction_id}_exchangeable`,
+                    `${context.transaction_id}_replaceable`,
                     "true",
                     TTL_IN_SECONDS
                   );

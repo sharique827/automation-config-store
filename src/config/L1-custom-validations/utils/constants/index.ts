@@ -79,6 +79,7 @@ export const ApiSequence = {
   CANCEL: 'cancel',
   ON_CANCEL: 'on_cancel',
   ON_CANCEL_RTO: 'on_cancel_rto',
+  ON_CANCEL_RETURN: 'on_cancel_return',
   TRACK: 'track',
   ON_TRACK: 'on_track',
   STATUS: 'status',
@@ -86,9 +87,9 @@ export const ApiSequence = {
   ON_STATUS_PACKED: 'on_status_packed',
   ON_STATUS_PICKED: 'on_status_picked',
   ON_STATUS_OUT_FOR_DELIVERY: 'on_status_out_for_delivery',
-  ON_STATUS_AGENT_ASSIGNED: 'on_status_agent_assigned',
   ON_STATUS_DELIVERED: 'on_status_delivered',
   ON_STATUS_RTO_DELIVERED: 'on_status_rto_delivered/disposed',
+  ON_STATUS_AGENT_ASSIGNED: 'on_status_agent_assigned',
   ON_UPDATE_PART_CANCEL: 'on_update_part_cancel',
   UPDATE: 'update',
   UPDATE_REVERSE_QC: 'update_reverse_qc',
@@ -548,25 +549,22 @@ export const statusArray = [
   'Cancelled',
 ]
 
-export const buyerCancellationRid = new Set(['001', '003', '006', '009', '010'])
+export const buyerCancellationRid = new Set(['051', '052', '053', '999'])
 export const buyerReturnId = new Set(['001', '002', '003', '004', '005'])
 export const rtoCancellationRid = new Set(['003', '006', '009', '010', '011', '012', '013', '014', '015', '016', '017'])
 
 export const sellerCancellationRid = new Set([
   '002',
-  '005',
-  '008',
   '011',
-  '012',
   '013',
   '014',
-  '015',
   '016',
-  '017',
   '018',
-  '019',
-  '020',
   '021',
+  '022',
+  '023',
+  '024',
+  '998',
 ])
 
 export const retailDomains = [

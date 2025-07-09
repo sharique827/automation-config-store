@@ -13,14 +13,14 @@ import {
   checkStatus,
   track,
   on_track,
-  updateRouter,
   onUpdateRouter,
+  updateRouter,
 } from "./apiTests";
 
 import { validationOutput } from "./types";
 
 export async function performL1CustomValidations(
-  payload: any,
+	payload: any,
 	action: string,
 	subscriberUrl: string,
 	allErrors = false,

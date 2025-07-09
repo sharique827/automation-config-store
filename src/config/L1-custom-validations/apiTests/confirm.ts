@@ -494,7 +494,7 @@ const validateQuote = async (
 ): Promise<void> => {
   try {
     let breakupPrice = 0;
-    quote.breakup.forEach((element: any) => {
+    quote.breakup.forEach((element: { price: { value: string } }) => {
       breakupPrice += parseFloat(element.price.value);
     });
 
@@ -506,156 +506,6 @@ const validateQuote = async (
         `Invalid response: Quoted Price ${quotePrice} does not match with Net Breakup Price ${breakupPrice} in /${constants.CONFIRM}`
       );
     }
-
-    quote.breakup.forEach((item: any) => {
-      if (item["@ondc/org/title_type"] === "offer") {
-        const tags = item.item?.tags;
-        if (!Array.isArray(tags)) {
-          addError(
-            result,
-            20006,
-            `Missing or invalid 'item.tags' in offer item`
-          );
-          return;
-        }
-
-        const requiredFinanceTerms = [
-          "subvention_type",
-          "subvention_amount",
-          "provider_tax_number",
-          "bank_account_no",
-          "ifsc_code",
-        ];
-
-        const requiredFinanceTxn = [
-          "loan_completed",
-          "down_payment",
-          "loan_amount",
-          "loan_provider",
-          "transaction_id",
-          "timestamp",
-        ];
-
-        const tagMap = new Map<string, any[]>();
-        tags.forEach((tag: any) => {
-          if (tag.code && Array.isArray(tag.list)) {
-            tagMap.set(tag.code, tag.list);
-          }
-        });
-
-        const quoteList = tagMap.get("quote");
-        if (!quoteList) {
-          addError(result, 20006, `Missing 'quote' tag in item.tags`);
-        } else if (
-          !quoteList.some(
-            (entry) => entry.code === "type" && entry.value === "item"
-          )
-        ) {
-          addError(
-            result,
-            20006,
-            `Missing or invalid 'type: item' in quote tag`
-          );
-        }
-
-        // Validate 'finance_terms' tag
-        const financeTerms = tagMap.get("finance_terms");
-        if (!financeTerms) {
-          addError(result, 20006, `Missing 'finance_terms' tag`);
-        } else {
-          requiredFinanceTerms.forEach((code) => {
-            const entry = financeTerms.find((item) => item.code === code);
-            if (!entry || !entry.value?.toString().trim()) {
-              addError(
-                result,
-                20006,
-                `Missing or empty '${code}' in finance_terms`
-              );
-            }
-          });
-
-          const subventionType = financeTerms.find(
-            (f) => f.code === "subvention_type"
-          )?.value;
-          if (
-            subventionType &&
-            !["percent", "amount"].includes(subventionType)
-          ) {
-            addError(
-              result,
-              20006,
-              `Invalid 'subvention_type': must be 'percent' or 'amount'`
-            );
-          }
-
-          const subventionAmount = financeTerms.find(
-            (f) => f.code === "subvention_amount"
-          )?.value;
-          if (subventionAmount && isNaN(parseFloat(subventionAmount))) {
-            addError(
-              result,
-              20006,
-              `Invalid 'subvention_amount': must be numeric`
-            );
-          }
-        }
-
-        const financeTxn = tagMap.get("finance_txn");
-        if (!financeTxn) {
-          addError(result, 20006, `Missing 'finance_txn' tag`);
-        } else {
-          requiredFinanceTxn.forEach((code) => {
-            const entry = financeTxn.find((item) => item.code === code);
-            if (!entry || !entry.value?.toString().trim()) {
-              addError(
-                result,
-                20006,
-                `Missing or empty '${code}' in finance_txn`
-              );
-            }
-          });
-
-          const downPayment = financeTxn.find(
-            (f) => f.code === "down_payment"
-          )?.value;
-          const loanAmount = financeTxn.find(
-            (f) => f.code === "loan_amount"
-          )?.value;
-
-          if (downPayment && isNaN(parseFloat(downPayment))) {
-            addError(result, 20006, `Invalid 'down_payment': must be numeric`);
-          }
-          if (loanAmount && isNaN(parseFloat(loanAmount))) {
-            addError(result, 20006, `Invalid 'loan_amount': must be numeric`);
-          }
-
-          const timestamp = financeTxn.find(
-            (f) => f.code === "timestamp"
-          )?.value;
-          if (timestamp && isNaN(Date.parse(timestamp))) {
-            addError(
-              result,
-              20006,
-              `Invalid 'timestamp': must be valid ISO 8601 datetime`
-            );
-          }
-
-          const loanCompleted = financeTxn.find(
-            (f) => f.code === "loan_completed"
-          )?.value;
-          if (
-            loanCompleted &&
-            !["yes", "no"].includes(loanCompleted.toLowerCase())
-          ) {
-            addError(
-              result,
-              20006,
-              `'loan_completed' must be either 'yes' or 'no'`
-            );
-          }
-        }
-      }
-    });
 
     const onSelectQuote = await getRedisValue(`${txnId}_quoteObj`);
     if (onSelectQuote) {
@@ -693,7 +543,7 @@ const validateQuote = async (
     addError(
       result,
       30019,
-      `Order Confirm Error: Error validating quote: ${err.message}, ${err.stack}`
+      `Order Confirm Error: Error validating quote: ${err.message}`
     );
   }
 };
@@ -721,7 +571,7 @@ const validatePayment = async (
     if (
       buyerFF &&
       parseFloat(payment["@ondc/org/buyer_app_finder_fee_amount"]) !==
-        parseFloat(buyerFF)
+      parseFloat(buyerFF)
     ) {
       addError(
         result,
@@ -753,14 +603,11 @@ const validatePayment = async (
         `Invalid response: settlement_details missing in /${constants.CONFIRM}`
       );
     } else {
-      if (
-        settlementDetails.settlement_counterparty !== "seller-app" &&
-        settlementDetails.settlement_counterparty !== "buyer-app"
-      ) {
+      if (settlementDetails.settlement_counterparty !== "seller-app") {
         addError(
           result,
           20006,
-          `Invalid response: settlement_counterparty must be 'seller-app' or 'buyer-app' in @ondc/org/settlement_details`
+          `Invalid response: settlement_counterparty must be 'seller-app' in @ondc/org/settlement_details`
         );
       }
 
@@ -872,6 +719,7 @@ const validateTags = async (
   result: ValidationError[]
 ): Promise<void> => {
   try {
+    console.log("🚀 ~ tags:", JSON.stringify(tags, null, 2));
     if (tags?.length) {
       const bppTermsTag = tags.find((tag: any) => tag.code === "bpp_terms");
       if (bppTermsTag) {
@@ -897,9 +745,6 @@ const validateTags = async (
 
         let tax_number: any = {};
         let provider_tax_number: any = {};
-        const np_type_on_search = await getRedisValue(
-          `${txnId}_${ApiSequence.ON_SEARCH}np_type`
-        );
 
         tagsList.forEach((e: any) => {
           if (e.code === "tax_number") {
@@ -965,43 +810,19 @@ const validateTags = async (
           );
         }
 
-        if (
-          tax_number.value?.length === 15 &&
-          provider_tax_number?.value?.length === 10 &&
-          np_type_on_search
-        ) {
-          const pan_id = tax_number.value.slice(2, 12);
-          if (
-            pan_id !== provider_tax_number.value &&
-            np_type_on_search === "ISN"
-          ) {
-            addError(
-              result,
-              20006,
-              `Invalid response: Pan_id is different in tax_number and provider_tax_number in /${constants.CONFIRM}`
-            );
-          } else if (
-            pan_id === provider_tax_number.value &&
-            np_type_on_search === "MSN"
-          ) {
-            addError(
-              result,
-              20006,
-              `Invalid response: Pan_id shouldn't be same in tax_number and provider_tax_number in /${constants.CONFIRM}`
-            );
-          }
-        }
       }
 
       const bapTermsTag = tags.find((tag: any) => tag.code === "bap_terms");
+      console.log("🚀 ~ bapTermsTag:", JSON.stringify(bapTermsTag))
+
       if (bapTermsTag) {
-        // if (!isTagsValid(tags, "bap_terms")) {
-        //   addError(
-        //     result,
-        //     20006,
-        //     `Invalid response: Tags/bap_terms should have valid gst number and fields in /${constants.CONFIRM}`
-        //   );
-        // }
+        if (!isTagsValid(tags, "bap_terms")) {
+          addError(
+            result,
+            20006,
+            `Invalid response: Tags/bap_terms should have valid gst number and fields in /${constants.CONFIRM}`
+          );
+        }
 
         const hasStaticTerms = bapTermsTag.list?.some(
           (item: any) => item.code === "static_terms"
@@ -1032,21 +853,11 @@ const validateTags = async (
           );
         }
       }
-      const initTagBapTermsArr: any =
-        (await RedisService.getKey(`${txnId}_initTagBapTerms`)) || [];
-      if (!_.isEmpty(initTagBapTermsArr)) {
-        const initTagBapTermsObj = JSON.parse(initTagBapTermsArr)?.[0];
-        const bapTermsErrors = compareObjects(initTagBapTermsObj, bapTermsTag);
 
-        bapTermsErrors?.forEach((error: string) => {
-          addError(
-            result,
-            20006,
-            `Invalid response: tags: ${error} when compared with /${constants.ON_INIT} tags.bap_terms`
-          );
-        });
-      }
       const onInitTags = await getRedisValue(`${txnId}_on_init_tags`);
+      console.log(
+        JSON.stringify(onInitTags, null, 2)
+      )
       if (onInitTags && bppTermsTag) {
         const initBppTerms = onInitTags.find(
           (tag: any) => tag.code === "bpp_terms"
@@ -1074,6 +885,7 @@ const validateTags = async (
       }
     }
   } catch (err: any) {
+
     addError(
       result,
       30019,

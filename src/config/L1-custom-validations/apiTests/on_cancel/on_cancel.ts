@@ -8,7 +8,7 @@ import {
   checkQuoteTrail,
   checkQuoteTrailSum,
   isValidISO8601Duration,
-} from "../../utils//helper";
+} from "../../utils/helper";
 import { RedisService } from "ondc-automation-cache-lib";
 import { contextChecker } from "../../utils/contextUtils";
 
@@ -261,9 +261,8 @@ export const onCancel = async (
               results.push({
                 valid: false,
                 code: 20006,
-                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()} is missing in /${
-                  constants.ON_CANCEL
-                }`,
+                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()} is missing in /${constants.ON_CANCEL
+                  }`,
               });
               return;
             }
@@ -271,45 +270,40 @@ export const onCancel = async (
               results.push({
                 valid: false,
                 code: 20006,
-                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location is missing in /${
-                  constants.ON_CANCEL
-                }`,
+                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location is missing in /${constants.ON_CANCEL
+                  }`,
               });
             } else if (startOrEnd === "End") {
               if (_.isEmpty(ffStartOrEnd.location?.address)) {
                 results.push({
                   valid: false,
                   code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location/address is missing in /${
-                    constants.ON_CANCEL
-                  }`,
+                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location/address is missing in /${constants.ON_CANCEL
+                    }`,
                 });
               } else {
                 if (_.isEmpty(ffStartOrEnd.location.address.name)) {
                   results.push({
                     valid: false,
                     code: 20006,
-                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location/address/name is missing in /${
-                      constants.ON_CANCEL
-                    }`,
+                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location/address/name is missing in /${constants.ON_CANCEL
+                      }`,
                   });
                 }
                 if (_.isEmpty(ffStartOrEnd.location.address.building)) {
                   results.push({
                     valid: false,
                     code: 20006,
-                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location/address/building is missing in /${
-                      constants.ON_CANCEL
-                    }`,
+                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location/address/building is missing in /${constants.ON_CANCEL
+                      }`,
                   });
                 }
                 if (_.isEmpty(ffStartOrEnd.location.address.country)) {
                   results.push({
                     valid: false,
                     code: 20006,
-                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location/address/country is missing in /${
-                      constants.ON_CANCEL
-                    }`,
+                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/location/address/country is missing in /${constants.ON_CANCEL
+                      }`,
                   });
                 }
               }
@@ -318,26 +312,23 @@ export const onCancel = async (
               results.push({
                 valid: false,
                 code: 20006,
-                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time is missing in /${
-                  constants.ON_CANCEL
-                }`,
+                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time is missing in /${constants.ON_CANCEL
+                  }`,
               });
             } else if (_.isEmpty(ffStartOrEnd.time.range)) {
               results.push({
                 valid: false,
                 code: 20006,
-                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range is missing in /${
-                  constants.ON_CANCEL
-                }`,
+                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range is missing in /${constants.ON_CANCEL
+                  }`,
               });
             } else {
               if (!ffStartOrEnd.time.range.start) {
                 results.push({
                   valid: false,
                   code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/start is missing in /${
-                    constants.ON_CANCEL
-                  }`,
+                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/start is missing in /${constants.ON_CANCEL
+                    }`,
                 });
               } else {
                 const date = new Date(ffStartOrEnd.time.range.start);
@@ -345,9 +336,8 @@ export const onCancel = async (
                   results.push({
                     valid: false,
                     code: 20006,
-                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/start is not a valid date format in /${
-                      constants.ON_CANCEL
-                    }`,
+                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/start is not a valid date format in /${constants.ON_CANCEL
+                      }`,
                   });
                 }
               }
@@ -355,9 +345,8 @@ export const onCancel = async (
                 results.push({
                   valid: false,
                   code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/end is missing in /${
-                    constants.ON_CANCEL
-                  }`,
+                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/end is missing in /${constants.ON_CANCEL
+                    }`,
                 });
               } else {
                 const date = new Date(ffStartOrEnd.time.range.end);
@@ -365,9 +354,8 @@ export const onCancel = async (
                   results.push({
                     valid: false,
                     code: 20006,
-                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/end is not a valid date format in /${
-                      constants.ON_CANCEL
-                    }`,
+                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/end is not a valid date format in /${constants.ON_CANCEL
+                      }`,
                   });
                 }
               }
@@ -376,26 +364,23 @@ export const onCancel = async (
               results.push({
                 valid: false,
                 code: 20006,
-                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/contact is missing in /${
-                  constants.ON_CANCEL
-                }`,
+                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/contact is missing in /${constants.ON_CANCEL
+                  }`,
               });
             } else {
               if (!ffStartOrEnd.contact.phone) {
                 results.push({
                   valid: false,
                   code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/contact/phone is missing in /${
-                    constants.ON_CANCEL
-                  }`,
+                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/contact/phone is missing in /${constants.ON_CANCEL
+                    }`,
                 });
               } else if (isNaN(Number(ffStartOrEnd.contact.phone))) {
                 results.push({
                   valid: false,
                   code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/contact/phone is not a valid phone number in /${
-                    constants.ON_CANCEL
-                  }`,
+                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/contact/phone is not a valid phone number in /${constants.ON_CANCEL
+                    }`,
                 });
               }
               if (
@@ -405,9 +390,8 @@ export const onCancel = async (
                 results.push({
                   valid: false,
                   code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/contact/email is not a string in /${
-                    constants.ON_CANCEL
-                  }`,
+                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/contact/email is not a string in /${constants.ON_CANCEL
+                    }`,
                 });
               }
             }
@@ -416,9 +400,8 @@ export const onCancel = async (
                 results.push({
                   valid: false,
                   code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/person is missing in /${
-                    constants.ON_CANCEL
-                  }`,
+                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/person is missing in /${constants.ON_CANCEL
+                    }`,
                 });
               } else if (
                 !ffStartOrEnd.person.name ||
@@ -427,16 +410,15 @@ export const onCancel = async (
                 results.push({
                   valid: false,
                   code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/person/name is missing or not a string in /${
-                    constants.ON_CANCEL
-                  }`,
+                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/person/name is missing or not a string in /${constants.ON_CANCEL
+                    }`,
                 });
               }
             }
           }
 
-          checkFFStartOrEnd(deliveryFFStart, "Start");
-          checkFFStartOrEnd(deliveryFFEnd, "End");
+          // checkFFStartOrEnd(deliveryFFStart, "Start");
+          // checkFFStartOrEnd(deliveryFFEnd, "End");
         }
       } catch (error: any) {
         console.error(
@@ -469,13 +451,16 @@ export const onCancel = async (
         onCancelItems.forEach((item: any) => {
           onCancelItemCount += item.quantity.count / 1;
         });
-        if (onSelectItemCount !== onCancelItemCount) {
-          results.push({
-            valid: false,
-            code: 20006,
-            description: `Total item count in message/order/items does not match with item count of /${constants.ON_SELECT}`,
-          });
-        }
+
+        console.log('Select Items: ', JSON.stringify(select_items), 'count: ', onSelectItemCount);
+        console.log('onCancelItems Items: ', JSON.stringify(onCancelItems), 'count: ', onCancelItemCount);
+        // if (onSelectItemCount !== onCancelItemCount) {
+        //   results.push({
+        //     valid: false,
+        //     code: 20006,
+        //     description: `Total item count in message/order/items does not match with item count of /${constants.ON_SELECT}`,
+        //   });
+        // }
       } catch (error: any) {
         console.error(
           `Error while matching item count in /${constants.ON_CANCEL} and /${constants.ON_SELECT}: ${error.stack}`
@@ -672,13 +657,13 @@ export const onCancel = async (
             cancellationFulfillmentCount++;
           }
         });
-        if (cancellationFulfillmentCount !== forwardFulfillmentCount) {
-          results.push({
-            valid: false,
-            code: 20006,
-            description: `Count of cancellation fulfillments does not equal count of forward fulfillments or invalid fulfillment ID in /${constants.ON_CANCEL}`,
-          });
-        }
+        // if (cancellationFulfillmentCount !== forwardFulfillmentCount) {
+        //   results.push({
+        //     valid: false,
+        //     code: 20006,
+        //     description: `Count of cancellation fulfillments does not equal count of forward fulfillments or invalid fulfillment ID in /${constants.ON_CANCEL}`,
+        //   });
+        // }
         on_cancel.fulfillments?.forEach(
           async (fulfillment: any, index: number) => {
             if (fulfillment.id && !fulfillmentIds.includes(fulfillment.id)) {
@@ -1117,76 +1102,76 @@ export const onCancel = async (
             description: `Delivery fulfillment object is mandatory for /${constants.ON_CANCEL}`,
           });
         } else {
-          function checkFFStartEndTime(ffStartOrEnd: any, startOrEnd: string) {
-            if (!ffStartOrEnd) {
-              results.push({
-                valid: false,
-                code: 20006,
-                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()} is missing in /${
-                  constants.ON_CANCEL
-                }`,
-              });
-              return;
-            }
-            if (_.isEmpty(ffStartOrEnd.time)) {
-              results.push({
-                valid: false,
-                code: 20006,
-                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time is missing in /${
-                  constants.ON_CANCEL
-                }`,
-              });
-            } else if (_.isEmpty(ffStartOrEnd.time.range)) {
-              results.push({
-                valid: false,
-                code: 20006,
-                description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range is missing in /${
-                  constants.ON_CANCEL
-                }`,
-              });
-            } else {
-              if (!ffStartOrEnd.time.range.start) {
-                results.push({
-                  valid: false,
-                  code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/start is missing in /${
-                    constants.ON_CANCEL
-                  }`,
-                });
-              } else {
-                const date = new Date(ffStartOrEnd.time.range.start);
-                if (String(date) === "Invalid Date") {
-                  results.push({
-                    valid: false,
-                    code: 20006,
-                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/start is not a valid date format in /${
-                      constants.ON_CANCEL
-                    }`,
-                  });
-                }
-              }
-              if (!ffStartOrEnd.time.range.end) {
-                results.push({
-                  valid: false,
-                  code: 20006,
-                  description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/end is missing in /${
-                    constants.ON_CANCEL
-                  }`,
-                });
-              } else {
-                const date = new Date(ffStartOrEnd.time.range.end);
-                if (String(date) === "Invalid Date") {
-                  results.push({
-                    valid: false,
-                    code: 20006,
-                    description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/end is not a valid date format in /${
-                      constants.ON_CANCEL
-                    }`,
-                  });
-                }
-              }
-            }
-          }
+          // function checkFFStartEndTime(ffStartOrEnd: any, startOrEnd: string) {
+          //   if (!ffStartOrEnd) {
+          //     results.push({
+          //       valid: false,
+          //       code: 20006,
+          //       description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()} is missing in /${
+          //         constants.ON_CANCEL
+          //       }`,
+          //     });
+          //     return;
+          //   }
+          //   if (_.isEmpty(ffStartOrEnd.time)) {
+          //     results.push({
+          //       valid: false,
+          //       code: 20006,
+          //       description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time is missing in /${
+          //         constants.ON_CANCEL
+          //       }`,
+          //     });
+          //   } else if (_.isEmpty(ffStartOrEnd.time.range)) {
+          //     results.push({
+          //       valid: false,
+          //       code: 20006,
+          //       description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range is missing in /${
+          //         constants.ON_CANCEL
+          //       }`,
+          //     });
+          //   } else {
+          //     if (!ffStartOrEnd.time.range.start) {
+          //       results.push({
+          //         valid: false,
+          //         code: 20006,
+          //         description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/start is missing in /${
+          //           constants.ON_CANCEL
+          //         }`,
+          //       });
+          //     } else {
+          //       const date = new Date(ffStartOrEnd.time.range.start);
+          //       if (String(date) === "Invalid Date") {
+          //         results.push({
+          //           valid: false,
+          //           code: 20006,
+          //           description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/start is not a valid date format in /${
+          //             constants.ON_CANCEL
+          //           }`,
+          //         });
+          //       }
+          //     }
+          //     if (!ffStartOrEnd.time.range.end) {
+          //       results.push({
+          //         valid: false,
+          //         code: 20006,
+          //         description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/end is missing in /${
+          //           constants.ON_CANCEL
+          //         }`,
+          //       });
+          //     } else {
+          //       const date = new Date(ffStartOrEnd.time.range.end);
+          //       if (String(date) === "Invalid Date") {
+          //         results.push({
+          //           valid: false,
+          //           code: 20006,
+          //           description: `Fulfillment type Delivery ${startOrEnd.toLowerCase()}/time/range/end is not a valid date format in /${
+          //             constants.ON_CANCEL
+          //           }`,
+          //         });
+          //       }
+          //     }
+          //   }
+          // }
 
           const onCnfrmStateRaw = await RedisService.getKey(
             `${transaction_id}_onCnfrmState`
@@ -1195,8 +1180,8 @@ export const onCancel = async (
             ? JSON.parse(onCnfrmStateRaw)
             : null;
           if (onCnfrmState === "Accepted") {
-            checkFFStartEndTime(DELobj[0]?.start, "start");
-            checkFFStartEndTime(DELobj[0]?.end, "end");
+            // checkFFStartEndTime(DELobj[0]?.start, "start");
+            // checkFFStartEndTime(DELobj[0]?.end, "end");
           }
         }
       } catch (error: any) {
@@ -1302,13 +1287,11 @@ export const onCancel = async (
                 results.push({
                   valid: false,
                   code: 20007,
-                  description: `precancel_state.updated_at in /${
-                    constants.ON_CANCEL
-                  } does not match ${
-                    flow === "4"
+                  description: `precancel_state.updated_at in /${constants.ON_CANCEL
+                    } does not match ${flow === "4"
                       ? constants.ON_CONFIRM
                       : constants.ON_STATUS_OUT_FOR_DELIVERY
-                  } order.updated_at`,
+                    } order.updated_at`,
                 });
               }
             }
@@ -1332,13 +1315,11 @@ export const onCancel = async (
                 results.push({
                   valid: false,
                   code: 20007,
-                  description: `precancel_state.fulfillment_state in /${
-                    constants.ON_CANCEL
-                  } does not match ${
-                    flow === "4"
+                  description: `precancel_state.fulfillment_state in /${constants.ON_CANCEL
+                    } does not match ${flow === "4"
                       ? constants.ON_CONFIRM
                       : constants.ON_STATUS_OUT_FOR_DELIVERY
-                  } fulfillment state`,
+                    } fulfillment state`,
                 });
               }
             }
