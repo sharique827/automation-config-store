@@ -25,7 +25,8 @@ export async function performL1CustomValidations(
 	subscriberUrl: string,
 	allErrors = false,
 	externalData = {}
-): Promise<validationOutput> {
+):  Promise<validationOutput> {
+  payload = structuredClone(payload)
   console.log("Performing custom L1 validations for action: " + action);
   let result: any = [];
   switch (action) {
