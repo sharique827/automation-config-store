@@ -65,25 +65,6 @@ const onSelect = async (data: any) => {
     const contextRes: any = checkContext(context, constants.ON_SELECT);
     const result: any[] = [];
 
-    try {
-        const previousCallPresent = await addActionToRedisSet(
-            context.transaction_id,
-            ApiSequence.SELECT,
-            ApiSequence.ON_SELECT
-        );
-        if (!previousCallPresent) {
-            result.push({
-                valid: false,
-                code: 20000,
-                description: `Previous call doesn't exist`,
-            });
-            return result;
-        }
-    } catch (error: any) {
-        console.error(
-            `!!Error while previous action call /${constants.ON_SELECT}, ${error.stack}`
-        );
-    }
 
     const checkBap = checkBppIdOrBapId(context.bap_id);
     const checkBpp = checkBppIdOrBapId(context.bpp_id);

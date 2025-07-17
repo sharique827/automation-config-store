@@ -71,25 +71,7 @@ const confirm = async (data: any) => {
 
     const contextRes: any = checkContext(context, constants.CONFIRM);
 
-    try {
-      const previousCallPresent = await addActionToRedisSet(
-        context.transaction_id,
-        ApiSequence.ON_INIT,
-        ApiSequence.CONFIRM
-      );
-      if (!previousCallPresent) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Previous call doesn't exist`,
-        });
-        return result;
-      }
-    } catch (error: any) {
-      console.error(
-        `!!Error while previous action call /${constants.CONFIRM}, ${error.stack}`
-      );
-    }
+  
 
     const checkBap = checkBppIdOrBapId(context.bap_id);
     const checkBpp = checkBppIdOrBapId(context.bpp_id);

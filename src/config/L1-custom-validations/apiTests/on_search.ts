@@ -72,26 +72,6 @@ export default async function onSearch(
 
     const transaction_id = context?.transaction_id;
 
-    try {
-      const previousCallPresent = await addActionToRedisSet(
-        context.transaction_id,
-        ApiSequence.SEARCH,
-        ApiSequence.ON_SEARCH
-      );
-      if (!previousCallPresent) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Previous call doesn't exist`,
-        });
-        return result;
-      }
-
-    } catch (error: any) {
-      console.error(
-        `!!Error while previous action call /${constants.ON_SEARCH}, ${error.stack}`
-      );
-    }
 
     await RedisService.setKey(
       `${transaction_id}_${ApiSequence.ON_SEARCH}_context`,
@@ -124,9 +104,6 @@ export default async function onSearch(
         addError(20006, err.description || "Context validation failed")
       );
     }
-
-    validateBapUri(context.bap_uri, context.bap_id, result, addError);
-    validateBppUri(context.bpp_uri, context.bpp_id, result, addError);
 
     if (context.transaction_id === context.message_id) {
       addError(
@@ -223,23 +200,6 @@ export default async function onSearch(
         `Error while checking customizations for items, ${error.stack}`
       );
     }
-
-    try {
-      console.info(
-        `Comparing Message Ids of /${constants.SEARCH} and /${constants.ON_SEARCH}`
-      );
-      if (!_.isEqual(searchContext.message_id, context.message_id)) {
-        addError(
-          20006,
-          `Message Id for /${constants.SEARCH} and /${constants.ON_SEARCH} api should be same`
-        );
-      }
-    } catch (error: any) {
-      console.info(
-        `Error while comparing message ids for /${constants.SEARCH} and /${constants.ON_SEARCH} api, ${error.stack}`
-      );
-    }
-
     const onSearchCatalog: any = message.catalog;
     const onSearchFFIdsArray: any = [];
     const prvdrsId = new Set();
@@ -599,10 +559,6 @@ export default async function onSearch(
                                 `parent_category_id should be empty string while type is ${item.value}`
                               );
                             }
-                            addError(
-                              20006,
-                              `parent_category_id should be present while type is ${item.value}`
-                            );
                           } else if (
                             category.parent_category_id &&
                             (item.value === "custom_menu" ||
@@ -1373,15 +1329,12 @@ export default async function onSearch(
                       if (
                         !qualifierBuyXgetY ||
                         !qualifierBuyXgetY.list.some(
-                          (item: any) => item.code === "min_value"
-                        ) ||
-                        !qualifierBuyXgetY.list.some(
                           (item: any) => item.code === "item_count"
                         )
                       ) {
                         addError(
                           20006,
-                          `'qualifier' tag must include 'min_value' and 'item_count' for offers[${offerIndex}] when offer.descriptor.code = ${offer.descriptor.code}`
+                          `'qualifier' tag must include 'item_count' for offers[${offerIndex}] when offer.descriptor.code = ${offer.descriptor.code}`
                         );
                       }
 

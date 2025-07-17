@@ -1158,25 +1158,6 @@ const onConfirm = async (data: any): Promise<ValidationError[]> => {
       return result;
     }
 
-    try {
-      const previousCallPresent = await addActionToRedisSet(
-        context.transaction_id,
-        ApiSequence.CONFIRM,
-        ApiSequence.ON_CONFIRM
-      );
-      if (!previousCallPresent) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Previous call doesn't exist`,
-        });
-        return result;
-      }
-    } catch (error: any) {
-      console.error(
-        `!!Error while previous action call /${constants.ON_CONFIRM}, ${error.stack}`
-      );
-    }
 
     const { transaction_id } = context;
     const order = message.order;
