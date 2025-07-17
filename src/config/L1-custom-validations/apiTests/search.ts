@@ -55,24 +55,6 @@ export default async function search(payload: any): Promise<ValidationOutput> {
       return result;
     }
 
-    try {
-      const previousCallPresent = await addActionToRedisSet(
-        context.transaction_id,
-        ApiSequence.SEARCH,
-        ApiSequence.SEARCH
-      );
-      if (!previousCallPresent) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Previous call doesn't exist`,
-        });
-      }
-    } catch (error: any) {
-      console.error(
-        `!!Error while previous action call /${constants.SEARCH}, ${error.stack}`
-      );
-    }
 
     // Validate message.intent
     const { intent } = message;
