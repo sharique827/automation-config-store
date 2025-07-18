@@ -599,10 +599,7 @@ export default async function onSearch(
                                 `parent_category_id should be empty string while type is ${item.value}`
                               );
                             }
-                            addError(
-                              20006,
-                              `parent_category_id should be present while type is ${item.value}`
-                            );
+                            
                           } else if (
                             category.parent_category_id &&
                             (item.value === "custom_menu" ||
