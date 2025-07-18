@@ -2285,6 +2285,11 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Item"
+        cancellation_terms:
+          description: Cancellation terms of this item
+          type: array
+          items:
+            $ref: "#/components/schemas/CancellationTerm"
         exp:
           type: string
           description: Time after which catalog has to be refreshed
