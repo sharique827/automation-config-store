@@ -907,54 +907,54 @@ const onInit = async (data: any) => {
       );
     }
 
-    try {
-      console.info(
-        `Checking Quote Object in /${constants.ON_SELECT} and /${constants.ON_INIT}`
-      );
-      const on_select_quoteRaw = await RedisService.getKey(
-        `${transaction_id}_quoteObj`
-      );
-      const on_select_quote = on_select_quoteRaw
-        ? JSON.parse(on_select_quoteRaw)
-        : null;
+    // try {
+    //   console.info(
+    //     `Checking Quote Object in /${constants.ON_SELECT} and /${constants.ON_INIT}`
+    //   );
+    //   const on_select_quoteRaw = await RedisService.getKey(
+    //     `${transaction_id}_quoteObj`
+    //   );
+    //   const on_select_quote = on_select_quoteRaw
+    //     ? JSON.parse(on_select_quoteRaw)
+    //     : null;
 
-      console.log(
-        "quoteDiff",
-        JSON.stringify(on_select_quote),
-        JSON.stringify(on_init.quote)
-      );
-      const quoteErrors = compareQuoteObjects(
-        on_select_quote,
-        on_init.quote,
-        constants.ON_SELECT,
-        constants.ON_INIT
-      );
-      const hasItemWithQuantity = _.some(on_init.quote.breakup, (item) =>
-        _.has(item, "item.quantity")
-      );
-      if (hasItemWithQuantity) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Extra attribute Quantity provided in quote object i.e not supposed to be provided after on_select so invalid quote object`,
-        });
-      } else if (quoteErrors) {
-        let i = 0;
-        const len = quoteErrors.length;
-        while (i < len) {
-          result.push({
-            valid: false,
-            code: 20000,
-            description: `${quoteErrors[i]}`,
-          });
-          i++;
-        }
-      }
-    } catch (error: any) {
-      console.error(
-        `!!Error while checking quote object in /${constants.ON_SELECT} and /${constants.ON_INIT}`
-      );
-    }
+    //   console.log(
+    //     "quoteDiff",
+    //     JSON.stringify(on_select_quote),
+    //     JSON.stringify(on_init.quote)
+    //   );
+    //   const quoteErrors = compareQuoteObjects(
+    //     on_select_quote,
+    //     on_init.quote,
+    //     constants.ON_SELECT,
+    //     constants.ON_INIT
+    //   );
+    //   const hasItemWithQuantity = _.some(on_init.quote.breakup, (item) =>
+    //     _.has(item, "item.quantity")
+    //   );
+    //   if (hasItemWithQuantity) {
+    //     result.push({
+    //       valid: false,
+    //       code: 20000,
+    //       description: `Extra attribute Quantity provided in quote object i.e not supposed to be provided after on_select so invalid quote object`,
+    //     });
+    //   } else if (quoteErrors) {
+    //     let i = 0;
+    //     const len = quoteErrors.length;
+    //     while (i < len) {
+    //       result.push({
+    //         valid: false,
+    //         code: 20000,
+    //         description: `${quoteErrors[i]}`,
+    //       });
+    //       i++;
+    //     }
+    //   }
+    // } catch (error: any) {
+    //   console.error(
+    //     `!!Error while checking quote object in /${constants.ON_SELECT} and /${constants.ON_INIT}`
+    //   );
+    // }
 
     try {
       if (on_init.tags) {
