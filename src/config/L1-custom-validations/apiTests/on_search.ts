@@ -1329,21 +1329,6 @@ export default async function onSearch(
 
                   switch (offer.descriptor?.code) {
                     case "discount":
-                      const qualifierDiscount = tags.find(
-                        (tag: any) => tag.code === "qualifier"
-                      );
-                      if (
-                        !qualifierDiscount ||
-                        !qualifierDiscount.list.some(
-                          (item: any) => item.code === "min_value"
-                        )
-                      ) {
-                        addError(
-                          20006,
-                          `'qualifier' tag must include 'min_value' for offers[${offerIndex}] when offer.descriptor.code = ${offer.descriptor.code}`
-                        );
-                      }
-
                       const benefitDiscount = tags.find(
                         (tag: any) => tag.code === "benefit"
                       );
@@ -1364,24 +1349,6 @@ export default async function onSearch(
                       break;
 
                     case "buyXgetY":
-                      const qualifierBuyXgetY = tags.find(
-                        (tag: any) => tag.code === "qualifier"
-                      );
-                      if (
-                        !qualifierBuyXgetY ||
-                        !qualifierBuyXgetY.list.some(
-                          (item: any) => item.code === "min_value"
-                        ) ||
-                        !qualifierBuyXgetY.list.some(
-                          (item: any) => item.code === "item_count"
-                        )
-                      ) {
-                        addError(
-                          20006,
-                          `'qualifier' tag must include 'min_value' and 'item_count' for offers[${offerIndex}] when offer.descriptor.code = ${offer.descriptor.code}`
-                        );
-                      }
-
                       const benefitBuyXgetY = tags.find(
                         (tag: any) => tag.code === "benefit"
                       );
@@ -1399,21 +1366,6 @@ export default async function onSearch(
                       break;
 
                     case "freebie":
-                      const qualifierFreebie = tags.find(
-                        (tag: any) => tag.code === "qualifier"
-                      );
-                      if (
-                        !qualifierFreebie ||
-                        !qualifierFreebie.list.some(
-                          (item: any) => item.code === "min_value"
-                        )
-                      ) {
-                        addError(
-                          20006,
-                          `'qualifier' tag must include 'min_value' for offers[${offerIndex}] when offer.descriptor.code = ${offer.descriptor.code}`
-                        );
-                      }
-
                       const benefitFreebie = tags.find(
                         (tag: any) => tag.code === "benefit"
                       );
@@ -1437,21 +1389,6 @@ export default async function onSearch(
                       break;
 
                     case "slab":
-                      const qualifierSlab = tags.find(
-                        (tag: any) => tag.code === "qualifier"
-                      );
-                      if (
-                        !qualifierSlab ||
-                        !qualifierSlab.list.some(
-                          (item: any) => item.code === "min_value"
-                        )
-                      ) {
-                        addError(
-                          20006,
-                          `'qualifier' tag must include 'min_value' for offers[${offerIndex}] when offer.descriptor.code = ${offer.descriptor.code}`
-                        );
-                      }
-
                       const benefitSlab = tags.find(
                         (tag: any) => tag.code === "benefit"
                       );
@@ -1475,24 +1412,6 @@ export default async function onSearch(
                       break;
 
                     case "combo":
-                      const qualifierCombo = tags.find(
-                        (tag: any) => tag.code === "qualifier"
-                      );
-                      if (
-                        !qualifierCombo ||
-                        !qualifierCombo.list.some(
-                          (item: any) => item.code === "min_value"
-                        ) ||
-                        !qualifierCombo.list.some(
-                          (item: any) => item.code === "item_id"
-                        )
-                      ) {
-                        addError(
-                          20006,
-                          `'qualifier' tag must include 'min_value' and 'item_id' for offers[${offerIndex}] when offer.descriptor.code = ${offer.descriptor.code}`
-                        );
-                      }
-
                       const benefitCombo = tags.find(
                         (tag: any) => tag.code === "benefit"
                       );
@@ -1516,21 +1435,6 @@ export default async function onSearch(
                       break;
 
                     case "delivery":
-                      const qualifierDelivery = tags.find(
-                        (tag: any) => tag.code === "qualifier"
-                      );
-                      if (
-                        !qualifierDelivery ||
-                        !qualifierDelivery.list.some(
-                          (item: any) => item.code === "min_value"
-                        )
-                      ) {
-                        addError(
-                          20006,
-                          `'qualifier' tag must include 'min_value' for offers[${offerIndex}] when offer.descriptor.code = ${offer.descriptor.code}`
-                        );
-                      }
-
                       const benefitDelivery = tags.find(
                         (tag: any) => tag.code === "benefit"
                       );
