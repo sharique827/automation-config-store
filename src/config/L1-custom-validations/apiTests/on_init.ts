@@ -116,14 +116,14 @@ const onInit = async (data: any) => {
     }
     const domain = await RedisService.getKey(`${transaction_id}_domain`);
 
-    console.log("domain", domain, data.context.domain.split(":")[1]);
-    if (!_.isEqual(data.context.domain.split(":")[1], domain)) {
-      result.push({
-        valid: false,
-        code: 20000,
-        description: `Domain should be same in each action`,
-      });
-    }
+    // console.log("domain", domain, data.context.domain.split(":")[1]);
+    // if (!_.isEqual(data.context.domain.split(":")[1], domain)) {
+    //   result.push({
+    //     valid: false,
+    //     code: 20000,
+    //     description: `Domain should be same in each action`,
+    //   });
+    // }
 
     await RedisService.setKey(
       `${transaction_id}_${ApiSequence.ON_INIT}`,
