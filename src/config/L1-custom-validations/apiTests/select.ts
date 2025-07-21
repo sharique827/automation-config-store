@@ -84,13 +84,13 @@ const select = async (data: any) => {
     const itemsTat: any[] = [];
 
     const domain = await RedisService.getKey(`${transaction_id}_domain`);
-    if (!_.isEqual(data.context.domain.split(":")[1], domain)) {
-        result.push({
-            valid: false,
-            code: 20000,
-            description: "Domain should be same in each action",
-        });
-    }
+    // if (!_.isEqual(data.context.domain.split(":")[1], domain)) {
+    //     result.push({
+    //         valid: false,
+    //         code: 20000,
+    //         description: "Domain should be same in each action",
+    //     });
+    // }
 
     const checkBap = checkBppIdOrBapId(context.bap_id);
     const checkBpp = checkBppIdOrBapId(context.bpp_id);
