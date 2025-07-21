@@ -736,68 +736,68 @@ const onInit = async (data: any) => {
       );
     }
 
-    try {
-      console.info(
-        `Checking Buyer App finder fee amount in /${constants.ON_INIT}`
-      );
-      const buyerFFRaw = await RedisService.getKey(
-        `${transaction_id}_${ApiSequence.SEARCH}_buyerFF`
-      );
-      const buyerFF = buyerFFRaw ? JSON.parse(buyerFFRaw) : null;
-      if (
-        !on_init.payment["@ondc/org/buyer_app_finder_fee_amount"] ||
-        parseFloat(on_init.payment["@ondc/org/buyer_app_finder_fee_amount"]) !=
-        buyerFF
-      ) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Buyer app finder fee can't change in /${constants.ON_INIT}`,
-        });
-      }
-    } catch (error: any) {
-      console.error(
-        `!!Error while checking buyer app finder fee in /${constants.ON_INIT}, ${error.stack}`
-      );
-    }
+    // try {
+    //   console.info(
+    //     `Checking Buyer App finder fee amount in /${constants.ON_INIT}`
+    //   );
+    //   const buyerFFRaw = await RedisService.getKey(
+    //     `${transaction_id}_${ApiSequence.SEARCH}_buyerFF`
+    //   );
+    //   const buyerFF = buyerFFRaw ? JSON.parse(buyerFFRaw) : null;
+    //   if (
+    //     !on_init.payment["@ondc/org/buyer_app_finder_fee_amount"] ||
+    //     parseFloat(on_init.payment["@ondc/org/buyer_app_finder_fee_amount"]) !=
+    //     buyerFF
+    //   ) {
+    //     result.push({
+    //       valid: false,
+    //       code: 20000,
+    //       description: `Buyer app finder fee can't change in /${constants.ON_INIT}`,
+    //     });
+    //   }
+    // } catch (error: any) {
+    //   console.error(
+    //     `!!Error while checking buyer app finder fee in /${constants.ON_INIT}, ${error.stack}`
+    //   );
+    // }
 
-    try {
-      console.info(`Checking Settlement basis in /${constants.ON_INIT}`);
-      const validSettlementBasis = ["delivery", "shipment"];
-      const settlementBasis = on_init.payment["@ondc/org/settlement_basis"];
-      if (!validSettlementBasis.includes(settlementBasis)) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Invalid settlement basis in /${constants.ON_INIT
-            }. Expected one of: ${validSettlementBasis.join(", ")}`,
-        });
-      }
-    } catch (error: any) {
-      console.error(
-        `!!Error while checking settlement basis in /${constants.ON_INIT}, ${error.stack}`
-      );
-    }
+    // try {
+    //   console.info(`Checking Settlement basis in /${constants.ON_INIT}`);
+    //   const validSettlementBasis = ["delivery", "shipment"];
+    //   const settlementBasis = on_init.payment["@ondc/org/settlement_basis"];
+    //   if (!validSettlementBasis.includes(settlementBasis)) {
+    //     result.push({
+    //       valid: false,
+    //       code: 20000,
+    //       description: `Invalid settlement basis in /${constants.ON_INIT
+    //         }. Expected one of: ${validSettlementBasis.join(", ")}`,
+    //     });
+    //   }
+    // } catch (error: any) {
+    //   console.error(
+    //     `!!Error while checking settlement basis in /${constants.ON_INIT}, ${error.stack}`
+    //   );
+    // }
 
-    try {
-      console.info(`Checking Settlement Window in /${constants.ON_INIT}`);
-      const validSettlementWindow = {
-        code: "SETTLEMENT_WINDOW",
-        type: "time",
-        value:
-          /^P(?=\d|T\d)(\d+Y)?(\d+M)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/,
-      };
-      const settlementWindow = on_init.payment["@ondc/org/settlement_window"];
-      if (!validSettlementWindow.value.test(settlementWindow)) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Invalid settlement window in /${constants.ON_INIT}. Expected format: PTd+[MH] (e.g., PT1H, PT30M).`,
-        });
-      }
-    } catch (err: any) {
-      console.error("Error while checking settlement window: " + err.message);
-    }
+    // try {
+    //   console.info(`Checking Settlement Window in /${constants.ON_INIT}`);
+    //   const validSettlementWindow = {
+    //     code: "SETTLEMENT_WINDOW",
+    //     type: "time",
+    //     value:
+    //       /^P(?=\d|T\d)(\d+Y)?(\d+M)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/,
+    //   };
+    //   const settlementWindow = on_init.payment["@ondc/org/settlement_window"];
+    //   if (!validSettlementWindow.value.test(settlementWindow)) {
+    //     result.push({
+    //       valid: false,
+    //       code: 20000,
+    //       description: `Invalid settlement window in /${constants.ON_INIT}. Expected format: PTd+[MH] (e.g., PT1H, PT30M).`,
+    //     });
+    //   }
+    // } catch (err: any) {
+    //   console.error("Error while checking settlement window: " + err.message);
+    // }
 
     try {
       console.info(`checking payment object in /${constants.ON_INIT}`);
