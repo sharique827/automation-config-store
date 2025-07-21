@@ -91,19 +91,6 @@ const onSelect = async (data: any) => {
         );
     }
 
-    if (
-        !_.isEqual(
-            data.context.domain.split(":")[1],
-            await RedisService.getKey(`${transaction_id}_domain`)
-        )
-    ) {
-        result.push({
-            valid: false,
-            code: 20000,
-            description: `Domain should be same in each action`,
-        });
-    }
-
     if (checkBap) {
         result.push({
             valid: false,
@@ -521,44 +508,6 @@ const onSelect = async (data: any) => {
     let onSelectItemsPrice = 0;
 
     try {
-        console.info(
-            `Comparing count of items in ${constants.SELECT} and ${constants.ON_SELECT}`
-        );
-        const itemsIdListRaw = await RedisService.getKey(
-            `${transaction_id}_itemsIdList`
-        );
-        const itemsIdList = itemsIdListRaw ? JSON.parse(itemsIdListRaw) : null;
-        if (on_select.quote) {
-            on_select.quote.breakup.forEach((item: { [x: string]: any }) => {
-                if (item["@ondc/org/item_id"] in itemsIdList) {
-                    if (
-                        item["@ondc/org/title_type"] === "item" &&
-                        itemsIdList[item["@ondc/org/item_id"]] !=
-                        item["@ondc/org/item_quantity"].count
-                    ) {
-                        result.push({
-                            valid: false,
-                            code: 20000,
-                            description: `Count of item with id: ${item["@ondc/org/item_id"]} does not match in ${constants.SELECT} & ${constants.ON_SELECT}`,
-                        });
-                    }
-                }
-            });
-        } else {
-            console.error(`Missing quote object in ${constants.ON_SELECT}`);
-            result.push({
-                valid: false,
-                code: 20000,
-                description: `Missing quote object in ${constants.ON_SELECT}`,
-            });
-        }
-    } catch (error: any) {
-        console.error(
-            `!!Error while comparing count items in ${constants.SELECT} and ${constants.ON_SELECT}, ${error.stack}`
-        );
-    }
-
-    try {
         const itemPrices = new Map();
         on_select.quote.breakup.forEach(
             (item: { [x: string]: any; price: { value: any } }) => {
@@ -580,45 +529,6 @@ const onSelect = async (data: any) => {
     } catch (error: any) {
         console.error(
             `!!Error while checking and comparing the quoted price in /${constants.ON_SELECT}, ${error.stack}`
-        );
-    }
-
-    try {
-        console.info(
-            `Checking available and maximum count in ${constants.ON_SELECT}`
-        );
-        on_select.quote.breakup.forEach((element: any, i: any) => {
-            const itemId = element["@ondc/org/item_id"];
-            if (
-                element.item?.quantity &&
-                element.item.quantity?.available &&
-                element.item.quantity?.maximum &&
-                typeof element.item.quantity.available.count === "string" &&
-                typeof element.item.quantity.maximum.count === "string"
-            ) {
-                const availCount = parseInt(element.item.quantity.available.count, 10);
-                const maxCount = parseInt(element.item.quantity.maximum.count, 10);
-                if (isNaN(availCount) || isNaN(maxCount) || availCount <= 0) {
-                    result.push({
-                        valid: false,
-                        code: 20000,
-                        description: `Available and Maximum count should be greater than 0 for item id: ${itemId} in quote.breakup[${i}]`,
-                    });
-                } else if (
-                    element.item.quantity.available.count.trim() === "" ||
-                    element.item.quantity.maximum.count.trim() === ""
-                ) {
-                    result.push({
-                        valid: false,
-                        code: 20000,
-                        description: `Available or Maximum count should not be empty string for item id: ${itemId} in quote.breakup[${i}]`,
-                    });
-                }
-            }
-        });
-    } catch (error: any) {
-        console.error(
-            `Error while checking available and maximum count in ${constants.ON_SELECT}, ${error.stack}`
         );
     }
 
@@ -741,7 +651,7 @@ const onSelect = async (data: any) => {
             console.info(
                 `Matching price breakup of items ${onSelectItemsPrice} (/${constants.ON_SELECT}) with selected items price ${selectedPrice} (${constants.SELECT})`
             );
-            if (
+            if (selectedPrice &&
                 typeof selectedPrice === "number" &&
                 onSelectItemsPrice !== selectedPrice
             ) {

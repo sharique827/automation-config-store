@@ -197,27 +197,14 @@ const select = async (data: any) => {
         const itemsOnSearch = itemsOnSearchRaw ? JSON.parse(itemsOnSearchRaw) : [];
         console.log("itemsOnSearchRaw", itemsOnSearchRaw);
 
-        if (!itemsOnSearch?.length) {
-            result.push({
-                valid: false,
-                code: 20000,
-                description: `No Items found on ${constants.ON_SEARCH} API`,
-            });
-        }
-
-        select.items.forEach(
-            (item: { id: string | number; quantity: { count: number } }) => {
-                if (!itemsOnSearch?.includes(item.id)) {
-                    result.push({
-                        valid: false,
-                        code: 20000,
-                        description: `Invalid item found in /${constants.SELECT} id: ${item.id}`,
-                    });
-                }
-                itemIdArray.push(item.id);
-                itemsOnSelect.push(item.id);
-                itemsIdList[item.id] = item.quantity.count;
+        select.items.forEach((item: { id: string | number; quantity: { count: number } }) => {
+            if (itemsOnSearch.length > 0 && !itemsOnSearch?.includes(item.id.toString())) {
+                addError(result, 30004, `Item not found - The item ID provided in the request was not found: ${item.id}`);
             }
+            itemIdArray.push(item.id.toString());
+            itemsOnSelect.push(item.id.toString());
+            itemsIdList[item.id] = item.quantity.count;
+        }
         );
 
         await RedisService.setKey(
@@ -316,7 +303,7 @@ const select = async (data: any) => {
                 code: 20000,
                 description: `provider with provider.id: ${select.provider.id} does not exist in on_search`,
             });
-        } else {
+        }
             providerOnSelect = provider[0];
 
             await RedisService.setKey(
@@ -329,7 +316,16 @@ const select = async (data: any) => {
                 JSON.stringify(providerOnSelect?.descriptor?.name),
                 TTL_IN_SECONDS
             );
-        }
+            if (providerOnSelect?.locations[0]?.id !== select.provider?.locations[0]?.id) {
+                addError(result,
+                    30002,
+                    `provider.locations[0].id ${providerOnSelect.locations[0].id}, Provider location not found - The provider location ID provided in the request was not found in /${constants.ON_SEARCH} and /${constants.SELECT}`
+                );
+            }
+
+            if (providerOnSelect?.time && providerOnSelect?.time?.label === "disable") {
+                addError(result, 40000, `provider with provider.id: ${providerOnSelect.id} was disabled in on_search`);
+            }
     } catch (error: any) {
         console.error(
             `Error while checking for valid provider in /${constants.ON_SEARCH} and /${constants.SELECT}, ${error.stack}`
@@ -630,12 +626,6 @@ const select = async (data: any) => {
     // Call the provider check Function only when valid provider is present
     if (providerOnSelect) {
         await checksOnValidProvider(providerOnSelect);
-    } else {
-        result.push({
-            valid: false,
-            code: 20000,
-            description: `Warning: Missed checks for provider as provider with ID: ${select.provider.id} does not exist on ${constants.ON_SEARCH} API`,
-        });
     }
 
     return result;
