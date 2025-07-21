@@ -55,26 +55,26 @@ const select = async (data: any) => {
         return result;
     }
 
-    try {
-        const previousCallPresent = await addActionToRedisSet(
-            context.transaction_id,
-            ApiSequence.ON_SEARCH,
-            ApiSequence.SELECT
-        );
-        if (!previousCallPresent) {
-            result.push({
-                valid: false,
-                code: 20000,
-                description: `Previous call doesn't exist`,
-            });
-            return result;
-        }
+    // try {
+    //     const previousCallPresent = await addActionToRedisSet(
+    //         context.transaction_id,
+    //         ApiSequence.ON_SEARCH,
+    //         ApiSequence.SELECT
+    //     );
+    //     if (!previousCallPresent) {
+    //         result.push({
+    //             valid: false,
+    //             code: 20000,
+    //             description: `Previous call doesn't exist`,
+    //         });
+    //         return result;
+    //     }
 
-    } catch (error: any) {
-        console.error(
-            `!!Error while previous action call /${constants.SELECT}, ${error.stack}`
-        );
-    }
+    // } catch (error: any) {
+    //     console.error(
+    //         `!!Error while previous action call /${constants.SELECT}, ${error.stack}`
+    //     );
+    // }
 
     const contextRes: any = checkContext(context, constants.SELECT);
 
