@@ -1643,6 +1643,55 @@ components:
             $ref: '#/components/schemas/TagGroup'
            
       additionalProperties: false
+    DescriptorIgm:
+      description: Describes the description of a real-world object.
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        symbol:
+          type: string
+        short_desc:
+          type: string
+        long_desc:
+          type: string
+        additional_desc:
+          type: object
+          properties:
+            url:
+              type: string
+            content_type:
+              type: string
+              enum:
+                - text/plain
+                - text/html
+                - application/json
+          additionalProperties: false
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageIgm'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaFile'    
+        audio:
+          type: string
+          format: uri
+        3d_render:
+          type: string
+          format: uri
+        tags:
+          description: >-
+            A list of tags containing any additional information sent along with
+            the Acknowledgement.
+          type: array
+          items:
+            $ref: '#/components/schemas/TagGroup'
+           
+      additionalProperties: false
     Dimensions:
       description: Describes the dimensions of a real-world object
       type: object
@@ -1962,6 +2011,14 @@ components:
         <br/><br/>```uri:http://path/to/image``` <br/><br/> An image can also be
         sent as a data string. For example : <br/><br/>
         ```data:js87y34ilhriuho84r3i4```
+      type: string
+      additionalProperties: false    
+    ImageIgm:
+      description: >-
+        Image of an object. <br/><br/> A url based image will look like
+        <br/><br/>```uri:http://path/to/image``` <br/><br/> An image can also be
+        sent as a data string. For example : <br/><br/>
+        ```data:js87y34ilhriuho84r3i4```
       type: object
       properties:
         url:
@@ -1969,7 +2026,7 @@ components:
           format: uri
         size_type:
           type: string 
-      additionalProperties: false        
+      additionalProperties: false      
     Intent:
       description: Intent of a user. Used for searching for services
       type: object
@@ -2258,7 +2315,7 @@ components:
           items:
             type: string     
         descriptor:
-          $ref: '#/components/schemas/Descriptor' 
+          $ref: '#/components/schemas/DescriptorIgm' 
         last_action_id:
           description: Describes the last action id
           type: string   
