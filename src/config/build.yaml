@@ -25123,6 +25123,7 @@ x-validations:
         subTags: $.list[*].code
         validValues:
           - id
+          - prep_time
           - cod_order
           - collection_amount
           - currency
@@ -26485,6 +26486,7 @@ x-validations:
         subTags: $.list[*].code
         validValues:
           - id
+          - prep_time
           - cod_order
           - collection_amount
           - currency
@@ -27197,6 +27199,7 @@ x-validations:
         subTags: $.list[*].code
         validValues:
           - id
+          - prep_time
           - cod_order
           - collection_amount
           - currency
@@ -28000,6 +28003,7 @@ x-validations:
         subTags: $.list[*].code
         validValues:
           - id
+          - prep_time
           - cod_order
           - collection_amount
           - currency
@@ -28657,6 +28661,7 @@ x-validations:
         subTags: $.list[*].code
         validValues:
           - id
+          - prep_time
           - cod_order
           - collection_amount
           - currency
