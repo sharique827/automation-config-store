@@ -65,6 +65,25 @@ const onSelect = async (data: any) => {
     const contextRes: any = checkContext(context, constants.ON_SELECT);
     const result: any[] = [];
 
+    // try {
+    //     const previousCallPresent = await addActionToRedisSet(
+    //         context.transaction_id,
+    //         ApiSequence.SELECT,
+    //         ApiSequence.ON_SELECT
+    //     );
+    //     if (!previousCallPresent) {
+    //         result.push({
+    //             valid: false,
+    //             code: 20000,
+    //             description: `Previous call doesn't exist`,
+    //         });
+    //         return result;
+    //     }
+    // } catch (error: any) {
+    //     console.error(
+    //         `!!Error while previous action call /${constants.ON_SELECT}, ${error.stack}`
+    //     );
+    // }
 
     const checkBap = checkBppIdOrBapId(context.bap_id);
     const checkBpp = checkBppIdOrBapId(context.bpp_id);
@@ -90,6 +109,19 @@ const onSelect = async (data: any) => {
             `!!Error while checking message id for /${constants.ON_SELECT}, ${error.stack}`
         );
     }
+
+    // if (
+    //     !_.isEqual(
+    //         data.context.domain.split(":")[1],
+    //         await RedisService.getKey(`${transaction_id}_domain`)
+    //     )
+    // ) {
+    //     result.push({
+    //         valid: false,
+    //         code: 20000,
+    //         description: `Domain should be same in each action`,
+    //     });
+    // }
 
     if (checkBap) {
         result.push({
@@ -181,39 +213,39 @@ const onSelect = async (data: any) => {
         );
     }
 
-    try {
-        const itemsOnSelectRaw = await RedisService.getKey(
-            `${transaction_id}_SelectItemList`
-        );
+    // try {
+    //     const itemsOnSelectRaw = await RedisService.getKey(
+    //         `${transaction_id}_SelectItemList`
+    //     );
 
-        const itemsOnSelect = itemsOnSelectRaw
-            ? JSON.parse(itemsOnSelectRaw)
-            : null;
+    //     const itemsOnSelect = itemsOnSelectRaw
+    //         ? JSON.parse(itemsOnSelectRaw)
+    //         : null;
 
-        console.log("itemsOnSelect", itemsOnSelectRaw, itemsOnSelect);
-        const itemsList = message.order.items;
-        const selectItems: any = [];
-        itemsList.forEach((item: any, index: number) => {
-            if (!itemsOnSelect?.includes(item.id)) {
-                result.push({
-                    valid: false,
-                    code: 20000,
-                    description: `Invalid Item Id provided in /${constants.ON_SELECT}: ${item.id}`,
-                });
-            } else {
-                selectItems.push(item.id);
-            }
-        });
-        await RedisService.setKey(
-            `${transaction_id}_SelectItemList`,
-            JSON.stringify(selectItems),
-            TTL_IN_SECONDS
-        );
-    } catch (error: any) {
-        console.error(
-            `Error while checking for item IDs for /${constants.ON_SELECT}, ${error.stack}`
-        );
-    }
+    //     console.log("itemsOnSelect", itemsOnSelectRaw, itemsOnSelect);
+    //     const itemsList = message.order.items;
+    //     const selectItems: any = [];
+    //     itemsList.forEach((item: any, index: number) => {
+    //         if (!itemsOnSelect?.includes(item.id)) {
+    //             result.push({
+    //                 valid: false,
+    //                 code: 20000,
+    //                 description: `Invalid Item Id provided in /${constants.ON_SELECT}: ${item.id}`,
+    //             });
+    //         } else {
+    //             selectItems.push(item.id);
+    //         }
+    //     });
+    //     await RedisService.setKey(
+    //         `${transaction_id}_SelectItemList`,
+    //         JSON.stringify(selectItems),
+    //         TTL_IN_SECONDS
+    //     );
+    // } catch (error: any) {
+    //     console.error(
+    //         `Error while checking for item IDs for /${constants.ON_SELECT}, ${error.stack}`
+    //     );
+    // }
 
     try {
         const fulfillments = message.order.fulfillments;
@@ -532,6 +564,45 @@ const onSelect = async (data: any) => {
         );
     }
 
+    // try {
+    //     console.info(
+    //         `Checking available and maximum count in ${constants.ON_SELECT}`
+    //     );
+    //     on_select.quote.breakup.forEach((element: any, i: any) => {
+    //         const itemId = element["@ondc/org/item_id"];
+    //         if (
+    //             element.item?.quantity &&
+    //             element.item.quantity?.available &&
+    //             element.item.quantity?.maximum &&
+    //             typeof element.item.quantity.available.count === "string" &&
+    //             typeof element.item.quantity.maximum.count === "string"
+    //         ) {
+    //             const availCount = parseInt(element.item.quantity.available.count, 10);
+    //             const maxCount = parseInt(element.item.quantity.maximum.count, 10);
+    //             if (isNaN(availCount) || isNaN(maxCount) || availCount <= 0) {
+    //                 result.push({
+    //                     valid: false,
+    //                     code: 20000,
+    //                     description: `Available and Maximum count should be greater than 0 for item id: ${itemId} in quote.breakup[${i}]`,
+    //                 });
+    //             } else if (
+    //                 element.item.quantity.available.count.trim() === "" ||
+    //                 element.item.quantity.maximum.count.trim() === ""
+    //             ) {
+    //                 result.push({
+    //                     valid: false,
+    //                     code: 20000,
+    //                     description: `Available or Maximum count should not be empty string for item id: ${itemId} in quote.breakup[${i}]`,
+    //                 });
+    //             }
+    //         }
+    //     });
+    // } catch (error: any) {
+    //     console.error(
+    //         `Error while checking available and maximum count in ${constants.ON_SELECT}, ${error.stack}`
+    //     );
+    // }
+
     try {
         console.info(
             `-x-x-x-x-Quote Breakup ${constants.ON_SELECT} all checks-x-x-x-x`
@@ -610,15 +681,15 @@ const onSelect = async (data: any) => {
                     titleType === "delivery" ||
                     titleType === "misc"
                 ) {
-                    if (
-                        !Object.values(itemFlfllmnts).includes(element["@ondc/org/item_id"])
-                    ) {
-                        result.push({
-                            valid: false,
-                            code: 20000,
-                            description: `invalid  id: ${element["@ondc/org/item_id"]} in ${titleType} line item (should be a valid fulfillment_id as provided in message.items for the items)`,
-                        });
-                    }
+                    // if (
+                    //     !Object.values(itemFlfllmnts).includes(element["@ondc/org/item_id"])
+                    // ) {
+                    //     result.push({
+                    //         valid: false,
+                    //         code: 20000,
+                    //         description: `invalid  id: ${element["@ondc/org/item_id"]} in ${titleType} line item (should be a valid fulfillment_id as provided in message.items for the items)`,
+                    //     });
+                    // }
                 }
             });
             await RedisService.setKey(

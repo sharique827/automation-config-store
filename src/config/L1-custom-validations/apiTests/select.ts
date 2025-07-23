@@ -55,12 +55,42 @@ const select = async (data: any) => {
         return result;
     }
 
+    // try {
+    //     const previousCallPresent = await addActionToRedisSet(
+    //         context.transaction_id,
+    //         ApiSequence.ON_SEARCH,
+    //         ApiSequence.SELECT
+    //     );
+    //     if (!previousCallPresent) {
+    //         result.push({
+    //             valid: false,
+    //             code: 20000,
+    //             description: `Previous call doesn't exist`,
+    //         });
+    //         return result;
+    //     }
+
+    // } catch (error: any) {
+    //     console.error(
+    //         `!!Error while previous action call /${constants.SELECT}, ${error.stack}`
+    //     );
+    // }
+
     const contextRes: any = checkContext(context, constants.SELECT);
 
     let selectedPrice = 0;
     const itemsIdList: any = {};
     const itemsCtgrs: any = {};
     const itemsTat: any[] = [];
+
+    const domain = await RedisService.getKey(`${transaction_id}_domain`);
+    // if (!_.isEqual(data.context.domain.split(":")[1], domain)) {
+    //     result.push({
+    //         valid: false,
+    //         code: 20000,
+    //         description: "Domain should be same in each action",
+    //     });
+    // }
 
     const checkBap = checkBppIdOrBapId(context.bap_id);
     const checkBpp = checkBppIdOrBapId(context.bpp_id);
@@ -158,6 +188,23 @@ const select = async (data: any) => {
     const itemMap: any = {};
     const itemMapper: any = {};
 
+    // try {
+    //     console.log(
+    //         `Comparing city of /${constants.ON_SEARCH} and /${constants.SELECT}`
+    //     );
+    //     if (!_.isEqual(onSearchContext?.city, context.city)) {
+    //         result.push({
+    //             valid: false,
+    //             code: 20000,
+    //             description: `City code mismatch in /${ApiSequence.ON_SEARCH} and /${ApiSequence.SELECT}`,
+    //         });
+    //     }
+    // } catch (error: any) {
+    //     console.log(
+    //         `Error while comparing city in /${constants.SEARCH} and /${constants.SELECT}, ${error.stack}`
+    //     );
+    // }
+
     try {
         console.log(
             `Comparing timestamp of /${constants.ON_SEARCH} and /${constants.SELECT}`
@@ -189,40 +236,53 @@ const select = async (data: any) => {
         );
     }
 
-    try {
-        console.log(`Storing item IDs and their count in /${constants.SELECT}`);
-        const itemsOnSearchRaw = await RedisService.getKey(
-            `${transaction_id}_${ApiSequence.ON_SEARCH}itemsId`
-        );
-        const itemsOnSearch = itemsOnSearchRaw ? JSON.parse(itemsOnSearchRaw) : [];
-        console.log("itemsOnSearchRaw", itemsOnSearchRaw);
+    // try {
+    //     console.log(`Storing item IDs and their count in /${constants.SELECT}`);
+    //     const itemsOnSearchRaw = await RedisService.getKey(
+    //         `${transaction_id}_${ApiSequence.ON_SEARCH}itemsId`
+    //     );
+    //     const itemsOnSearch = itemsOnSearchRaw ? JSON.parse(itemsOnSearchRaw) : [];
+    //     console.log("itemsOnSearchRaw", itemsOnSearchRaw);
 
-        select.items.forEach((item: { id: string | number; quantity: { count: number } }) => {
-            if (itemsOnSearch.length > 0 && !itemsOnSearch?.includes(item.id.toString())) {
-                addError(result, 30004, `Item not found - The item ID provided in the request was not found: ${item.id}`);
-            }
-            itemIdArray.push(item.id.toString());
-            itemsOnSelect.push(item.id.toString());
-            itemsIdList[item.id] = item.quantity.count;
-        }
-        );
+    //     if (!itemsOnSearch?.length) {
+    //         result.push({
+    //             valid: false,
+    //             code: 20000,
+    //             description: `No Items found on ${constants.ON_SEARCH} API`,
+    //         });
+    //     }
 
-        await RedisService.setKey(
-            `${transaction_id}_itemsIdList`,
-            JSON.stringify(itemsIdList),
-            TTL_IN_SECONDS
-        );
-        console.log("itemsOnSelect", itemsOnSelect, JSON.stringify(itemsOnSelect));
-        await RedisService.setKey(
-            `${transaction_id}_SelectItemList`,
-            JSON.stringify(itemsOnSelect),
-            TTL_IN_SECONDS
-        );
-    } catch (error: any) {
-        console.error(
-            `Error while storing item IDs in /${constants.SELECT}, ${error.stack}`
-        );
-    }
+    //     select.items.forEach(
+    //         (item: { id: string | number; quantity: { count: number } }) => {
+    //             if (!itemsOnSearch?.includes(item.id)) {
+    //                 result.push({
+    //                     valid: false,
+    //                     code: 20000,
+    //                     description: `Invalid item found in /${constants.SELECT} id: ${item.id}`,
+    //                 });
+    //             }
+    //             itemIdArray.push(item.id);
+    //             itemsOnSelect.push(item.id);
+    //             itemsIdList[item.id] = item.quantity.count;
+    //         }
+    //     );
+
+    //     await RedisService.setKey(
+    //         `${transaction_id}_itemsIdList`,
+    //         JSON.stringify(itemsIdList),
+    //         TTL_IN_SECONDS
+    //     );
+    //     console.log("itemsOnSelect", itemsOnSelect, JSON.stringify(itemsOnSelect));
+    //     await RedisService.setKey(
+    //         `${transaction_id}_SelectItemList`,
+    //         JSON.stringify(itemsOnSelect),
+    //         TTL_IN_SECONDS
+    //     );
+    // } catch (error: any) {
+    //     console.error(
+    //         `Error while storing item IDs in /${constants.SELECT}, ${error.stack}`
+    //     );
+    // }
 
     try {
         console.log(`Checking for GPS precision in /${constants.SELECT}`);
@@ -624,9 +684,15 @@ const select = async (data: any) => {
     };
 
     // Call the provider check Function only when valid provider is present
-    if (providerOnSelect) {
-        await checksOnValidProvider(providerOnSelect);
-    }
+    // if (providerOnSelect) {
+    //     await checksOnValidProvider(providerOnSelect);
+    // } else {
+    //     result.push({
+    //         valid: false,
+    //         code: 20000,
+    //         description: `Warning: Missed checks for provider as provider with ID: ${select.provider.id} does not exist on ${constants.ON_SEARCH} API`,
+    //     });
+    // }
 
     return result;
 };

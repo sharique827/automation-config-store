@@ -48,6 +48,26 @@ const onInit = async (data: any) => {
     }
 
  
+    // try {
+    //   const previousCallPresent = await addActionToRedisSet(
+    //     context.transaction_id,
+    //     ApiSequence.INIT,
+    //     ApiSequence.ON_INIT
+    //   );
+    //   if (!previousCallPresent) {
+    //     result.push({
+    //       valid: false,
+    //       code: 20000,
+    //       description: `Previous call doesn't exist`,
+    //     });
+    //     return result;
+    //   }
+    // } catch (error: any) {
+    //   console.error(
+    //     `!!Error while previous action call /${constants.ON_INIT}, ${error.stack}`
+    //   );
+    // }
+
     const searchContextRaw = await RedisService.getKey(
       `${transaction_id}_${ApiSequence.SEARCH}_context`
     );
@@ -95,6 +115,16 @@ const onInit = async (data: any) => {
         });
       });
     }
+    const domain = await RedisService.getKey(`${transaction_id}_domain`);
+
+    // console.log("domain", domain, data.context.domain.split(":")[1]);
+    // if (!_.isEqual(data.context.domain.split(":")[1], domain)) {
+    //   result.push({
+    //     valid: false,
+    //     code: 20000,
+    //     description: `Domain should be same in each action`,
+    //   });
+    // }
 
     await RedisService.setKey(
       `${transaction_id}_${ApiSequence.ON_INIT}`,
@@ -707,68 +737,68 @@ const onInit = async (data: any) => {
       );
     }
 
-    try {
-      console.info(
-        `Checking Buyer App finder fee amount in /${constants.ON_INIT}`
-      );
-      const buyerFFRaw = await RedisService.getKey(
-        `${transaction_id}_${ApiSequence.SEARCH}_buyerFF`
-      );
-      const buyerFF = buyerFFRaw ? JSON.parse(buyerFFRaw) : null;
-      if (
-        buyerFF &&
-        parseFloat(on_init.payment["@ondc/org/buyer_app_finder_fee_amount"]) !==
-        parseFloat(buyerFF)
-      ) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Buyer app finder fee can't change in /${constants.ON_INIT}`,
-        });
-      }
-    } catch (error: any) {
-      console.error(
-        `!!Error while checking buyer app finder fee in /${constants.ON_INIT}, ${error.stack}`
-      );
-    }
+    // try {
+    //   console.info(
+    //     `Checking Buyer App finder fee amount in /${constants.ON_INIT}`
+    //   );
+    //   const buyerFFRaw = await RedisService.getKey(
+    //     `${transaction_id}_${ApiSequence.SEARCH}_buyerFF`
+    //   );
+    //   const buyerFF = buyerFFRaw ? JSON.parse(buyerFFRaw) : null;
+    //   if (
+    //     !on_init.payment["@ondc/org/buyer_app_finder_fee_amount"] ||
+    //     parseFloat(on_init.payment["@ondc/org/buyer_app_finder_fee_amount"]) !=
+    //     buyerFF
+    //   ) {
+    //     result.push({
+    //       valid: false,
+    //       code: 20000,
+    //       description: `Buyer app finder fee can't change in /${constants.ON_INIT}`,
+    //     });
+    //   }
+    // } catch (error: any) {
+    //   console.error(
+    //     `!!Error while checking buyer app finder fee in /${constants.ON_INIT}, ${error.stack}`
+    //   );
+    // }
 
-    try {
-      console.info(`Checking Settlement basis in /${constants.ON_INIT}`);
-      const validSettlementBasis = ["delivery", "shipment"];
-      const settlementBasis = on_init.payment["@ondc/org/settlement_basis"];
-      if (settlementBasis && !validSettlementBasis.includes(settlementBasis)) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Invalid settlement basis in /${constants.ON_INIT
-            }. Expected one of: ${validSettlementBasis.join(", ")}`,
-        });
-      }
-    } catch (error: any) {
-      console.error(
-        `!!Error while checking settlement basis in /${constants.ON_INIT}, ${error.stack}`
-      );
-    }
+    // try {
+    //   console.info(`Checking Settlement basis in /${constants.ON_INIT}`);
+    //   const validSettlementBasis = ["delivery", "shipment"];
+    //   const settlementBasis = on_init.payment["@ondc/org/settlement_basis"];
+    //   if (!validSettlementBasis.includes(settlementBasis)) {
+    //     result.push({
+    //       valid: false,
+    //       code: 20000,
+    //       description: `Invalid settlement basis in /${constants.ON_INIT
+    //         }. Expected one of: ${validSettlementBasis.join(", ")}`,
+    //     });
+    //   }
+    // } catch (error: any) {
+    //   console.error(
+    //     `!!Error while checking settlement basis in /${constants.ON_INIT}, ${error.stack}`
+    //   );
+    // }
 
-    try {
-      console.info(`Checking Settlement Window in /${constants.ON_INIT}`);
-      const validSettlementWindow = {
-        code: "SETTLEMENT_WINDOW",
-        type: "time",
-        value:
-          /^P(?=\d|T\d)(\d+Y)?(\d+M)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/,
-      };
-      const settlementWindow = on_init.payment["@ondc/org/settlement_window"];
-      if (settlementWindow && !validSettlementWindow.value.test(settlementWindow)) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Invalid settlement window in /${constants.ON_INIT}. Expected format: PTd+[MH] (e.g., PT1H, PT30M).`,
-        });
-      }
-    } catch (err: any) {
-      console.error("Error while checking settlement window: " + err.message);
-    }
+    // try {
+    //   console.info(`Checking Settlement Window in /${constants.ON_INIT}`);
+    //   const validSettlementWindow = {
+    //     code: "SETTLEMENT_WINDOW",
+    //     type: "time",
+    //     value:
+    //       /^P(?=\d|T\d)(\d+Y)?(\d+M)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/,
+    //   };
+    //   const settlementWindow = on_init.payment["@ondc/org/settlement_window"];
+    //   if (!validSettlementWindow.value.test(settlementWindow)) {
+    //     result.push({
+    //       valid: false,
+    //       code: 20000,
+    //       description: `Invalid settlement window in /${constants.ON_INIT}. Expected format: PTd+[MH] (e.g., PT1H, PT30M).`,
+    //     });
+    //   }
+    // } catch (err: any) {
+    //   console.error("Error while checking settlement window: " + err.message);
+    // }
 
     try {
       console.info(`checking payment object in /${constants.ON_INIT}`);
@@ -878,54 +908,54 @@ const onInit = async (data: any) => {
       );
     }
 
-    try {
-      console.info(
-        `Checking Quote Object in /${constants.ON_SELECT} and /${constants.ON_INIT}`
-      );
-      const on_select_quoteRaw = await RedisService.getKey(
-        `${transaction_id}_quoteObj`
-      );
-      const on_select_quote = on_select_quoteRaw
-        ? JSON.parse(on_select_quoteRaw)
-        : null;
+    // try {
+    //   console.info(
+    //     `Checking Quote Object in /${constants.ON_SELECT} and /${constants.ON_INIT}`
+    //   );
+    //   const on_select_quoteRaw = await RedisService.getKey(
+    //     `${transaction_id}_quoteObj`
+    //   );
+    //   const on_select_quote = on_select_quoteRaw
+    //     ? JSON.parse(on_select_quoteRaw)
+    //     : null;
 
-      console.log(
-        "quoteDiff",
-        JSON.stringify(on_select_quote),
-        JSON.stringify(on_init.quote)
-      );
-      const quoteErrors = compareQuoteObjects(
-        on_select_quote,
-        on_init.quote,
-        constants.ON_SELECT,
-        constants.ON_INIT
-      );
-      const hasItemWithQuantity = _.some(on_init.quote.breakup, (item) =>
-        _.has(item, "item.quantity")
-      );
-      if (hasItemWithQuantity) {
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Extra attribute Quantity provided in quote object i.e not supposed to be provided after on_select so invalid quote object`,
-        });
-      } else if (quoteErrors) {
-        let i = 0;
-        const len = quoteErrors.length;
-        while (i < len) {
-          result.push({
-            valid: false,
-            code: 20000,
-            description: `${quoteErrors[i]}`,
-          });
-          i++;
-        }
-      }
-    } catch (error: any) {
-      console.error(
-        `!!Error while checking quote object in /${constants.ON_SELECT} and /${constants.ON_INIT}`
-      );
-    }
+    //   console.log(
+    //     "quoteDiff",
+    //     JSON.stringify(on_select_quote),
+    //     JSON.stringify(on_init.quote)
+    //   );
+    //   const quoteErrors = compareQuoteObjects(
+    //     on_select_quote,
+    //     on_init.quote,
+    //     constants.ON_SELECT,
+    //     constants.ON_INIT
+    //   );
+    //   const hasItemWithQuantity = _.some(on_init.quote.breakup, (item) =>
+    //     _.has(item, "item.quantity")
+    //   );
+    //   if (hasItemWithQuantity) {
+    //     result.push({
+    //       valid: false,
+    //       code: 20000,
+    //       description: `Extra attribute Quantity provided in quote object i.e not supposed to be provided after on_select so invalid quote object`,
+    //     });
+    //   } else if (quoteErrors) {
+    //     let i = 0;
+    //     const len = quoteErrors.length;
+    //     while (i < len) {
+    //       result.push({
+    //         valid: false,
+    //         code: 20000,
+    //         description: `${quoteErrors[i]}`,
+    //       });
+    //       i++;
+    //     }
+    //   }
+    // } catch (error: any) {
+    //   console.error(
+    //     `!!Error while checking quote object in /${constants.ON_SELECT} and /${constants.ON_INIT}`
+    //   );
+    // }
 
     try {
       if (on_init.tags) {
