@@ -23972,14 +23972,14 @@ x-validations:
         useCode:
         - METRO
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_CREDS_TYPE
-        attr: "$.message.catalog.providers[*].fulfillments[*].customer.person.creds[*].type"
-        valid_enums: ["PAN","AADHAR","DL","VOTER_ID"]
-        _RETURN_: attr all in valid_enums
-        useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
-        useCode:
-        - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+      # - _NAME_: REQUIRED_CREDS_TYPE
+      #   attr: "$.message.catalog.providers[*].fulfillments[*].customer.person.creds[*].type"
+      #   valid_enums: ["PAN","AADHAR","DL","VOTER_ID"]
+      #   _RETURN_: attr all in valid_enums
+      #   useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
+      #   useCode:
+      #   - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_CATEGORY_24
         attr: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
         _RETURN_: attr are present && attr all in enumList
