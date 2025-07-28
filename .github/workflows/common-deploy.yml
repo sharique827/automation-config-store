@@ -1,4 +1,4 @@
-name: Deploy api service
+name: common-deploy-api-service
 on:
   workflow_dispatch:
   push:
@@ -7,6 +7,8 @@ on:
     branches-ignore:
       - main
       - dev
+    branches:
+      - '**'
 
 jobs:
   deploy-draft:
