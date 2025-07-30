@@ -12,9 +12,9 @@ jobs:
   deploy-draft:
     if: startsWith(github.ref_name, 'release') == false
     runs-on: ubuntu-latest
-    environment:  
-          name: ${{ github.ref_name }}
-          url: https://github.com
+    environment:
+      name: ${{ github.ref_name }}
+      url: https://github.com
 
     steps:
       - name: Checkout code
@@ -26,7 +26,7 @@ jobs:
           chmod 600 ./key.pem
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-          
+
 
 
           ssh -i ./key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} -T <<EOF
@@ -36,7 +36,7 @@ jobs:
           echo "Cloning repository from main branch"
           git clone --single-branch --branch main https://github.com/ONDC-Official/automation-api-service-generator.git \$REPO_DIR
           EOF
- 
+
       - name: Install Docker Compose (if not installed)
         run: |
           ssh -i ./key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
@@ -80,6 +80,7 @@ jobs:
           echo "SERVICE_NAME=${{ vars.SERVICE_NAME }}" >> \$REPO_DIR/.env
           echo "TRACE_URL=${{ vars.TRACE_URL }}" >> \$REPO_DIR/.env
           echo "API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_DEV }}" >> \$REPO_DIR/.env
+          echo "LOKI_HOST=${{ vars.LOKI_HOST }}" >> \$REPO_DIR/.env
           EOF
 
       - name: Verify .env and docker-compose.yml files
@@ -98,15 +99,14 @@ jobs:
           echo ".env and docker-compose.yml files found."
           EOF
 
-      - name : initiate submodule
-        run : |
+      - name: initiate submodule
+        run: |
           echo "cloning submodule"
           ssh -i ./key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
           REPO_DIR=~/ONDC-automation-framework/api-service/api-service-generator-${{ github.ref_name }}
           cd \$REPO_DIR
           git submodule update --init --recursive
           EOF
-
 
       - name: Add latest build.yaml file
         run: |
@@ -116,8 +116,6 @@ jobs:
            rm -rf \$REPO_DIR/src/config
            mv -f \$REPO_DIR/automation-config-store/src/config  \$REPO_DIR/src/config
           EOF
-
-
 
       - name: Automation Api Server Deployment
         run: |
@@ -145,9 +143,9 @@ jobs:
   deploy-release:
     if: startsWith(github.ref_name, 'release') == true
     runs-on: ubuntu-latest
-    environment:  
-          name: ${{ github.ref_name }}
-          url: https://github.com
+    environment:
+      name: ${{ github.ref_name }}
+      url: https://github.com
 
     steps:
       - name: Checkout code
@@ -159,7 +157,7 @@ jobs:
           chmod 600 ./key.pem
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-          
+
 
 
           ssh -i ./key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} -T <<EOF
@@ -169,7 +167,7 @@ jobs:
           echo "Cloning repository from main branch"
           git clone --single-branch --branch main https://github.com/ONDC-Official/automation-api-service-generator.git \$REPO_DIR
           EOF
- 
+
       - name: Install Docker Compose (if not installed)
         run: |
           ssh -i ./key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
@@ -211,7 +209,9 @@ jobs:
           echo "SERVICE_NAME=${{ vars.SERVICE_NAME }}" >> \$REPO_DIR/.env
           echo "TRACE_URL=${{ vars.TRACE_URL_STAGING }}" >> \$REPO_DIR/.env
           echo "API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_STAGING }}" >> \$REPO_DIR/.env
-
+          echo "LOKI_HOST=${{ vars.LOKI_HOST }}" >> \$REPO_DIR/.env
+          echo "WORKBENCH_SUBSCRIBER_ID=${{ vars.WORKBENCH_SUBSCRIBER_ID }}" >> \$REPO_DIR/.env
+          echo "IN_HOUSE_REGISTRY=${{ vars.IN_HOUSE_REGISTRY_STAGING }}" >> \$REPO_DIR/.env 
           EOF
 
       - name: Verify .env and docker-compose.yml files
@@ -230,15 +230,14 @@ jobs:
           echo ".env and docker-compose.yml files found."
           EOF
 
-      - name : initiate submodule
-        run : |
+      - name: initiate submodule
+        run: |
           echo "cloning submodule"
           ssh -i ./key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
           REPO_DIR=~/ONDC-automation-framework/api-service/api-service-generator-${{ github.ref_name }}
           cd \$REPO_DIR
           git submodule update --init --recursive --remote
           EOF
-
 
       - name: Add latest build.yaml file
         run: |
@@ -248,8 +247,6 @@ jobs:
            rm -rf \$REPO_DIR/src/config
            mv -f \$REPO_DIR/automation-config-store/src/config  \$REPO_DIR/src/config
           EOF
-
-
 
       - name: Automation Api Server Deployment
         run: |
