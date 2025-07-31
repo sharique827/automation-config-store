@@ -35248,6 +35248,7 @@ x-validations:
                 _NAME_: REQUIRED_message_order_items_price_value
               - &on_select_REQUIRED_message_order_items_fulfillment_ids
                 attr: $.message.order.items[*].fulfillment_ids[*]
+                _CONTINUE_: "!(attr are present)"
                 _RETURN_: attr are present
                 _NAME_: REQUIRED_message_order_items_fulfillment_ids
           - &on_select_items_Enums_Tests
