@@ -2880,7 +2880,7 @@ x-enum:
               - code: ELECTRIC
                 description: Describes the vehicle energy_type as Electric
                 reference: <PR/Issue/Discussion Links md format text
-              - code: PETRO
+              - code: PETROL
                 description: Describes the vehicle energy_type as Petrol
                 reference: <PR/Issue/Discussion Links md format text
               - code: DIESEL
@@ -34386,6 +34386,8 @@ x-validations:
                 _NAME_: REQUIRED_context_bap_uri
               - &search_REQUIRED_context_ttl
                 attr: $.context.ttl
+                reg: ['^P(?=\\d|T)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+S)?)?$']
+                optional_vars: ["on_search","on_select","on_confirm","on_init","on_cancel","on_track","on_update","on_status"]
                 _RETURN_: attr are present
                 _NAME_: REQUIRED_context_ttl
           - _NAME_: Context_Enums_Tests
@@ -34443,7 +34445,7 @@ x-validations:
                 _NAME_: VALID_ENUM_message_intent_fulfillment_vehicle_variant
               - enumList:
                   - ELECTRIC
-                  - PETRO
+                  - PETROL
                   - DIESEL
                   - HYDROGEN
                   - BIOFUELS
@@ -34641,7 +34643,7 @@ x-validations:
               - &select_VALID_ENUM_message_order_fulfillments_vehicle_energy_type
                 enumList:
                   - ELECTRIC
-                  - PETRO
+                  - PETROL
                   - DIESEL
                   - HYDROGEN
                   - BIOFUELS
@@ -35085,6 +35087,9 @@ x-validations:
               - attr: $.message.catalog.providers[*].items[*].fulfillment_ids[*]
                 _RETURN_: attr are present
                 _NAME_: REQUIRED_message_catalog_providers_items_fulfillment_ids
+              - attr: $.message.catalog.providers[].items[].location_ids[*]
+                _RETURN_ : attr are present
+                _NAME_ : REQUIRED_message_catalog_providers_items_location_ids
           - _NAME_: providers_Enums_Tests
             _RETURN_:
               - attr: $.message.catalog.providers[*].fulfillments[*].type
@@ -35105,7 +35110,7 @@ x-validations:
                 enumList:
                   - RIDE
                   - RENTAL
-                  - INTERMEDIATE_STOP
+                  # - INTERMEDIATE_STOP
                 _NAME_: VALID_ENUM_message_catalog_providers_items_descriptor_code
               - attr: $.message.catalog.providers[*].payments[*].collected_by
                 _RETURN_: attr all in enumList
@@ -35125,7 +35130,7 @@ x-validations:
                 _NAME_: VALID_ENUM_message_catalog_providers_fulfillments_vehicle_variant
               - enumList:
                   - ELECTRIC
-                  - PETRO
+                  - PETROL
                   - DIESEL
                   - HYDROGEN
                   - BIOFUELS
