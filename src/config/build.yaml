@@ -35087,7 +35087,7 @@ x-validations:
               - attr: $.message.catalog.providers[*].items[*].fulfillment_ids[*]
                 _RETURN_: attr are present
                 _NAME_: REQUIRED_message_catalog_providers_items_fulfillment_ids
-              - attr: $.message.catalog.providers[].items[].location_ids[*]
+              - attr: $.message.catalog.providers[*].items[*].location_ids[*]
                 _RETURN_ : attr are present
                 _NAME_ : REQUIRED_message_catalog_providers_items_location_ids
           - _NAME_: providers_Enums_Tests
