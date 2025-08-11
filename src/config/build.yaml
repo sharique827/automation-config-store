@@ -34875,6 +34875,7 @@ x-validations:
             _RETURN_:
               - &confirm_VALID_ENUM_message_order_fulfillments_type
                 attr: $.message.order.fulfillments[*].type
+                _CONTINUE_: "!(attr are present)"
                 _RETURN_: attr all in enumList
                 enumList:
                   - DELIVERY
