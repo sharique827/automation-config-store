@@ -4,7 +4,7 @@ import { RedisService } from "ondc-automation-cache-lib";
 import _ from "lodash";
 
 import { areTimestampsLessThanOrEqualTo } from "../utils/helper";
-import { electronicsData } from "../utils/constants/electronics";
+import { homeAndKitchenData } from "../utils/constants/home&Kitchen";
 
 interface ValidationError {
   valid: boolean;
@@ -130,8 +130,8 @@ async function validateProviders(
       }
       itemIdList.push(item.id);
       itemsArray.push(item);
-      const categoryId = item.category_id as keyof typeof electronicsData;
-      const categoryRules = electronicsData[categoryId];
+      const categoryId = item.category_id as keyof typeof homeAndKitchenData;
+      const categoryRules = homeAndKitchenData[categoryId];
 
       const attributesTag = item.tags?.find(
         (tag: any) => tag.code === "attribute"
