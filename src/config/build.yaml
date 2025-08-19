@@ -23820,6 +23820,8 @@ x-validations:
           - id
           - name
           - address
+          - cred_code
+          - cred_desc
           - tax_id
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_fulfill_request
@@ -24625,6 +24627,7 @@ x-validations:
         subTags: $.list[*].code
         validValues:
           - accept_bpp_terms
+          - phone
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_4_lbnp_sla_terms
         _SCOPE_: $.message.order.tags[?(@.code=='lbnp_sla_terms')]
@@ -25113,10 +25116,12 @@ x-validations:
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='linked_provider')]
         subTags: $.list[*].code
         validValues:
-          - id
-          - name
-          - address
-          - tax_id
+         - id
+         - name
+         - address
+         - cred_code
+         - cred_desc
+         - tax_id
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_0_linked_order
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='linked_order')]
@@ -25776,6 +25781,8 @@ x-validations:
           - id
           - name
           - address
+          - cred_code
+          - cred_desc
           - tax_id
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_fulfill_request
@@ -26479,6 +26486,8 @@ x-validations:
           - id
           - name
           - address
+          - cred_code
+          - cred_desc
           - tax_id
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_3_linked_order
@@ -26590,6 +26599,8 @@ x-validations:
         subTags: $.list[*].code
         validValues:
           - static_terms
+          - phone
+          - np_tax_type
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_4_bap_terms
         _SCOPE_: $.message.order.tags[?(@.code=='bap_terms')]
@@ -27192,6 +27203,8 @@ x-validations:
           - id
           - name
           - address
+          - cred_code
+          - cred_desc
           - tax_id
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_linked_order
@@ -27996,6 +28009,8 @@ x-validations:
           - id
           - name
           - address
+          - cred_code
+          - cred_desc
           - tax_id
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_linked_order
@@ -28654,6 +28669,8 @@ x-validations:
           - id
           - name
           - address
+          - cred_code
+          - cred_desc
           - tax_id
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_linked_order
