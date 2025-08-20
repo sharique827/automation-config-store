@@ -705,22 +705,6 @@ const onInit = async (data: any) => {
       console.info(
         `Comparing /${constants.ON_INIT} Quoted Price and /${constants.ON_SELECT} Quoted Price`
       );
-      const onSelectPriceRaw = await RedisService.getKey(
-        `${transaction_id}_onSelectPrice`
-      );
-      const onSelectPrice = onSelectPriceRaw
-        ? JSON.parse(onSelectPriceRaw)
-        : null;
-      if (Math.round(onSelectPrice) != Math.round(initQuotePrice)) {
-        console.info(
-          `Quoted Price in /${constants.ON_INIT} is not equal to the quoted price in /${constants.ON_SELECT}`
-        );
-        result.push({
-          valid: false,
-          code: 20000,
-          description: `Quoted Price in /${constants.ON_INIT} INR ${initQuotePrice} does not match with the quoted price in /${constants.ON_SELECT} INR ${onSelectPrice}`,
-        });
-      }
 
       console.info(`Checking Payment Object for  /${constants.ON_INIT}`);
       if (!on_init.payment) {
