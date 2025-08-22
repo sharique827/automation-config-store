@@ -28844,6 +28844,8 @@ x-validations:
           - diff_dim
           - diff_weight
           - diff_proof
+          - bap_terms
+          - bpp_terms
         tagPath: $.message.order.tags[*].code
         _CONTINUE_: "!(tagPath are present)"
         _RETURN_: tagPath all in validTags
