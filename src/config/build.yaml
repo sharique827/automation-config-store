@@ -19315,7 +19315,7 @@ x-validations:
           - on_confirm
         _RETURN_: &ref_42
           - _NAME_: REQUIRED_ON_CONFIRM_ORDER
-            _RETURN_:
+            _RETURN_: &COMMON_REQUIRED_ON_ACTION_ORDER_ITEMS
               - _NAME_: REQUIRED_ORDER_ID
                 attr: $.message.order.id
                 _RETURN_: attr are present
@@ -19822,42 +19822,60 @@ x-validations:
       - _NAME_: ON_CANCEL_ORDER
         action:
           - on_cancel
+        usecasepath: $.error.code  
+        _CONTINUE_: (usecasepath are present)  
         _RETURN_: *ref_42
 
       - _NAME_: ON_CANCEL_ITEMS
         action:
           - on_cancel
+        usecasepath: $.error.code  
+        _CONTINUE_: (usecasepath are present)  
         _RETURN_: *ref_44
 
       - _NAME_: ON_CANCEL_FULFILLMENTS
         action:
           - on_cancel
+        usecasepath: $.error.code  
+        _CONTINUE_: (usecasepath are present)  
         _RETURN_: *ref_45
       - _NAME_: ON_CANCEL_PROVIDER
         action:
           - on_cancel
+        usecasepath: $.error.code  
+        _CONTINUE_: (usecasepath are present)  
         _RETURN_: *ref_36   
       - _NAME_: ON_CANCEL_CANCELLATION_TERMS
         action:
           - on_cancel
+        usecasepath: $.error.code  
+        _CONTINUE_: (usecasepath are present)  
         _RETURN_: *ref_37
 
       - _NAME_: ON_CANCEL_QUOTE
         action:
           - on_cancel
+        usecasepath: $.error.code  
+        _CONTINUE_: (usecasepath are present)  
         _RETURN_: *ref_38
       - _NAME_: ON_CANCEL_PAYMENTS
         action:
           - on_cancel
+        usecasepath: $.error.code  
+        _CONTINUE_: (usecasepath are present)  
         _RETURN_: *ref_40
       - _NAME_: ON_CANCEL_PAYMENTS_TAG
         action:
           - on_cancel
+        usecasepath: $.error.code  
+        _CONTINUE_: (usecasepath are present)  
         _RETURN_: *ref_41    
 
       - _NAME_: ON_CANCEL_CANCELLATION
         action:
           - on_cancel
+        usecasepath: $.error.code  
+        _CONTINUE_: (usecasepath are present)  
         _RETURN_: 
           - _NAME_: REQUIRED_CANCELLED_BY
             attr: $.message.order.cancellation.cancelled_by
@@ -19888,9 +19906,187 @@ x-validations:
               - "013"
               - "014"  
             _RETURN_: attr any in enumList  
-                 
 
-  
+      - _NAME_: CANCELLATION_ERROR
+        usecasepath: $.error.code  
+        _CONTINUE_: '!(usecasepath are present)'
+        _RETURN_: 
+          - _NAME_: ERROR_CODE
+            attr: $.error.code
+            _RETURN_: attr are present
+
+          - _NAME_: ERROR_MESSAGE
+            attr: $.error.message
+            _RETURN_: attr are present
+
+    update:
+      - _NAME_: UPDATE_CONTEXT
+        action:
+          - update
+        domain:
+          - ONDC:TRV14
+        version: 
+          - 2.0.0
+        _RETURN_: *ref_30
+
+      - _NAME_: UPDATE_CANCELLATION_ITEMS
+        _RETURN_:
+          - _NAME_: REQUIRED_UPDATE_ITEMS
+            _RETURN_:
+              - _NAME_: REQUIRED_REASON_ID
+                attr: $.message.order.cancellation.reason.id
+                _RETURN_: attr are present
+
+              - _NAME_: REQUIRED_REASON_CODE
+                attr: $.message.order.cancellation.reason.descriptor.code
+                _RETURN_: attr are present
+
+              - _NAME_: REQUIRED_ITEMS_ID
+                attr: $.message.order.items[*].id
+                _RETURN_: attr are present
+
+              - _NAME_: REQUIRED_ITEMS_QUANTITY_COUNT
+                attr: $.message.order.items[*].quantity.selected.count
+                _RETURN_: attr are present         
+
+
+          - _NAME_: VALID_ENUM_UPDATE_ITEMS
+            _RETURN_:
+              - _NAME_: VALID_CANCELLATION_DESCRIPTOR_CODE
+                attr: $.message.order.cancellation.reason.descriptor.code
+                enumList: 
+                  - SOFT_CANCEL
+                  - CONFIRM_CANCEL
+                _RETURN_: attr any in enumList
+
+    on_update:
+      - _NAME_: ON_UPDATE_CONTEXT
+        action:
+          - on_update
+        domain:
+          - ONDC:TRV14
+        version: 
+          - 2.0.0
+        _RETURN_: *ref_30
+
+      - _NAME_: ON_UPDATE_ORDER
+        action:
+          - on_update
+        _RETURN_: &ref_42
+          - _NAME_: REQUIRED_ON_UPDATE_ORDER
+            _RETURN_: *COMMON_REQUIRED_ON_ACTION_ORDER_ITEMS
+
+          - _NAME_: VALID_ENUM_ON_UPDATE_ORDER
+            _RETURN_: 
+              - _NAME_: VALID_ENUM_ORDER_STATUS
+                attr: $.message.order.status
+                enumList:
+                  - SOFT_CANCEL
+                  - ACTIVE
+                _RETURN_: attr any in enumList  
+              
+              - _NAME_: REGEX_ON_CONFIRM_CREATED_AT
+                attr: $.message.order.created_at
+                reg: ['^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\.\\d{3}Z$']
+                _RETURN_: attr follow regex reg 
+
+              - _NAME_: REGEX_ON_CONFIRM_UPDATED_AT
+                attr: $.message.order.updated_at
+                reg: ['^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\.\\d{3}Z$']
+                _RETURN_: attr follow regex reg 
+
+      - _NAME_: ON_UPDATE_ITEMS
+        action:
+          - on_update
+        _RETURN_: *ref_44
+
+      - _NAME_: ON_UPDATE_FULFILLMENTS
+        action:
+          - on_update
+        _RETURN_: *ref_45
+
+      - _NAME_: ON_UPDATE_PROVIDER
+        action:
+          - on_update
+        _RETURN_: *ref_36
+
+      - _NAME_: ON_UPDATE_CANCELLATION_TERMS
+        action:
+          - on_cancel
+        _RETURN_: *ref_37
+
+      - _NAME_: ON_UPDATE_REPLACEMENT_TERMS
+        _RETURN_:
+          - _NAME_: REQUIRED_REPLACEMENT_TERMS_EXTERNAL_URL
+            attr: $.message.order.replacement_terms[*].external_ref.url
+            _RETURN_: attr are present
+
+          - _NAME_: REQUIRED_REPLACEMENT_TERMS_MIME_TYPE
+            attr: $.message.order.replacement_terms[*].external_ref.mimetype
+            _RETURN_: attr are present
+
+          - _NAME_: REGEX_REPLACEMENT_TERMS_ELIGIBLE_URL
+            attr: $.message.order.replacement_terms[*].external_ref.url
+            reg:
+              - ^https?:\\/\\/[a-zA-Z0-9.-]+(?:\\.[a-zA-Z]{2,})?(:\\d+)?(\\/[^\\s?#]*)?(\\?[^\\s#]*)?(#[^\\s]*)?$
+            _RETURN_: attr follow regex reg         
+
+      - _NAME_: ON_UPDATE_QUOTE
+        action:
+          - on_update
+        _RETURN_: *ref_38
+      - _NAME_: ON_UPDATE_PAYMENTS
+        action:
+          - on_update
+        _RETURN_: *ref_40
+      - _NAME_: ON_UPDATE_PAYMENTS_TAG
+        action:
+          - on_update
+        _RETURN_: *ref_41
+
+    rating:
+      - _NAME_: RATING_CONTEXT
+        action:
+          - rating
+        domain:
+          - ONDC:TRV14
+        version: 
+          - 2.0.0
+        _RETURN_: *ref_30
+
+      - _NAME_: MESSAGE_RATINGS
+        _RETURN_: 
+          - _NAME_: RATING_CATEGORY
+            attr: $.message.ratings[*].rating_category
+            _RETURN_: attr are present
+          - _NAME_: RATING_ID
+            attr: $.message.ratings[*].id
+            _RETURN_: attr are present
+          - _NAME_: RATING_VALUE
+            attr: $.message.ratings[*].value
+            _RETURN_: attr are present 
+
+    on_rating:
+      - _NAME_: ON_RATING_CONTEXT
+        action:
+          - on_rating
+        domain:
+          - ONDC:TRV14
+        version: 
+          - 2.0.0
+        _RETURN_: *ref_30
+
+      - _NAME_: RATING_ERROR
+        _RETURN_: 
+          - _NAME_: ERROR_CODE
+            attr: $.error.code
+            _RETURN_: attr are present
+
+          - _NAME_: ERROR_MESSAGE
+            attr: $.error.message
+            _RETURN_: attr are present  
+                     
+
 
   _SESSION_DATA_:
     trans: {}
