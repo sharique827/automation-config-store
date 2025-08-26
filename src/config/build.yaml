@@ -18775,7 +18775,7 @@ x-validations:
           - _NAME_: REGEX_MESSAGE_ITEMS_IMAGES_URL
             attr: $.message.order.items[*].descriptor.images[*].url
             reg:
-              - ^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$
+              - ^https:\/\/
             _RETURN_: attr follow regex reg
           - _NAME_: ABSTRACT_ITEM_CODE
             usecasepath: $.message.order.items[*].descriptor.code
@@ -19080,7 +19080,7 @@ x-validations:
           - _NAME_: REGEX_MESSAGE_ITEMS_IMAGES_URL
             attr: $.message.order.items[*].descriptor.images[*].url
             reg:
-              - ^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$
+              - ^https:\/\/
             _RETURN_: attr follow regex reg
           - _NAME_: ABSTRACT_ITEM_CODE
             usecasepath: $.message.order.items[*].descriptor.code
@@ -19397,7 +19397,7 @@ x-validations:
           - _NAME_: REGEX_MESSAGE_ITEMS_IMAGES_URL
             attr: $.message.order.items[*].descriptor.images[*].url
             reg:
-              - ^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$
+              - ^https:\/\/
             _RETURN_: attr follow regex reg
           - _NAME_: ABSTRACT_ITEM_CODE
             usecasepath: $.message.order.items[*].descriptor.code
@@ -19610,7 +19610,7 @@ x-validations:
           - _NAME_: REGEX_MESSAGE_ITEMS_IMAGES_URL
             attr: $.message.order.items[*].descriptor.images[*].url
             reg:
-              - ^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$
+              - ^https:\/\/
             _RETURN_: attr follow regex reg
           - _NAME_: ABSTRACT_ITEM_CODE
             usecasepath: $.message.order.items[*].descriptor.code
