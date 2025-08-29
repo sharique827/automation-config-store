@@ -24519,6 +24519,8 @@ x-validations:
           - weight_unit
           - weight_value
           - return_to_origin
+          - hsn_code
+          - ebn_exempt
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_3_cod_settlement_detail
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='cod_settlement_detail')]
@@ -25152,6 +25154,8 @@ x-validations:
           - quantity
           - weight_unit
           - weight_value
+          - hsn_code
+          - ebn_exempt
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_0_fulfill_request
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_request')]
@@ -25833,6 +25837,8 @@ x-validations:
           - quantity
           - weight_unit
           - weight_value
+          - hsn_code
+          - ebn_exempt
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_3
         validTags:
@@ -26519,6 +26525,8 @@ x-validations:
           - quantity
           - weight_unit
           - weight_value
+          - hsn_code
+          - ebn_exempt
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_3_cod_settlement_detail
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='cod_settlement_detail')]
@@ -27243,6 +27251,8 @@ x-validations:
           - quantity
           - weight_unit
           - weight_value
+          - hsn_code
+          - ebn_exempt
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_cod_settlement_detail
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='cod_settlement_detail')]
@@ -27282,13 +27292,6 @@ x-validations:
           - cancellation_reason_id
           - sub_reason_id
           - cancelled_by
-        _RETURN_: subTags all in validValues
-      - _NAME_: validate_tag_2_ebn
-        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='ebn')]
-        subTags: $.list[*].code
-        validValues:
-          - id
-          - expiry_date
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_linked_order_diff
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='linked_order_diff')]
@@ -28042,6 +28045,15 @@ x-validations:
           - quantity
           - weight_unit
           - weight_value
+          - hsn_code
+          - ebn_exempt
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_2_ebn_on_update
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='ebn')]
+        subTags: $.list[*].code
+        validValues:
+          - id
+          - expiry_date
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_cod_settlement_detail
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='cod_settlement_detail')]
@@ -28082,13 +28094,6 @@ x-validations:
           - pickup_slot_end
           - delivery_slot_start
           - delivery_slot_end
-        _RETURN_: subTags all in validValues
-      - _NAME_: validate_tag_2_ebn
-        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='ebn')]
-        subTags: $.list[*].code
-        validValues:
-          - id
-          - expiry_date
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_fulfill_response
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='fulfill_response')]
@@ -28702,6 +28707,15 @@ x-validations:
           - quantity
           - weight_unit
           - weight_value
+          - hsn_code
+          - ebn_exempt
+        _RETURN_: subTags all in validValues
+      - _NAME_: validate_tag_2_ebn_on_status_1
+        _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='ebn')]
+        subTags: $.list[*].code
+        validValues:
+          - id
+          - expiry_date
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_2_shipping_label
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='shipping_label')]
@@ -28788,7 +28802,7 @@ x-validations:
           - P003
           - Q001
         _RETURN_: subTags all in validValues
-      - _NAME_: validate_tag_2_ebn
+      - _NAME_: validate_tag_2_ebn_on_status_2
         _SCOPE_: $.message.order.fulfillments[*].tags[?(@.code=='ebn')]
         subTags: $.list[*].code
         validValues:
@@ -28846,6 +28860,8 @@ x-validations:
           - diff_proof
           - bap_terms
           - bpp_terms
+          - ebn
+          - fulfillment_proof
         tagPath: $.message.order.tags[*].code
         _CONTINUE_: "!(tagPath are present)"
         _RETURN_: tagPath all in validTags
