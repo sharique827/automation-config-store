@@ -22913,6 +22913,7 @@ x-validations:
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_3
         enumList:
         - QR
+        - USER_CONFIRMATION_AND_QR
         enumPath: "$.message.intent.fulfillment.stops[*].authorization.type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23144,6 +23145,7 @@ x-validations:
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_5
         enumList:
         - QR
+        - USER_CONFIRMATION_AND_QR
         enumPath: "$.message.order.fulfillments[*].stops[*].authorization.type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23356,6 +23358,7 @@ x-validations:
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_5
         enumList:
         - QR
+        - USER_CONFIRMATION_AND_QR
         enumPath: "$.message.order.fulfillments[*].stops[*].authorization.type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23600,6 +23603,7 @@ x-validations:
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_5
         enumList:
         - QR
+        - USER_CONFIRMATION_AND_QR
         enumPath: "$.message.order.fulfillments[*].stops[*].authorization.type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23844,6 +23848,7 @@ x-validations:
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_5
         enumList:
         - QR
+        - USER_CONFIRMATION_AND_QR
         enumPath: "$.message.order.fulfillments[*].stops[*].authorization.type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -24125,6 +24130,7 @@ x-validations:
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_2
         enumList:
         - QR
+        - USER_CONFIRMATION_AND_QR
         enumPath: "$.message.catalog.providers[*].fulfillments[*].stops[*].authorization.type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -24779,6 +24785,7 @@ x-validations:
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_1
         enumList:
         - QR
+        - USER_CONFIRMATION_AND_QR
         enumPath: "$.message.order.fulfillments[*].stops[*].authorization.type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -25685,6 +25692,7 @@ x-validations:
         _RETURN_: attr are present && attr all in enumList
         enumList:
         - QR
+        - USER_CONFIRMATION_AND_QR
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
         - METRO
