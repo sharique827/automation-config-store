@@ -441,6 +441,7 @@ async function validateFulfillments(
             delete obj2.end.time.timestamp;
             delete obj2?.state;
             delete obj1?.state;
+            
           }
           apiSeq =
             obj2.type === "Cancel"
@@ -452,8 +453,10 @@ async function validateFulfillments(
                 : ApiSequence.ON_STATUS_PENDING;
           if (obj2) {
             let tempobj2 = structuredClone(obj2)
-            delete tempobj2?.start?.time?.timestamp;
-            delete tempobj2?.end?.time?.timestamp;
+            delete tempobj2?.start?.time;
+            delete tempobj2?.end?.time;
+            delete obj1?.start?.time;
+            delete obj1?.end?.time;
             const errors = compareFulfillmentObject(obj1, tempobj2, keys, i, apiSeq);
             errors.forEach((item: any) => {
               result.push(addError(item.errMsg, ERROR_CODES.INVALID_RESPONSE));
