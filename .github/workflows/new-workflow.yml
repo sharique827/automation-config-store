@@ -28,21 +28,20 @@ jobs:
             echo "BUILD_TYPE=default" >> $GITHUB_ENV
           fi
 
-      # - name: Print environment variables (sanitized)
-      #   run: |
-      # - name: Print environment variables (sanitized)
-      #   run: |
-      #     echo "---- Effective environment variables ----"
-      #     echo "DOMAIN=$CONFIG_SERVICE_URL"
-      #     echo "PORT=${{ vars.CONFIG_SERVICE_URL }}"
-      #     echo "VERSION=$VERSION"
-      #     echo "IMAGE_NAME=$IMAGE_NAME"
-      #     echo "BUILD_TYPE=$BUILD_TYPE"
-      #     echo "vars.DOMAIN = ${{ vars.DOMAIN }}"
-      #     echo "vars.PORT = ${{ vars.PORT }}"
-      #     echo "vars.VERSION = ${{ vars.VERSION }}"
-      #     echo "repo-level DOMAIN = $DOMAIN"
-      #     env | grep -v -i "PASSWORD\|KEY\|SECRET" | sort
+
+      - name: Prepare build repo
+        run: |
+          echo "Cloning generator repo..."
+          git clone --single-branch --branch main https://github.com/ONDC-Official/automation-mock-service-generator.git automation-mock-service-generator
+
+          echo "Initializing submodules..."
+          cd automation-mock-service-generator
+          git submodule update --init --recursive
+
+          echo "Copying mock-config from current repo..."
+          cp -r $GITHUB_WORKSPACE/src/config/mock-config ./src/config/
+
+          echo "Build repo ready at $(pwd)"
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -54,7 +53,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          cd automation-mock-service-generator
+          IMAGE_NAME=ghcr.io/$SAFE_ORG/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
           docker build -t $IMAGE_NAME:${{ github.sha }} .
         env:
           DOCKER_BUILDKIT: 1
