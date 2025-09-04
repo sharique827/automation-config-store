@@ -56,7 +56,8 @@ jobs:
           # Remove colon from DOMAIN for Docker tag
           SAFE_DOMAIN="${{ vars.DOMAIN }}"
           SAFE_DOMAIN="${SAFE_DOMAIN//:/}"
-          SAFE_ORG="${GITHUB_REPOSITORY_OWNER,,}"   # lowercase in Bash
+          SAFE_ORG="${GITHUB_REPOSITORY%%/*}"  # GITHUB_REPOSITORY = owner/repo
+          SAFE_ORG="${SAFE_ORG,,}"             # lowercase
           echo "SAFE_DOMAIN=$SAFE_DOMAIN" >> $GITHUB_ENV
 
       - name: Build Docker image
