@@ -42,6 +42,10 @@ jobs:
           echo "VERSION=$VERSION"
           echo "IMAGE_NAME=$IMAGE_NAME"
           echo "BUILD_TYPE=$BUILD_TYPE"
+          echo "vars.DOMAIN = ${{ vars.DOMAIN }}"
+          echo "vars.PORT = ${{ vars.PORT }}"
+          echo "vars.VERSION = ${{ vars.VERSION }}"
+          echo "repo-level DOMAIN = $DOMAIN"
           env | grep -v -i "PASSWORD\|KEY\|SECRET" | sort
 
       - name: Log in to GHCR
