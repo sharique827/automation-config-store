@@ -35,6 +35,11 @@ jobs:
       - name: Print environment variables (sanitized)
         run: |
           echo "---- Effective environment variables ----"
+          echo "DOMAIN=$DOMAIN"
+          echo "PORT=$PORT"
+          echo "VERSION=$VERSION"
+          echo "IMAGE_NAME=$IMAGE_NAME"
+          echo "BUILD_TYPE=$BUILD_TYPE"
           env | grep -v -i "PASSWORD\|KEY\|SECRET" | sort
 
       - name: Log in to GHCR
