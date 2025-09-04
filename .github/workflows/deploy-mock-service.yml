@@ -1,4 +1,4 @@
-name: Deploy mock service
+name: Deploy mock service (beta)
 on:
   workflow_dispatch:
   # push:
