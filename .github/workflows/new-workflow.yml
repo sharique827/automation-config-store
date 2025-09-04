@@ -10,14 +10,8 @@ on:
 jobs:
   build-and-verify:
     runs-on: ubuntu-latest
-    environment: |
-      ${{
-        (startsWith(github.ref_name, 'release') && format('release-{0}', github.ref_name)) ||
-        (startsWith(github.ref_name, 'draft') && format('draft-{0}', github.ref_name)) ||
-        (startsWith(github.ref_name, 'release') && 'release') ||
-        (startsWith(github.ref_name, 'draft') && 'draft') ||
-        'default'
-      }}
+    environment: ${{ github.ref_name }}  # environment exactly matches branch name
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
