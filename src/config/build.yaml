@@ -26619,6 +26619,12 @@ x-validations:
           - static_terms
           - phone
           - np_tax_type
+          - max_liability
+          - max_liability_cap
+          - mandatory_arbitration
+          - mandatory_arbitration
+          - court_jurisdiction
+          - delay_interest
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_4_bap_terms
         _SCOPE_: $.message.order.tags[?(@.code=='bap_terms')]
@@ -28872,6 +28878,7 @@ x-validations:
           - bpp_terms
           - ebn
           - fulfillment_proof
+          - lbnp_sla_terms
         tagPath: $.message.order.tags[*].code
         _CONTINUE_: "!(tagPath are present)"
         _RETURN_: tagPath all in validTags
