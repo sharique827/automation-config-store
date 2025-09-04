@@ -37,8 +37,8 @@ jobs:
       - name: Print environment variables (sanitized)
         run: |
           echo "---- Effective environment variables ----"
-          echo "DOMAIN=$DOMAIN"
-          echo "PORT=$PORT"
+          echo "DOMAIN=$CONFIG_SERVICE_URL"
+          echo "PORT=${{ vars.CONFIG_SERVICE_URL }}"
           echo "VERSION=$VERSION"
           echo "IMAGE_NAME=$IMAGE_NAME"
           echo "BUILD_TYPE=$BUILD_TYPE"
