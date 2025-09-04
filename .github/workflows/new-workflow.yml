@@ -58,7 +58,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/automation-mock-service-${BUILD_TYPE}-${{ SAFE_DOMAIN }}-${{ vars.VERSION }}
+          IMAGE_NAME=ghcr.io/${{ github.repository }}/automation-mock-service-${BUILD_TYPE}-$SAFE_DOMAIN-${{ vars.VERSION }}
           docker build -t $IMAGE_NAME:${{ github.sha }} .
         env:
           DOCKER_BUILDKIT: 1
