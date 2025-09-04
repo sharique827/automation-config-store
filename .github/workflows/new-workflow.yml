@@ -68,7 +68,7 @@ jobs:
 
       - name: Run container locally
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner,, }}/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          IMAGE_NAME=ghcr.io/$SAFE_ORG/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
           docker run -d --rm --name mock-test \
             -p ${{ vars.PORT }}:${{ vars.PORT }} \
             $IMAGE_NAME:${{ github.sha }}
@@ -96,7 +96,7 @@ jobs:
 
       - name: Tag & Push Images
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner,, }}/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          IMAGE_NAME=ghcr.io/$SAFE_ORG/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
           docker tag $IMAGE_NAME:${{ github.sha }} $IMAGE_NAME:latest
           docker tag $IMAGE_NAME:${{ github.sha }} $IMAGE_NAME:stable
           docker push $IMAGE_NAME:${{ github.sha }}
@@ -151,7 +151,7 @@ jobs:
             LOKI_HOST=${{ vars.LOKI_HOST }}
             EOF
 
-            IMAGE_NAME=ghcr.io/${{ github.repository_owner,, }}/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+            IMAGE_NAME=ghcr.io/$SAFE_ORG/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
 
             echo "Pulling latest image..."
             docker pull $IMAGE_NAME:stable || docker pull $IMAGE_NAME:${{ github.sha }}
