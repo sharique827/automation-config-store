@@ -26,21 +26,21 @@ jobs:
             echo "BUILD_TYPE=default" >> $GITHUB_ENV
           fi
 
-      - name: Print environment variables (sanitized)
-        run: |
-      - name: Print environment variables (sanitized)
-        run: |
-          echo "---- Effective environment variables ----"
-          echo "DOMAIN=$CONFIG_SERVICE_URL"
-          echo "PORT=${{ vars.CONFIG_SERVICE_URL }}"
-          echo "VERSION=$VERSION"
-          echo "IMAGE_NAME=$IMAGE_NAME"
-          echo "BUILD_TYPE=$BUILD_TYPE"
-          echo "vars.DOMAIN = ${{ vars.DOMAIN }}"
-          echo "vars.PORT = ${{ vars.PORT }}"
-          echo "vars.VERSION = ${{ vars.VERSION }}"
-          echo "repo-level DOMAIN = $DOMAIN"
-          env | grep -v -i "PASSWORD\|KEY\|SECRET" | sort
+      # - name: Print environment variables (sanitized)
+      #   run: |
+      # - name: Print environment variables (sanitized)
+      #   run: |
+      #     echo "---- Effective environment variables ----"
+      #     echo "DOMAIN=$CONFIG_SERVICE_URL"
+      #     echo "PORT=${{ vars.CONFIG_SERVICE_URL }}"
+      #     echo "VERSION=$VERSION"
+      #     echo "IMAGE_NAME=$IMAGE_NAME"
+      #     echo "BUILD_TYPE=$BUILD_TYPE"
+      #     echo "vars.DOMAIN = ${{ vars.DOMAIN }}"
+      #     echo "vars.PORT = ${{ vars.PORT }}"
+      #     echo "vars.VERSION = ${{ vars.VERSION }}"
+      #     echo "repo-level DOMAIN = $DOMAIN"
+      #     env | grep -v -i "PASSWORD\|KEY\|SECRET" | sort
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -51,7 +51,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/automation-mock-service-${BUILD_TYPE}-${{ vars.DOMAIN }}-${{ vars.VERSION }}
+          SAFE_DOMAIN=${{ vars.DOMAIN//:/}}
+          IMAGE_NAME=ghcr.io/${{ github.repository }}/automation-mock-service-${BUILD_TYPE}-${{ SAFE_DOMAIN }}-${{ vars.VERSION }}
           docker build -t $IMAGE_NAME:${{ github.sha }} .
         env:
           DOCKER_BUILDKIT: 1
