@@ -63,7 +63,7 @@ jobs:
       - name: Run container locally
         run: |
           IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
-          cat > $REPO_DIR/.env <<EOF
+          cat > ./.env <<EOF
               REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}
               REDIS_HOST=${{ secrets.REDIS_HOST }}
               REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
@@ -80,7 +80,7 @@ jobs:
             
           docker run -d --rm --name mock-test \
             -p ${{ vars.PORT }}:${{ vars.PORT }} \
-            --env-file .env \
+            --env-file ./.env \
             $IMAGE_NAME:${{ github.sha }}
           sleep 5
 
