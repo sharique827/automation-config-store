@@ -37,6 +37,7 @@ jobs:
           ls -R automation-mock-service-generator
           echo "Initializing submodules..."
           cd automation-mock-service-generator
+          GENERATOR_SHA=$(git rev-parse HEAD)
           git submodule update --init --recursive
 
           echo "Copying mock-config from current repo..."
@@ -56,7 +57,7 @@ jobs:
         run: |
           cd automation-mock-service-generator
           IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
-          docker build -t $IMAGE_NAME:${{ github.sha }} .
+          docker build -t $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA} .
         env:
           DOCKER_BUILDKIT: 1
 
@@ -81,7 +82,7 @@ jobs:
       #     docker run -d --rm --name mock-test \
       #       -p ${{ vars.PORT }}:${{ vars.PORT }} \
       #       --env-file ./.env \
-      #       $IMAGE_NAME:${{ github.sha }}
+      #       $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA}
       #     sleep 5
 
       # - name: Healthcheck
@@ -107,9 +108,9 @@ jobs:
       - name: Tag & Push Images
         run: |
           IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
-          docker tag $IMAGE_NAME:${{ github.sha }} $IMAGE_NAME:latest
-          docker tag $IMAGE_NAME:${{ github.sha }} $IMAGE_NAME:stable
-          docker push $IMAGE_NAME:${{ github.sha }}
+          docker tag $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA} $IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA} $IMAGE_NAME:stable
+          docker push $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA}
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:stable
 
