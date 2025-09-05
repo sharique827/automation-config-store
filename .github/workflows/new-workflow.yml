@@ -166,4 +166,4 @@ jobs:
   #           docker run -d --name automation-mock-service-${BUILD_TYPE}-${{ vars.DOMAIN }}-${{ vars.VERSION }} \
   #             --env-file $REPO_DIR/.env \
   #             -p ${{ vars.PORT }}:${{ vars.PORT }} \
-              $IMAGE_NAME:stable
+              # $IMAGE_NAME:stable
