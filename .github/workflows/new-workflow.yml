@@ -40,7 +40,6 @@ jobs:
           git submodule update --init --recursive
 
           echo "Copying mock-config from current repo..."
-          ls -R automation-mock-service-generator
           cp -r $GITHUB_WORKSPACE/mock-service/src/config/mock-config ./src/config/
 
           echo "Build repo ready at $(pwd)"
