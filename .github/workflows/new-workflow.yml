@@ -38,11 +38,11 @@ jobs:
           echo "Initializing submodules..."
           cd automation-mock-service-generator
           GENERATOR_SHA=$(git rev-parse HEAD)
+          TAG="$GITHUB_SHA-$GENERATOR_SHA"
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "TAG in this step: $TAG"
+          GENERATOR_SHA=$(git rev-parse HEAD)
           git submodule update --init --recursive
-          TAG="$GITHUB_SHA-$GENERATOR_SHA"    # bash variable
-          echo "TAG=$TAG" >> $GITHUB_ENV     # export for next steps
-          echo TAG in this step: $TAG   
-
           echo "Copying mock-config from current repo..."
           cp -r $GITHUB_WORKSPACE/mock-service/src/config/mock-config ./src/config/
 
