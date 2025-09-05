@@ -55,7 +55,7 @@ jobs:
       - name: Build Docker image
         run: |
           cd automation-mock-service-generator
-          IMAGE_NAME=ghcr.io/$SAFE_ORG/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
           docker build -t $IMAGE_NAME:${{ github.sha }} .
         env:
           DOCKER_BUILDKIT: 1
