@@ -33,13 +33,14 @@ jobs:
         run: |
           echo "Cloning generator repo..."
           git clone --single-branch --branch main https://github.com/ONDC-Official/automation-mock-service-generator.git automation-mock-service-generator
-
+          ls -R automation-mock-service-generator
           echo "Initializing submodules..."
           cd automation-mock-service-generator
           git submodule update --init --recursive
 
           echo "Copying mock-config from current repo..."
-          cp -r $GITHUB_WORKSPACE/src/config/mock-config ./src/config/
+          ls -R automation-mock-service-generator
+          cp -r $GITHUB_WORKSPACE/automation-mock-service/src/config/mock-config ./src/config/
 
           echo "Build repo ready at $(pwd)"
 
