@@ -32,7 +32,7 @@ jobs:
       - name: Prepare build repo
         run: |
           echo "Cloning generator repo..."
-          ls -R root
+          ls -R $GITHUB_WORKSPACE
           git clone --single-branch --branch main https://github.com/ONDC-Official/automation-mock-service-generator.git automation-mock-service-generator
           ls -R automation-mock-service-generator
           echo "Initializing submodules..."
