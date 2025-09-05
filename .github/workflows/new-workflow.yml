@@ -20,7 +20,6 @@ jobs:
 
       - name: Detect build type
         run: |
-          ls -R root
           if [[ "${GITHUB_REF_NAME}" == draft* ]]; then
             echo "BUILD_TYPE=draft" >> $GITHUB_ENV
           elif [[ "${GITHUB_REF_NAME}" == release* ]]; then
@@ -33,6 +32,7 @@ jobs:
       - name: Prepare build repo
         run: |
           echo "Cloning generator repo..."
+          ls -R root
           git clone --single-branch --branch main https://github.com/ONDC-Official/automation-mock-service-generator.git automation-mock-service-generator
           ls -R automation-mock-service-generator
           echo "Initializing submodules..."
