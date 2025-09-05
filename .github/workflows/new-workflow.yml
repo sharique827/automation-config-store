@@ -58,6 +58,7 @@ jobs:
           cd automation-mock-service-generator
           IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
           docker build -t $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA} .
+          echo "${{ github.sha }}-${GENERATOR_SHA}"
         env:
           DOCKER_BUILDKIT: 1
 
