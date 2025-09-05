@@ -111,7 +111,7 @@ jobs:
 
       - name: Tag & Push Images
         run: |
-          echo "TAG in next step: $TAG"
+          echo TAG in next step: $TAG
           # IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
           # docker tag $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA} $IMAGE_NAME:latest
           # docker tag $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA} $IMAGE_NAME:stable
