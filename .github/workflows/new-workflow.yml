@@ -32,15 +32,15 @@ jobs:
       - name: Prepare build repo
         run: |
           echo "Cloning generator repo..."
-          ls -R $GITHUB_WORKSPACE
+          # ls -R $GITHUB_WORKSPACE
           git clone --single-branch --branch main https://github.com/ONDC-Official/automation-mock-service-generator.git automation-mock-service-generator
-          ls -R automation-mock-service-generator
+          # ls -R automation-mock-service-generator
           echo "Initializing submodules..."
           cd automation-mock-service-generator
           GENERATOR_SHA=$(git rev-parse HEAD)
           git submodule update --init --recursive
           echo "TAG=${{ github.sha }}-${GENERATOR_SHA}" >> $GITHUB_ENV
-          echo $GENERATOR_SHA
+          echo $TAG
 
           echo "Copying mock-config from current repo..."
           cp -r $GITHUB_WORKSPACE/mock-service/src/config/mock-config ./src/config/
