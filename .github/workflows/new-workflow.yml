@@ -39,7 +39,7 @@ jobs:
           cd automation-mock-service-generator
           GENERATOR_SHA=$(git rev-parse HEAD)
           git submodule update --init --recursive
-          TAG="${{ github.sha }}-${GENERATOR_SHA}"
+          echo "TAG=${{ github.sha }}-${GENERATOR_SHA}" >> $GITHUB_ENV
 
           echo "Copying mock-config from current repo..."
           cp -r $GITHUB_WORKSPACE/mock-service/src/config/mock-config ./src/config/
