@@ -63,8 +63,24 @@ jobs:
       - name: Run container locally
         run: |
           IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          cat > $REPO_DIR/.env <<EOF
+              REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}
+              REDIS_HOST=${{ secrets.REDIS_HOST }}
+              REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+              REDIS_PORT=${{ secrets.REDIS_PORT }}
+              PORT=${{ vars.PORT }}
+              API_SERVICE_URL=${{ vars.API_SERVICE_URL }}
+              DOMAIN=${{ vars.DOMAIN }}
+              CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
+              API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY }}
+              FORM_SERVICE=${{ vars.FORM_SERVICE }}
+              NODE_ENV=${{ vars.NODE_ENV }}
+              LOKI_HOST=${{ vars.LOKI_HOST }}
+            EOF
+            
           docker run -d --rm --name mock-test \
             -p ${{ vars.PORT }}:${{ vars.PORT }} \
+            --env-file .env \
             $IMAGE_NAME:${{ github.sha }}
           sleep 5
 
@@ -90,7 +106,7 @@ jobs:
 
       - name: Tag & Push Images
         run: |
-          /$SAFE_ORG/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
           docker tag $IMAGE_NAME:${{ github.sha }} $IMAGE_NAME:latest
           docker tag $IMAGE_NAME:${{ github.sha }} $IMAGE_NAME:stable
           docker push $IMAGE_NAME:${{ github.sha }}
@@ -145,7 +161,7 @@ jobs:
             LOKI_HOST=${{ vars.LOKI_HOST }}
             EOF
 
-            /$SAFE_ORG/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+            IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
 
             echo "Pulling latest image..."
             docker pull $IMAGE_NAME:stable || docker pull $IMAGE_NAME:${{ github.sha }}
