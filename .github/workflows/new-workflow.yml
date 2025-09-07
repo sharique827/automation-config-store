@@ -60,7 +60,7 @@ jobs:
         run: |
           cd automation-mock-service-generator
           echo "TAG in this step: $TAG"
-          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${{vars.CONTAINER_NAME}}
           docker build -t $IMAGE_NAME:$TAG .
           echo "$TAG"
         env:
@@ -68,7 +68,7 @@ jobs:
 
       - name: Run container locally
         run: |
-          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${{vars.CONTAINER_NAME}}
           cat > ./.env <<EOF
               REDIS_USERNAME=${{ vars.REDIS_USERNAME }}
               REDIS_HOST=${{ vars.REDIS_HOST }}
@@ -113,7 +113,7 @@ jobs:
       - name: Tag & Push Images
         run: |
           echo TAG in next step: $TAG
-          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${{vars.CONTAINER_NAME}}
           docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:latest
           docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:stable
           docker push $IMAGE_NAME:$TAG
@@ -161,7 +161,7 @@ jobs:
   #           LOKI_HOST=${{ vars.LOKI_HOST }}
   #           EOF
 
-  #           IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+  #           IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${{vars.CONTAINER_NAME}}
 
   #           echo "Pulling latest image..."
   #           docker pull $IMAGE_NAME:stable || docker pull $IMAGE_NAME:${{ github.sha }}
