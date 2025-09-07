@@ -84,7 +84,7 @@ jobs:
               LOKI_HOST=${{ vars.LOKI_HOST }}
             EOF
             
-          docker run -d --rm --name mock-test \
+          docker run --rm --name mock-test \
             -p ${{ vars.PORT }}:${{ vars.PORT }} \
             --env-file ./.env \
             $IMAGE_NAME:$TAG
