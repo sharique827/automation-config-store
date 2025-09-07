@@ -87,7 +87,7 @@ jobs:
             -p ${{ vars.PORT }}:${{ vars.PORT }} \
             --env-file ./.env \
             $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA}
-          sleep 5
+          sleep 15
 
       - name: Healthcheck
         run: |
