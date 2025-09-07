@@ -82,7 +82,7 @@ jobs:
               FORM_SERVICE=${{ vars.FORM_SERVICE }}
               NODE_ENV=${{ vars.NODE_ENV }}
               LOKI_HOST=${{ vars.LOKI_HOST }}
-            EOF
+          EOF
             
           # docker run -d --rm --name mock-test \
           #   -p ${{ vars.PORT }}:${{ vars.PORT }} \
@@ -90,22 +90,22 @@ jobs:
           #   $IMAGE_NAME:$TAG
           # sleep 5
 
-            docker run -d --name mock-test \
-              -p ${{ vars.PORT }}:${{ vars.PORT }} \
-              --env-file .env \
-              $IMAGE_NAME:$TAG
-        
-            echo "⏳ Waiting for service..."
-            sleep 5
-        
-            echo "📋 Container status:"
-            docker ps -a
-        
-            echo "📜 Logs:"
-            docker logs mock-test || true
-        
-            echo "🔍 Health check:"
-            curl -v http://localhost:${{ vars.PORT }}/health || true
+          docker run -d --name mock-test \
+            -p ${{ vars.PORT }}:${{ vars.PORT }} \
+            --env-file .env \
+            $IMAGE_NAME:$TAG
+      
+          echo "⏳ Waiting for service..."
+          sleep 5
+      
+          echo "📋 Container status:"
+          docker ps -a
+      
+          echo "📜 Logs:"
+          docker logs mock-test || true
+      
+          echo "🔍 Health check:"
+          curl -v http://localhost:${{ vars.PORT }}/health || true
 
       # - name: Healthcheck
       #   run: |
