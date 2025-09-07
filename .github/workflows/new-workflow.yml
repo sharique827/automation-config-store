@@ -62,7 +62,7 @@ jobs:
           echo "TAG in this step: $TAG"
           IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
           docker build -t $IMAGE_NAME:$TAG .
-          echo "${{ github.sha }}-${GENERATOR_SHA}"
+          echo "$TAG"
         env:
           DOCKER_BUILDKIT: 1
 
@@ -113,12 +113,12 @@ jobs:
       - name: Tag & Push Images
         run: |
           echo TAG in next step: $TAG
-          # IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
-          # docker tag $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA} $IMAGE_NAME:latest
-          # docker tag $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA} $IMAGE_NAME:stable
-          # docker push $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA}
-          # docker push $IMAGE_NAME:latest
-          # docker push $IMAGE_NAME:stable
+          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:stable
+          docker push $IMAGE_NAME:$TAG
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:stable
 
   # deploy:
   #   needs: build-and-verify
