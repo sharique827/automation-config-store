@@ -65,49 +65,49 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
 
-      # - name: Run container locally
-      #   run: |
-      #     IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
-      #     cat > ./.env <<EOF
-      #         REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}
-      #         REDIS_HOST=${{ secrets.REDIS_HOST }}
-      #         REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-      #         REDIS_PORT=${{ secrets.REDIS_PORT }}
-      #         PORT=${{ vars.PORT }}
-      #         API_SERVICE_URL=${{ vars.API_SERVICE_URL }}
-      #         DOMAIN=${{ vars.DOMAIN }}
-      #         CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
-      #         API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY }}
-      #         FORM_SERVICE=${{ vars.FORM_SERVICE }}
-      #         NODE_ENV=${{ vars.NODE_ENV }}
-      #         LOKI_HOST=${{ vars.LOKI_HOST }}
-      #       EOF
+      - name: Run container locally
+        run: |
+          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${BUILD_TYPE}-${{vars.CONTAINER_NAME}}
+          cat > ./.env <<EOF
+              REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}
+              REDIS_HOST=${{ secrets.REDIS_HOST }}
+              REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+              REDIS_PORT=${{ secrets.REDIS_PORT }}
+              PORT=${{ vars.PORT }}
+              API_SERVICE_URL=${{ vars.API_SERVICE_URL }}
+              DOMAIN=${{ vars.DOMAIN }}
+              CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
+              API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY }}
+              FORM_SERVICE=${{ vars.FORM_SERVICE }}
+              NODE_ENV=${{ vars.NODE_ENV }}
+              LOKI_HOST=${{ vars.LOKI_HOST }}
+            EOF
             
-      #     docker run -d --rm --name mock-test \
-      #       -p ${{ vars.PORT }}:${{ vars.PORT }} \
-      #       --env-file ./.env \
-      #       $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA}
-      #     sleep 5
+          docker run -p ${{vars.PORT}}:${{vars.PORT}} -d --rm --name mock-test \
+            -p ${{ vars.PORT }}:${{ vars.PORT }} \
+            --env-file ./.env \
+            $IMAGE_NAME:${{ github.sha }}-${GENERATOR_SHA}
+          sleep 5
 
-      # - name: Healthcheck
-      #   run: |
-      #     HEALTHCHECK_URL="http://localhost:${{ vars.PORT }}/mock/${{ vars.DOMAIN }}/health"
-      #     echo "Checking $HEALTHCHECK_URL ..."
-      #     for i in {1..10}; do
-      #       if curl -sSf "$HEALTHCHECK_URL" > /dev/null; then
-      #         echo "✅ Container is healthy"
-      #         exit 0
-      #       fi
-      #       echo "Waiting... ($i)"
-      #       sleep 2
-      #     done
-      #     echo "❌ Healthcheck failed!"
-      #     docker logs mock-test
-      #     exit 1
+      - name: Healthcheck
+        run: |
+          HEALTHCHECK_URL="http://localhost:${{ vars.PORT }}/mock/${{ vars.DOMAIN }}/health"
+          echo "Checking $HEALTHCHECK_URL ..."
+          for i in {1..10}; do
+            if curl -sSf "$HEALTHCHECK_URL" > /dev/null; then
+              echo "✅ Container is healthy"
+              exit 0
+            fi
+            echo "Waiting... ($i)"
+            sleep 2
+          done
+          echo "❌ Healthcheck failed!"
+          docker logs mock-test
+          exit 1
 
-      # - name: Stop test container
-      #   if: always()
-      #   run: docker stop mock-test || true
+      - name: Stop test container
+        if: always()
+        run: docker stop mock-test || true
 
       - name: Tag & Push Images
         run: |
