@@ -84,11 +84,28 @@ jobs:
               LOKI_HOST=${{ vars.LOKI_HOST }}
             EOF
             
-          docker run --rm --name mock-test \
-            -p ${{ vars.PORT }}:${{ vars.PORT }} \
-            --env-file ./.env \
-            $IMAGE_NAME:$TAG
-          sleep 5
+          # docker run -d --rm --name mock-test \
+          #   -p ${{ vars.PORT }}:${{ vars.PORT }} \
+          #   --env-file ./.env \
+          #   $IMAGE_NAME:$TAG
+          # sleep 5
+
+            docker run -d --name mock-test \
+              -p ${{ vars.PORT }}:${{ vars.PORT }} \
+              --env-file .env \
+              $IMAGE_NAME:$TAG
+        
+            echo "⏳ Waiting for service..."
+            sleep 5
+        
+            echo "📋 Container status:"
+            docker ps -a
+        
+            echo "📜 Logs:"
+            docker logs mock-test || true
+        
+            echo "🔍 Health check:"
+            curl -v http://localhost:${{ vars.PORT }}/health || true
 
       # - name: Healthcheck
       #   run: |
@@ -106,19 +123,19 @@ jobs:
       #     docker logs mock-test
       #     exit 1
 
-      - name: Stop test container
-        if: always()
-        run: docker stop mock-test || true
+      # - name: Stop test container
+      #   if: always()
+      #   run: docker stop mock-test || true
 
-      - name: Tag & Push Images
-        run: |
-          echo TAG in next step: $TAG
-          IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${{vars.CONTAINER_NAME}}
-          docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:latest
-          docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:stable
-          docker push $IMAGE_NAME:$TAG
-          docker push $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:stable
+      # - name: Tag & Push Images
+      #   run: |
+      #     echo TAG in next step: $TAG
+      #     IMAGE_NAME=ghcr.io/ondc-official/automation-mock-service-${{vars.CONTAINER_NAME}}
+      #     docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:latest
+      #     docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:stable
+      #     docker push $IMAGE_NAME:$TAG
+      #     docker push $IMAGE_NAME:latest
+      #     docker push $IMAGE_NAME:stable
 
   # deploy:
   #   needs: build-and-verify
