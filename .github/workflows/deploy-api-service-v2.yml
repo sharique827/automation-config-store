@@ -47,7 +47,8 @@ jobs:
           echo "Copying api-config from current repo..."
 
           cp -r $GITHUB_WORKSPACE/api-service/src/config/ ./src/config/
-          ls -R automation-api-service-generator/src/config
+          ls -R automation-api-service-generator
+          ls -R automation-api-service-generator/src
           echo "Build repo ready at $(pwd)"
 
       - name: Log in to GHCR
