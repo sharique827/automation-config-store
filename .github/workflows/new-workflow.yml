@@ -164,12 +164,12 @@ jobs:
 
             echo "Writing .env file..."
             cat > $REPO_DIR/.env <<EOF
-            REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}
-            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_USERNAME=${{ vars.REDIS_USERNAME }}
+            REDIS_HOST=${{ vars.REDIS_HOST }}
             REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-            REDIS_PORT=${{ secrets.REDIS_PORT }}
+            REDIS_PORT=${{ vars.REDIS_PORT }}
             PORT=${{ vars.MOCK_SERVICE_PORT }}
-            API_SERVICE_URL=${{ vars.API_SERVICE_URL }}
+            API_SERVICE_URL=${{  secrets.API_SERVICE_KEY_DEV }}
             DOMAIN=${{ vars.DOMAIN }}
             CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
             API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY }}
