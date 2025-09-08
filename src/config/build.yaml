@@ -22828,8 +22828,8 @@ x-validations:
       - _NAME_: VALIDATE_CITY_CODE_FORMAT
         _SCOPE_: "$.context.location.city"
         subTags: "$.code"
-        match: ["^std:0\\d+$"]
-        _RETURN_: subTags follow regex match      
+        match1: ["^std:0\\d+$"]
+        _RETURN_: subTags follow regex match1      
       - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
         attr: "$.context.domain"
         _RETURN_: attr are present && attr all in enumList
@@ -26800,8 +26800,8 @@ x-validations:
       - _NAME_: VALIDATE_CANCELLATION_DURATION_FORMAT
         _SCOPE_: "$.message.order.cancellation_terms[*].cancel_by"
         subTags: "$.duration"
-        match: ["^P(\\d+D)?(T(\\d+H)?(\\d+M)?)?$"]
-        _RETURN_: subTags follow regex match
+        match1: ["^P(\\d+D)?(T(\\d+H)?(\\d+M)?)?$"]
+        _RETURN_: subTags follow regex match1
 
     on_status:
       - _NAME_: REQUIRED_PAYMENT_STATUS
