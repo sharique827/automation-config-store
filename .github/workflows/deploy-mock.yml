@@ -2,9 +2,12 @@ name: Deploy Mock Service
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - draft-TRV14-2.0.0
+  #temporary disable workflow trigger
+  # push:
+  #   branches:
+  #     - draft-TRV14-2.0.0
+     
+     
       # - "draft/*"
       # - "release/*"
       
