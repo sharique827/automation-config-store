@@ -75,10 +75,10 @@ jobs:
               REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
               REDIS_PORT=${{ vars.REDIS_PORT }}
               PORT=${{ vars.MOCK_SERVICE_PORT }}
-              API_SERVICE_URL=${{  secrets.API_SERVICE_KEY_DEV }}
+              API_SERVICE_URL=${{  vars.API_SERVICE_URL }}
               DOMAIN=${{ vars.DOMAIN }}
               CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
-              API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY }}
+              API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_DEV }}
               FORM_SERVICE=${{ vars.FORM_SERVICE }}
               NODE_ENV=${{ vars.NODE_ENV }}
               LOKI_HOST=${{ vars.LOKI_HOST }}
@@ -169,10 +169,10 @@ jobs:
             REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
             REDIS_PORT=${{ vars.REDIS_PORT }}
             PORT=${{ vars.MOCK_SERVICE_PORT }}
-            API_SERVICE_URL=${{  secrets.API_SERVICE_KEY_DEV }}
+            API_SERVICE_URL=${{  vars.API_SERVICE_URL }}
             DOMAIN=${{ vars.DOMAIN }}
             CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
-            API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY }}
+            API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_DEV }}
             FORM_SERVICE=${{ vars.FORM_SERVICE }}
             NODE_ENV=${{ vars.NODE_ENV }}
             LOKI_HOST=${{ vars.LOKI_HOST }}
