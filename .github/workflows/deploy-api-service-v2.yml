@@ -112,7 +112,7 @@ jobs:
 
       - name: Healthcheck
         run: |
-          HEALTHCHECK_URL="http://localhost:${{ vars. API_SERVICE_PORT }}/api-service/${{ vars.DOMAIN }}/health"
+          HEALTHCHECK_URL="http://localhost:${{ vars.API_SERVICE_PORT}}/api-service/${{ vars.DOMAIN }}/${{vars.VERSION}}/health"
           echo "Checking $HEALTHCHECK_URL ..."
           for i in {1..10}; do
             if curl -sSf "$HEALTHCHECK_URL" > /dev/null; then
