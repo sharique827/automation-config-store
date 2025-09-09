@@ -196,7 +196,7 @@ jobs:
             mkdir -p $REPO_DIR
 
             echo "Writing .env file..."
-
+            cd \$REPO_DIR
             cat > ./.env <<EOF
             NODE_ENV=${{ vars.NODE_ENV }}
             SIGN_PRIVATE_KEY=${{ secrets.SIGN_PRIVATE_KEY }}
