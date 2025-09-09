@@ -192,7 +192,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            REPO_DIR="~/ONDC-automation-framework/api-service/automation-api-service-${{ github.ref_name }}"
+            REPO_DIR="$HOME/ONDC-automation-framework/api-service/automation-api-service-${{ github.ref_name }}"
             mkdir -p $REPO_DIR
 
             echo "Writing .env file..."
