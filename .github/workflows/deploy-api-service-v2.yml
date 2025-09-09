@@ -98,14 +98,14 @@ jobs:
             --env-file .env \
             $IMAGE_NAME:$TAG
       
-          # echo "⏳ Waiting for service..."
-          # sleep 5
+          echo "⏳ Waiting for service..."
+          sleep 5
       
-          # echo "📋 Container status:"
-          # docker ps -a
+          echo "📋 Container status:"
+          docker ps -a
       
-          # echo "📜 Logs:"
-          # docker logs api-test || true
+          echo "📜 Logs:"
+          docker logs api-test || true
       
           # echo "🔍 Health check:"
           # curl -v http://localhost:${{ vars. API_SERVICE_PORT }}/health || true
