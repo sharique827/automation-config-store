@@ -3,12 +3,14 @@ name: Deploy Api Service
 on:
   workflow_dispatch:
   push:
+    paths:
+      - "api-service/**"
+      - "mock-service/**"
     branches:
-      - draft-TRV14-2.0.0
-      # - "draft/*"
-      # - "release/*"
-      
+      - "draft-*"
+      - "release-*"
 
+      
 jobs:
   build-and-verify:
     runs-on: ubuntu-latest
