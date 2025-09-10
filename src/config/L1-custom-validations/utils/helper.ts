@@ -312,21 +312,6 @@ export function validateLocations(locations: any[], tags: any[]) {
                     "Circle radius should not exceed 500 km for serviceability, even if it is PAN India.",
             });
         }
-
-        for (let i = 0; i < tags.length; i++) {
-            if (tags[i].code === "serviceability") {
-                for (let j = 0; j < tags[i].list.length; j++) {
-                    if (
-                        tags[i].list[j].code === "val" &&
-                        tags[i].list[j].value !== radius.value
-                    ) {
-                        Object.assign(errorObj, {
-                            srvcabilityValErr: `value passed in serviceability tags[${i}] should be same as passed in location/circle`,
-                        });
-                    }
-                }
-            }
-        }
     }
 
     return errorObj;
