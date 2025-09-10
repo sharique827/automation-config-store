@@ -45,9 +45,7 @@ jobs:
           GENERATOR_SHA=$(git rev-parse HEAD)
           git submodule update --init --recursive
           echo "Copying api-config from current repo..."
-
-          cp -r $GITHUB_WORKSPACE/api-service/src/config/ ./src/config/
-          ls -R ./
+          cp -rf $GITHUB_WORKSPACE/api-service/src/config/* ./src/config/
           # ls -R automation-api-service-generator/src
           echo "Build repo ready at $(pwd)"
 
