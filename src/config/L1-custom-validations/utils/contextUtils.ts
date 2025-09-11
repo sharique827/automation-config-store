@@ -91,15 +91,15 @@ export const contextChecker = async (
       const prevCountry = await getRedisValue(`${txnId}_country`);
       const prevDomain = await getRedisValue(`${txnId}_domain`);
 
-      const previousCallPresent = await addActionToRedisSet(
-        txnId,
-        pastCall,
-        currentCall
-      );
+      // const previousCallPresent = await addActionToRedisSet(
+      //   txnId,
+      //   pastCall,
+      //   currentCall
+      // );
 
-      if ( !previousCallPresent) {
-        throw new Error(`previous call doesn't exist`);
-      }
+      // if ( !previousCallPresent) {
+      //   throw new Error(`previous call doesn't exist`);
+      // }
 
       if (
         context.action !== "on_status" &&

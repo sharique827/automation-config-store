@@ -21,12 +21,12 @@ import { validationOutput } from "./types";
 
 export async function performL1CustomValidations(
   payload: any,
-	action: string,
-	subscriberUrl: string,
-	allErrors = false,
-	externalData = {}
-):  Promise<validationOutput> {
-  payload = structuredClone(payload)
+  action: string,
+  subscriberUrl: string,
+  allErrors = false,
+  externalData = {}
+): Promise<validationOutput> {
+  payload = structuredClone(payload);
   console.log("Performing custom L1 validations for action: " + action);
   let result: any = [];
   switch (action) {
@@ -78,6 +78,9 @@ export async function performL1CustomValidations(
     case "on_update":
       result = await onUpdateRouter(payload);
       break;
+    case "issue":
+    case "on_issue":
+      return result;
     default:
       result = [
         {
