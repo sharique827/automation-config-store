@@ -836,7 +836,7 @@ const onSelect = async (data: any) => {
                         });
                     }
                     if (
-                        item["@ondc/org/title_type"] !== "item" &&
+                        item["@ondc/org/title_type"] !== "item" && item["@ondc/org/title_type"] !== "offer" &&
                         !(item.title.toLowerCase().trim() in retailPymntTtl)
                     ) {
                         result.push({
@@ -845,7 +845,7 @@ const onSelect = async (data: any) => {
                             description: `Quote breakup Payment title "${item.title}" is not as per the API Contract`,
                         });
                     } else if (
-                        item["@ondc/org/title_type"] !== "item" &&
+                        item["@ondc/org/title_type"] !== "item" && item["@ondc/org/title_type"] !== "offer" &&
                         retailPymntTtl[item.title.toLowerCase().trim()] !==
                         item["@ondc/org/title_type"]
                     ) {
