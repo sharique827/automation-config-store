@@ -269,7 +269,8 @@ async function validateFulfillments(
     if (fulfillmentIdsArray && !fulfillmentIdsArray.includes(ff.id)) {
       result.push(
         addError(
-          `Fulfillment id ${ff.id || "missing"} does not exist in /${constants.ON_SELECT
+          `Fulfillment id ${ff.id || "missing"} does not exist in /${
+            constants.ON_SELECT
           }`,
           ERROR_CODES.INVALID_RESPONSE
         )
@@ -421,24 +422,23 @@ async function validateFulfillments(
       });
 
       let i = 0;
-      for (let obj1 of fulfillmentsItemsSet) {
+      for (const obj1 of fulfillmentsItemsSet) {
         const keys = Object.keys(obj1);
         let obj2 = order.fulfillments.filter((f: any) => f.type === obj1.type);
         let apiSeq =
           obj1.type === "Cancel"
             ? ApiSequence.ON_UPDATE_PART_CANCEL
             : (await RedisService.getKey(`${transaction_id}_onCnfrmState`)) ===
-              "Accepted"
-            ? ApiSequence.ON_CONFIRM
-            : ApiSequence.ON_STATUS_PENDING;
+                "Accepted"
+              ? ApiSequence.ON_CONFIRM
+              : ApiSequence.ON_STATUS_PENDING;
 
         if (obj2.length > 0) {
           obj2 = obj2[0];
-          obj2 = structuredClone(obj2)
-          obj1 = structuredClone(obj1)
+          obj2 = structuredClone(obj2);
           if (obj2.type === "Delivery") {
-            delete obj2.start.time.timestamp;
-            delete obj2.end.time.timestamp;
+            delete obj2?.start?.time?.timestamp;
+            delete obj2?.end?.time?.timestamp;
             delete obj2?.state;
             delete obj1?.state;
             
@@ -447,22 +447,27 @@ async function validateFulfillments(
             obj2.type === "Cancel"
               ? ApiSequence.ON_UPDATE_PART_CANCEL
               : (await RedisService.getKey(
-                `${transaction_id}_onCnfrmState`
-              )) === "Accepted"
+                    `${transaction_id}_onCnfrmState`
+                  )) === "Accepted"
                 ? ApiSequence.ON_CONFIRM
                 : ApiSequence.ON_STATUS_PENDING;
           if (obj2) {
-            let tempobj2 = structuredClone(obj2)
+            let tempobj2 = structuredClone(obj2);
             delete tempobj2?.start?.time;
             delete tempobj2?.end?.time;
             delete obj1?.start?.time;
             delete obj1?.end?.time;
-            const errors = compareFulfillmentObject(obj1, tempobj2, keys, i, apiSeq);
+            const errors = compareFulfillmentObject(
+              obj1,
+              tempobj2,
+              keys,
+              i,
+              apiSeq
+            );
             errors.forEach((item: any) => {
               result.push(addError(item.errMsg, ERROR_CODES.INVALID_RESPONSE));
             });
           }
-
         } else {
           result.push(
             addError(
@@ -477,7 +482,7 @@ async function validateFulfillments(
       fulfillmentsItemsSet.clear();
       fulfillmentsItemsStatusSet.forEach((ff: any) => {
         let obj: any = JSON.parse(ff);
-        obj = structuredClone(obj)
+        obj = structuredClone(obj);
         delete obj?.state;
         delete obj?.start?.time;
         delete obj?.end?.time;
@@ -500,7 +505,7 @@ async function validateFulfillments(
         );
       } else {
         let deliverObj = { ...deliveryObjArr[0] };
-        deliverObj = structuredClone(deliverObj)
+        deliverObj = structuredClone(deliverObj);
         delete deliverObj?.state;
         delete deliverObj?.tags;
         delete deliverObj?.start?.instructions;
@@ -962,7 +967,7 @@ const checkOnStatusDelivered = async (
   const result: any = [];
 
   try {
-    const data = structuredClone(payload)
+    const data = structuredClone(payload);
     const { context, message } = data;
     try {
       await contextChecker(
