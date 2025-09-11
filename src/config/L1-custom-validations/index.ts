@@ -88,6 +88,9 @@ export async function performL1CustomValidations(
     case "on_update":
       result = await onUpdateRouter(payload);
       break;
+    case "issue":
+    case "on_issue":
+      return result;
     default:
       result = [
         {
