@@ -18266,17 +18266,19 @@ x-validations:
             useCasePath: $.parent_category_id
             _CONTINUE_: (useCasePath are present)
             _RETURN_: attr are present
-          - _NAME_: ENUM_MESSAGE_PROVIDERS_CATRGORY_CODE
-            attr: $.message.catalog.providers[*].categories[*].descriptor.code
+          - _NAME_: ENUM_MESSAGE_PROVIDERS_CATRGORY_CODE    
+            _SCOPE_: $.message.catalog.providers[*].categories[*]
+            attr: $.descriptor.code
             enumList:
               - CULTURE_HERITAGE
-            useCasePath: $.message.catalog.providers[*].categories[*].parent_category_id
+            useCasePath: $.parent_category_id
             _CONTINUE_: (useCasePath are present)
             _RETURN_: attr all in enumList
           - _NAME_: CHECK_CATEGORY_ID_PARENT_ID
-            attr: $.message.catalog.providers[*].categories[*].parent_category_id
-            useCasePath: $.message.catalog.providers[*].categories[*].descriptor.code
-            var_category_id: $.message.catalog.providers[*].categories[*].id
+            _SCOPE_: $.message.catalog.providers[*].categories[*]
+            attr: $.parent_category_id
+            useCasePath: $.descriptor.code
+            var_category_id: $.id
             _CONTINUE_: '!(useCasePath are present && var_category_id equal to attr)'
             _RETURN_: attr are present
           - _NAME_: REQUIRED_MESSAGE_PROVIDERS_START_RANGE
