@@ -10,34 +10,38 @@ import { MockConfirmSuccessClass } from "./2.0.0/confirm/confirm_card_balance_su
 import { MockConfirmFaliureClass } from "./2.0.0/confirm/confirm_card_balance_faliure/class";
 import { MockOnConfirmSuccessDefaultClass } from "./2.0.0/on_confirm/on_confirm_card_balance_success/class";
 import { MockOnConfirmFaliureDefaultClass } from "./2.0.0/on_confirm/on_confirm_card_balance_faliure/class";
+import { MockAction } from "./classes/mock-action";
 
-export function getMockAction(actionId: string) {
-  switch (actionId) {
-    case "search":
-      return new MockSearchClass();
-    case "on_search":
-      return new MockOnSearchClass();
-    case "select":
-      return new MockSelectClass();
-    case "on_select":
-      return new MockOnSelectClass();
-    case "init":
-      return new MockInitClass();
-    case "on_init":
-      return new MockOnInitClass();
-    case "confirm":
-      return new MockConfirmClass();
-    case "confirm_card_balance_success":
-      return new MockConfirmSuccessClass();
-    case "confirm_card_balance_faliure":
-      return new MockConfirmFaliureClass();
-    case "on_confirm":
-      return new MockOnConfirmDefaultClass();
-    case "on_confirm_card_balance_success":
-      return new MockOnConfirmSuccessDefaultClass();
-    case "on_confirm_card_balance_faliure":
-      return new MockOnConfirmFaliureDefaultClass();
-    default:
-      throw new Error(`Action with ID ${actionId} not found`);
+type Ctor<T> = new () => T;
+
+const registry = {
+  search: MockSearchClass,
+  on_search: MockOnSearchClass,
+  select: MockSelectClass,
+  on_select: MockOnSelectClass,
+  init: MockInitClass,
+  on_init: MockOnInitClass,
+  confirm: MockConfirmClass,
+  confirm_card_balance_success: MockConfirmSuccessClass,
+  confirm_card_balance_faliure: MockConfirmFaliureClass,
+  on_confirm: MockOnConfirmDefaultClass,
+  on_confirm_card_balance_success: MockOnConfirmSuccessDefaultClass,
+  on_confirm_card_balance_faliure: MockOnConfirmFaliureDefaultClass,
+} as const satisfies Record<string, Ctor<MockAction>>;
+
+export function getFIS11MockAction(actionId: string): MockAction {
+  const Ctor = registry[actionId as keyof typeof registry];
+  if (!Ctor) {
+    throw new Error(`Action with ID ${actionId} not found`);
   }
+  return new Ctor();
+}
+
+export function listFIS11MockActions(): (keyof typeof registry)[] {
+  return Object.keys(registry) as (keyof typeof registry)[];
+}
+
+// Keep backward compatibility
+export function getMockAction(actionId: string) {
+  return getFIS11MockAction(actionId);
 }
