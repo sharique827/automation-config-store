@@ -13,6 +13,8 @@ const actionConfigFIS11 = yaml.load(
 	readFileSync(path.join(__dirname, "./FIS11/factory.yaml"), "utf8")
 ) as any;
 
+export const actionConfig = actionConfigFIS11;
+
 export const defaultSessionDataFIS11 = () =>
 	yaml.load(
 		readFileSync(path.join(__dirname, "./FIS11/session-data.yaml"), "utf8")
