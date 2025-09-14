@@ -7,5 +7,5 @@ import { testFlow, testUnitApi } from "./mock-testing";
 
 (async () => {
 	const action = getMockAction("search");
-	console.log(action.mockActionConfig.generator);
+	console.log(action.mockActionConfig);
 })();
