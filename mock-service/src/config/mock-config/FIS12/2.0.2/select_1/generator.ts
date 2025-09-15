@@ -7,9 +7,7 @@ export async function select1Generator(existingPayload: any, sessionData: any) {
   // console.log("data--> " + data)
   
   console.log("existingPayload-->",existingPayload)
-  let submission_id = sessionData?.user_inputs?.form_submission_id || "F01_SUBMISSION_ID"
-  submission_id = submission_id?.split(",")
-  console.log("subid-->",submission_id)
+  const submission_id = sessionData?.form_data?.consumer_information_form?.form_submission_id;
 
   // Map provider.id and item.id from on_search saved session if available
   const selectedProvider = sessionData.selected_provider;
@@ -31,6 +29,10 @@ export async function select1Generator(existingPayload: any, sessionData: any) {
   const formId = selectedItem?.xinput?.form?.id;
   if (formId && existingPayload.message?.order?.items?.[0]?.xinput?.form) {
     existingPayload.message.order.items[0].xinput.form.id = formId;
+  }
+
+  if(existingPayload.message?.order?.items?.[0]?.xinput?.form_response){
+    existingPayload.message.order.items[0].xinput.form_response.submission_id = submission_id;
   }
 
   return existingPayload;
