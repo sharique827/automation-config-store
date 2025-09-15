@@ -110,7 +110,7 @@ jobs:
           cat > ./.env <<EOF
           NODE_ENV=${{ vars.NODE_ENV }}
           SIGN_PRIVATE_KEY=${{ secrets.SIGN_PRIVATE_KEY }}
-          PORT=${{ vars.API_SERVICE_PORT_STAGING }}
+          PORT=${{ vars.API_SERVICE_PORT }}
           SIGN_PUBLIC_KEY=${{ vars.SIGN_PUBLIC_KEY }}
           SUBSCRIBER_ID=${{ vars.SUBSCRIBER_ID_STAGING }}
           UKID=${{ vars.UKID_STAGING }}
@@ -119,22 +119,24 @@ jobs:
           REDIS_HOST=${{ vars.REDIS_HOST }}
           REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
           REDIS_PORT=${{ vars.REDIS_PORT_STAGING }}
-          WORKBENCH_SUBSCRIBER_ID=${{ vars.WORKBENCH_SUBSCRIBER_ID }}
-          IN_HOUSE_REGISTRY=${{ vars.IN_HOUSE_REGISTRY_STAGING }}
           MOCK_SERVER_URL=${{ vars.MOCK_SERVER_URL_STAGING }}
           DATA_BASE_URL=${{ vars.DATA_BASE_URL_STAGING }}
           API_SERVICE_URL=${{ vars.API_SERVICE_URL_STAGING }}
-          CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL_STAGING }}
           CONTAINER_NAME=${{ vars.CONTAINER_NAME }}
+          CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL_STAGING }}
           DOMAIN=${{ vars.DOMAIN }}
           VERSION=${{ vars.VERSION }}
           SERVICE_NAME=automation-api-service-${{ vars.CONTAINER_NAME }}
           TRACE_URL=${{ vars.TRACE_URL_STAGING }}
           API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_STAGING }}
           LOKI_HOST=${{ vars.LOKI_HOST }}
+          WORKBENCH_SUBSCRIBER_ID=${{ vars.WORKBENCH_SUBSCRIBER_ID }}
+          IN_HOUSE_REGISTRY=${{ vars.IN_HOUSE_REGISTRY_STAGING }}
           HOSTED_ENV=${{ vars.HOSTED_ENV_STAGING }}
           NO_URL=${{ vars.NO_URL }}
           NO_TOKEN=${{ secrets.NO_TOKEN }}
+
+
           EOF
           fi
             
@@ -257,7 +259,7 @@ jobs:
             cat > ./.env <<EOF
             NODE_ENV=${{ vars.NODE_ENV }}
             SIGN_PRIVATE_KEY=${{ secrets.SIGN_PRIVATE_KEY }}
-            PORT=${{ vars.API_SERVICE_PORT_STAGING }}
+            PORT=${{ vars.API_SERVICE_PORT }}
             SIGN_PUBLIC_KEY=${{ vars.SIGN_PUBLIC_KEY }}
             SUBSCRIBER_ID=${{ vars.SUBSCRIBER_ID_STAGING }}
             UKID=${{ vars.UKID_STAGING }}
@@ -266,22 +268,23 @@ jobs:
             REDIS_HOST=${{ vars.REDIS_HOST }}
             REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
             REDIS_PORT=${{ vars.REDIS_PORT_STAGING }}
-            WORKBENCH_SUBSCRIBER_ID=${{ vars.WORKBENCH_SUBSCRIBER_ID }}
-            IN_HOUSE_REGISTRY=${{ vars.IN_HOUSE_REGISTRY_STAGING }}
             MOCK_SERVER_URL=${{ vars.MOCK_SERVER_URL_STAGING }}
             DATA_BASE_URL=${{ vars.DATA_BASE_URL_STAGING }}
             API_SERVICE_URL=${{ vars.API_SERVICE_URL_STAGING }}
-            CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL_STAGING }}
             CONTAINER_NAME=${{ vars.CONTAINER_NAME }}
+            CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL_STAGING }}
             DOMAIN=${{ vars.DOMAIN }}
             VERSION=${{ vars.VERSION }}
             SERVICE_NAME=automation-api-service-${{ vars.CONTAINER_NAME }}
             TRACE_URL=${{ vars.TRACE_URL_STAGING }}
             API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_STAGING }}
             LOKI_HOST=${{ vars.LOKI_HOST }}
+            WORKBENCH_SUBSCRIBER_ID=${{ vars.WORKBENCH_SUBSCRIBER_ID }}
+            IN_HOUSE_REGISTRY=${{ vars.IN_HOUSE_REGISTRY_STAGING }}
             HOSTED_ENV=${{ vars.HOSTED_ENV_STAGING }}
             NO_URL=${{ vars.NO_URL }}
             NO_TOKEN=${{ secrets.NO_TOKEN }}
+
             EOF
             fi
               
