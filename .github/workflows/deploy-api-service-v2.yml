@@ -76,7 +76,7 @@ jobs:
 
             if [[ "$BUILD_TYPE" == "draft" ]]; then
             
-                cat > ./.env <<EOF
+            cat > ./.env <<EOF
                     NODE_ENV=${{ vars.NODE_ENV }}
                     SIGN_PRIVATE_KEY=${{ secrets.SIGN_PRIVATE_KEY }}
                     PORT=${{ vars.API_SERVICE_PORT }}
@@ -107,7 +107,7 @@ jobs:
             EOF
             
             elif [[ "$BUILD_TYPE" == "release" ]]; then
-            
+            cat > ./.env <<EOF
                 echo "NODE_ENV=${{ vars.NODE_ENV }}" >> $REPO_DIR/.env
                 echo "SIGN_PRIVATE_KEY=${{ secrets.SIGN_PRIVATE_KEY }}" >> $REPO_DIR/.env
                 echo "PORT=${{ vars.API_SERVICE_PORT_STAGING }}" >> $REPO_DIR/.env
@@ -135,6 +135,7 @@ jobs:
                 echo "HOSTED_ENV=${{ vars.HOSTED_ENV_STAGING }}" >> $REPO_DIR/.env
                 echo "NO_URL=${{ vars.NO_URL }}" >> $REPO_DIR/.env
                 echo "NO_TOKEN=${{ secrets.NO_TOKEN }}" >> $REPO_DIR/.env
+            EOF
             fi
             
           # docker run -d --rm --name api-test \
@@ -222,7 +223,7 @@ jobs:
             
             if [[ "$BUILD_TYPE" == "draft" ]]; then
             
-                cat > ./.env <<EOF
+            cat > ./.env <<EOF
                     NODE_ENV=${{ vars.NODE_ENV }}
                     SIGN_PRIVATE_KEY=${{ secrets.SIGN_PRIVATE_KEY }}
                     PORT=${{ vars.API_SERVICE_PORT }}
@@ -253,7 +254,7 @@ jobs:
             EOF
             
             elif [[ "$BUILD_TYPE" == "release" ]]; then
-            
+            cat > ./.env <<EOF
                 echo "NODE_ENV=${{ vars.NODE_ENV }}" >> $REPO_DIR/.env
                 echo "SIGN_PRIVATE_KEY=${{ secrets.SIGN_PRIVATE_KEY }}" >> $REPO_DIR/.env
                 echo "PORT=${{ vars.API_SERVICE_PORT_STAGING }}" >> $REPO_DIR/.env
@@ -281,8 +282,9 @@ jobs:
                 echo "HOSTED_ENV=${{ vars.HOSTED_ENV_STAGING }}" >> $REPO_DIR/.env
                 echo "NO_URL=${{ vars.NO_URL }}" >> $REPO_DIR/.env
                 echo "NO_TOKEN=${{ secrets.NO_TOKEN }}" >> $REPO_DIR/.env
+            EOF
             fi
-
+            
             
 
 
