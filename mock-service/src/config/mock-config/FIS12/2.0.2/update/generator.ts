@@ -14,6 +14,7 @@ export async function updateDefaultGenerator(existingPayload: any, sessionData: 
     message_id: sessionData.message_id,
     order_id: sessionData.order_id,
     update_target: sessionData.update_target,
+    flow_id: sessionData.flow_id,
     user_inputs: sessionData.user_inputs
   });
 
@@ -49,14 +50,31 @@ export async function updateDefaultGenerator(existingPayload: any, sessionData: 
     const payment = existingPayload.message.order.payments[0];
     payment.time = payment.time || {};
 
-    // Choose label based on user_inputs or saved update_label
-    const labelFromSession = sessionData.update_label
-      || (sessionData.user_inputs?.foreclosure_amount ? 'FORECLOSURE'
-          : sessionData.user_inputs?.missed_emi_amount ? 'MISSED_EMI_PAYMENT'
-          : sessionData.user_inputs?.part_payment_amount ? 'PRE_PART_PAYMENT'
-          : payment.time.label);
+    // Choose label based on flow_id, user_inputs, or saved update_label
+    let labelFromSession = sessionData.update_label;
+    
+    // Map flow IDs to specific payment labels
+    if (sessionData.flow_id) {
+      if (sessionData.flow_id.includes('Missed_EMI')) {
+        labelFromSession = 'MISSED_EMI_PAYMENT';
+      } else if (sessionData.flow_id.includes('Foreclosure')) {
+        labelFromSession = 'FORECLOSURE';
+      } else if (sessionData.flow_id.includes('Part_Payment') || sessionData.flow_id.includes('Pre_Part')) {
+        labelFromSession = 'PRE_PART_PAYMENT';
+      }
+    }
+    
+    // Fallback to user_inputs if no flow-based mapping found
+    if (!labelFromSession) {
+      labelFromSession = sessionData.user_inputs?.foreclosure_amount ? 'FORECLOSURE'
+        : sessionData.user_inputs?.missed_emi_amount ? 'MISSED_EMI_PAYMENT'
+        : sessionData.user_inputs?.part_payment_amount ? 'PRE_PART_PAYMENT'
+        : payment.time.label;
+    }
+    
     if (labelFromSession) {
       payment.time.label = labelFromSession;
+      console.log(`Payment label set to: ${labelFromSession} based on flow_id: ${sessionData.flow_id}`);
     }
 
     // Amount mapping for part payment (optional for other labels)

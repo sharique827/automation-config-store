@@ -15,6 +15,8 @@ export async function initDefaultGenerator(existingPayload: any, sessionData: an
     existingPayload.context.timestamp = new Date().toISOString();
     existingPayload.context.action = "init";
   }
+
+  const submission_id = sessionData?.form_data?.loan_adjustment_form?.form_submission_id;
   
   // Update transaction_id from session data
   if (sessionData.transaction_id && existingPayload.context) {
@@ -52,6 +54,9 @@ export async function initDefaultGenerator(existingPayload: any, sessionData: an
     item0.xinput = item0.xinput || {};
     item0.xinput.form = item0.xinput.form || {};
     if (!item0.xinput.form.id) item0.xinput.form.id = sessionData.item.xinput.form.id;
+  }
+  if(existingPayload.message?.order?.items?.[0]?.xinput?.form_response){
+    existingPayload.message.order.items[0].xinput.form_response.submission_id = submission_id;
   }
 
   return existingPayload;
