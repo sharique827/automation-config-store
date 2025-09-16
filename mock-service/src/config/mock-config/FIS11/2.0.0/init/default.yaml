@@ -21,8 +21,7 @@ order:
               type: CARD_IDENTIFIER
 
   payments:
-    - id: PA1
-      collected_by: BAP
+    - collected_by: BAP
       type: PRE_ORDER
       status: NOT-PAID
 

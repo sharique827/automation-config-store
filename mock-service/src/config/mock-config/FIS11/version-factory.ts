@@ -4,7 +4,7 @@ import { SessionCache } from "../../../types/api-session-cache";
 import { createMockResponseFIS11_200 } from "./2.0.0/generaton-pipeline";
 import { createBuyerUrl, createSellerUrl } from "../../../utils/request-utils";
 
-export async function createFIS11MockResponse(
+export async function createMockResponse(
 	session_id: string,
 	sessionData: SessionData,
 	action_id: string,
@@ -31,6 +31,3 @@ export async function createFIS11MockResponse(
 	}
 	return payload;
 }
-
-// Keep backward compatibility
-export const createMockResponse = createFIS11MockResponse;

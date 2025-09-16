@@ -58,11 +58,9 @@
 function createItemPayload(selectedItem: any): any {
   const itemPayload: any = {
     id: selectedItem.id,
-    quantity: {
-      selected: {
-        count: 1
-      }
-    }
+    price: {
+      value:selectedItem.price.value
+    },
   };
 
   // Add parent_item_id if it exists
@@ -71,14 +69,13 @@ function createItemPayload(selectedItem: any): any {
   }
 
   // Add add-ons if they exist
-  if (selectedItem.add_ons && Array.isArray(selectedItem.add_ons) && selectedItem.add_ons.length > 0) {
+  if (
+    selectedItem.add_ons &&
+    Array.isArray(selectedItem.add_ons) &&
+    selectedItem.add_ons.length > 0
+  ) {
     itemPayload.add_ons = selectedItem.add_ons.map((addOn: any) => ({
       id: addOn.id,
-      quantity: {
-        selected: {
-          count: 1
-        }
-      }
     }));
   }
 

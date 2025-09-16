@@ -27,10 +27,7 @@ export abstract class MockAction {
 	 * @param targetPayload The payload to validate.
 	 * @returns A promise that resolves to an object indicating whether the validation was successful and an optional message.
 	 */
-	abstract validate(
-		targetPayload: any,
-		sessionData?: SessionData
-	): Promise<MockOutput>;
+	abstract validate(targetPayload: any): Promise<MockOutput>;
 	/**
 	 * Checks if the preconditions for generating a payload with given actionID are met.
 	 * @param sessionData The session data to check against.
@@ -45,20 +42,16 @@ export abstract class MockAction {
 	abstract get defaultData(): any;
 	abstract get inputs(): any;
 
-	async __forceSaveData(
-		sessionData: SessionData
-	): Promise<Record<string, any>> {
-		throw new Error(
-			"Trying to force save data for action without implementation"
-		);
-	}
-
-	public get mockActionConfig() {
+	get mockActionConfig() {
 		return {
 			name: this.name(),
 			description: this.description,
 			inputs: this.inputs,
+			defaultData: this.defaultData,
 			saveData: this.saveData,
+			generator: this.generator.toString(),
+			validate: this.validate.toString(),
+			meetRequirements: this.meetRequirements.toString(),
 		};
 	}
 }
