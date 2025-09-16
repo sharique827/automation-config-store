@@ -1,6 +1,6 @@
 /**
  * On_Init Generator for TRV14
- *
+ * 
  * Logic:
  * 1. Reuse data from session: items, fulfillments, provider, quote, cancellation_terms, replacement_terms, payments, billing, tags
  * 2. Combine bpp_terms and bap_terms from session into tags array
@@ -12,137 +12,122 @@ export async function onInitGenerator(existingPayload: any, sessionData: any) {
   if (sessionData.items) {
     existingPayload.message.order.items = sessionData.items;
   }
-
+  
   if (sessionData.fulfillments) {
-    if (Array.isArray(sessionData.fulfillments)) {
-      sessionData.fulfillments.forEach((fulfillment: any) => {
-        (fulfillment.customer.contact = {
-          email: "joe.adam@abc.org",
-          phone: "+91-9999999999",
-        }),
-          (fulfillment.customer.person.name = "Joe");
-      });
-
-      existingPayload.message.order.fulfillments = sessionData.fulfillments;
-    }
+    existingPayload.message.order.fulfillments = sessionData.fulfillments;
   }
-
+  
   if (sessionData.provider) {
     existingPayload.message.order.provider = sessionData.provider;
   }
-
+  
   if (sessionData.quote) {
     existingPayload.message.order.quote = sessionData.quote;
   }
-
+  
   if (sessionData.cancellation_terms) {
-    existingPayload.message.order.cancellation_terms =
-      sessionData.cancellation_terms[0];
+    existingPayload.message.order.cancellation_terms = sessionData.cancellation_terms[0];
   }
-
+  
   if (sessionData.replacement_terms) {
-    existingPayload.message.order.replacement_terms =
-      sessionData.replacement_terms[0];
+    existingPayload.message.order.replacement_terms = sessionData.replacement_terms[0];
   }
-
+  
   if (sessionData.payments) {
-    if (Array.isArray(sessionData.payments)) {
-      sessionData.payments.forEach((payment: any) => {
-        payment.id = "PAYMENT_ID";
-      });
-      existingPayload.message.order.payments = sessionData.payments;
-    }
+    existingPayload.message.order.payments = sessionData.payments;
   }
-
+  
   if (sessionData.billing) {
     existingPayload.message.order.billing = sessionData.billing;
   }
 
   // Combine bpp_terms and bap_terms from session into tags array
   const tags = [];
-
+  
   // Add BPP Terms structure
   const bppTerms = {
-    descriptor: {
-      code: "BPP_TERMS",
-      name: "BPP Terms of Engagement",
+    "descriptor": {
+      "code": "BPP_TERMS",
+      "name": "BPP Terms of Engagement"
     },
-    display: false,
-    list: [
+    "display": false,
+    "list": [
       {
-        descriptor: {
-          code: "BUYER_FINDER_FEES_PERCENTAGE",
+        "descriptor": {
+          "code": "BUYER_FINDER_FEES_PERCENTAGE"
         },
-        value: "1",
+        "value": "1"
       },
       {
-        descriptor: {
-          code: "BUYER_FINDER_FEES_TYPE",
+        "descriptor": {
+          "code": "BUYER_FINDER_FEES_TYPE"
         },
-        value: "percent",
+        "value": "percent"
       },
       {
-        descriptor: {
-          code: "STATIC_TERMS",
+        "descriptor": {
+          "code": "STATIC_TERMS"
         },
-        value: "https://api.example-bap.com/booking/terms",
+        "value": "https://api.example-bap.com/booking/terms"
       },
       {
-        descriptor: {
-          code: "MANDATORY_ARBITRATION",
+        "descriptor": {
+          "code": "MANDATORY_ARBITRATION"
         },
-        value: "true",
+        "value": "true"
       },
       {
-        descriptor: {
-          code: "COURT_JURISDICTION",
+        "descriptor": {
+          "code": "COURT_JURISDICTION"
         },
-        value: "std:011",
+        "value": "std:011"
       },
       {
-        descriptor: {
-          code: "DELAY_INTEREST",
+        "descriptor": {
+          "code": "DELAY_INTEREST"
         },
-        value: "2.5 %",
+        "value": "2.5 %"
       },
       {
-        descriptor: {
-          code: "SETTLEMENT_AMOUNT",
+        "descriptor": {
+          "code": "SETTLEMENT_AMOUNT"
         },
-        value: "7 INR",
+        "value": "7 INR"
       },
       {
-        descriptor: {
-          code: "SETTLEMENT_TYPE",
+        "descriptor": {
+          "code": "SETTLEMENT_TYPE"
         },
-        value: "upi",
+        "value": "upi"
       },
       {
-        descriptor: {
-          code: "SETTLEMENT_BANK_CODE",
+        "descriptor": {
+          "code": "SETTLEMENT_BANK_CODE"
         },
-        value: "XXXXXXXX",
+        "value": "XXXXXXXX"
       },
       {
-        descriptor: {
-          code: "SETTLEMENT_BANK_ACCOUNT_NUMBER",
+        "descriptor": {
+          "code": "SETTLEMENT_BANK_ACCOUNT_NUMBER"
         },
-        value: "xxxxxxxxxxxxxx",
-      },
-    ],
+        "value": "xxxxxxxxxxxxxx"
+      }
+    ]
   };
-
+  
   tags.push(bppTerms);
-
+  
   // Add BAP Terms from session if available
   if (sessionData.bap_terms) {
     tags.push(sessionData.bap_terms);
   }
-
+  
+  
   // Set the combined tags array
   if (tags.length > 0) {
     existingPayload.message.order.tags = tags;
   }
 
+  
   return existingPayload;
-}
+} 

@@ -3,71 +3,105 @@ import logger from "@ondc/automation-logger";
 import path from "path";
 import yaml from "js-yaml";
 import { SessionData as MockSessionDataFIS11 } from "./FIS11/session-types";
-import { createMockResponse } from "./FIS11/version-factory";
-import { getMockAction, listMockActions } from "./FIS11/action-factory";
+import { createFIS11MockResponse } from "./FIS11/version-factory";
+import { getFIS11MockAction, listFIS11MockActions } from "./FIS11/action-factory";
+
+export { MockSessionDataFIS11 };
 export { MockSessionDataFIS11 as MockSessionData };
 
-export const actionConfig = yaml.load(
-  readFileSync(path.join(__dirname, "./FIS11/factory.yaml"), "utf8")
+const actionConfigFIS11 = yaml.load(
+	readFileSync(path.join(__dirname, "./FIS11/factory.yaml"), "utf8")
 ) as any;
 
-export const defaultSessionData = () =>
-  yaml.load(
-    readFileSync(path.join(__dirname, "./FIS11/session-data.yaml"), "utf8")
-  ) as { session_data: MockSessionDataFIS11 };
+export const actionConfig = actionConfigFIS11;
+
+export const defaultSessionDataFIS11 = () =>
+	yaml.load(
+		readFileSync(path.join(__dirname, "./FIS11/session-data.yaml"), "utf8")
+	) as { session_data: MockSessionDataFIS11 };
+	
+export const defaultSessionData = defaultSessionDataFIS11;
 
 export async function generateMockResponse(
-  session_id: string,
-  sessionData: any,
-  action_id: string,
-  input?: any
+	session_id: string,
+	sessionData: any,
+	action_id: string,
+	input?: any
 ) {
-  try {
-    let response = await createMockResponse(
-        session_id,
-        sessionData,
-        action_id,
-        input
-      )
-    response.context.timestamp = new Date().toISOString();
-    return response;
-  } catch (e) {
-    logger.error("Error in generating mock response", e);
-    throw e;
-  }
+	try {
+		const domain = process.env.DOMAIN;
+		let response;
+		
+		if (domain === "ONDC:FIS11") {
+			response = await createFIS11MockResponse(
+				session_id,
+				sessionData,
+				action_id,
+				input
+			);
+		} else {
+			throw new Error(`Domain ${domain} not supported`);
+		}
+		
+		response.context.timestamp = new Date().toISOString();
+		return response;
+	} catch (e) {
+		logger.error("Error in generating mock response", e);
+		throw e;
+	}
 }
 
 export function getMockActionObject(actionId: string) {
-    return getMockAction(actionId);
+	const domain = process.env.DOMAIN;
+	if (domain === "ONDC:FIS11") {
+		return getFIS11MockAction(actionId);
+	}
+	throw new Error(`Domain ${domain} not supported`);
 }
 
 export function getAllMockActionIds() {
-  return listMockActions();
+	return listFIS11MockActions();
 }
 
 export function getUiMetaKeys(): (keyof MockSessionDataFIS11)[] {
-  return [];
+	return [];
 }
 
 export function getActionData(code: number) {
-  const actionData = actionConfig.codes.find(
-    (action: any) => action.code === code
-  );
-  if (actionData) {
-    return actionData;
-  }
-  throw new Error(`Action code ${code} not found`);
+	const domain = process.env.DOMAIN;
+	let actionConfig;
+	
+	if (domain === "ONDC:FIS11") {
+		actionConfig = actionConfigFIS11;
+	} else {
+		throw new Error(`Domain ${domain} not supported`);
+	}
+	
+	const actionData = actionConfig.codes.find(
+		(action: any) => action.code === code
+	);
+	if (actionData) {
+		return actionData;
+	}
+	throw new Error(`Action code ${code} not found`);
 }
 
 export function getSaveDataContent(version: string, action: string) {
-  let actionFolderPath = path.resolve(
-    __dirname,
-    `./FIS11/${version}/${action}`
-  );
-
-  const saveDataFilePath = path.join(actionFolderPath, "save-data.yaml");
-  const fileContent = readFileSync(saveDataFilePath, "utf8");
-  const cont = yaml.load(fileContent) as any;
-  console.log(cont);
-  return cont;
+	const domain = process.env.DOMAIN;
+	let actionFolderPath;
+	
+	if (domain === "ONDC:FIS11") {
+		actionFolderPath = path.resolve(
+			__dirname,
+			`./FIS11/${version}/${action}`
+		);
+	} else {
+		throw new Error(`Domain ${domain} not supported`);
+	}
+	
+	const saveDataFilePath = path.join(actionFolderPath, "save-data.yaml");
+	const fileContent = readFileSync(saveDataFilePath, "utf8");
+	const cont = yaml.load(fileContent) as any;
+	console.log(cont);
+	return cont;
 }
