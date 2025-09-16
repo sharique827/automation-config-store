@@ -220,7 +220,7 @@ jobs:
             REPO_DIR="$HOME/ONDC-automation-framework/api-service/automation-api-service-${{ github.ref_name }}"
             rm -rf $REPO_DIR
             mkdir -p $REPO_DIR
-            echo "$BUILD_TYPE is the build type"
+            echo $BUILD_TYPE
 
             echo "Writing .env file..."
             cd $REPO_DIR
