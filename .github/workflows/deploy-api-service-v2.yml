@@ -30,6 +30,8 @@ jobs:
             echo "BUILD_TYPE=default" >> $GITHUB_ENV
           fi
           echo "Detected BUILD_TYPE=$BUILD_TYPE"
+          echo "Detected BUILD_TYPE=${{ steps.set_build_type.outputs.build_type }}"
+
 
 
 
@@ -221,6 +223,8 @@ jobs:
             rm -rf $REPO_DIR
             mkdir -p $REPO_DIR
             echo $BUILD_TYPE
+            echo "BUILD_TYPE=${{ needs.detect-build-type.outputs.build_type }}"
+
 
             echo "Writing .env file..."
             cd $REPO_DIR
