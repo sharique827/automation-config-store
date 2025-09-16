@@ -202,15 +202,15 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}  # environment exactly matches branch name
     steps:
-      # - name: Detect build type
-      #   run: |
-      #     if [[ "${GITHUB_REF_NAME}" == draft* ]]; then
-      #       echo "BUILD_TYPE=draft" >> $GITHUB_ENV
-      #     elif [[ "${GITHUB_REF_NAME}" == release* ]]; then
-      #       echo "BUILD_TYPE=release" >> $GITHUB_ENV
-      #     else
-      #       echo "BUILD_TYPE=default" >> $GITHUB_ENV
-      #     fi
+      - name: Detect build type
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == draft* ]]; then
+            echo "BUILD_TYPE=draft" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF_NAME}" == release* ]]; then
+            echo "BUILD_TYPE=release" >> $GITHUB_ENV
+          else
+            echo "BUILD_TYPE=default" >> $GITHUB_ENV
+          fi
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
