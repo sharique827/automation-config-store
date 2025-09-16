@@ -32,8 +32,6 @@ jobs:
           echo "Detected BUILD_TYPE=$BUILD_TYPE"
           echo "Detected BUILD_TYPE=${{ steps.set_build_type.outputs.build_type }}"
 
-          exit 0
-
 
       - name: Prepare build repo
         run: |
@@ -217,8 +215,7 @@ jobs:
             else
               BUILD_TYPE=default
             fi
-  
-            echo "BUILD_TYPE=$BUILD_TYPE"
+
   
             REPO_DIR="$HOME/ONDC-automation-framework/api-service/automation-api-service-${{ github.ref_name }}"
             rm -rf $REPO_DIR
