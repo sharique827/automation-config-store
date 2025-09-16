@@ -56,7 +56,11 @@ export class MockFirstFormTestingClass extends MockAction {
 		return Promise.resolve({ valid: true });
 	}
 	get saveData(): saveType {
-		return { "save-data": {} };
+		return {
+			"save-data": {
+				first_form_testing: "$.inputs.submission_id",
+			},
+		};
 	}
 	get defaultData(): any {
 		return {};
