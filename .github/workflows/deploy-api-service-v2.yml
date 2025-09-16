@@ -200,15 +200,15 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}  # environment exactly matches branch name
     steps:
-      - name: Detect build type
-        run: |
-          if [[ "${GITHUB_REF_NAME}" == draft* ]]; then
-            echo "BUILD_TYPE=draft" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF_NAME}" == release* ]]; then
-            echo "BUILD_TYPE=release" >> $GITHUB_ENV
-          else
-            echo "BUILD_TYPE=default" >> $GITHUB_ENV
-          fi
+      # - name: Detect build type
+      #   run: |
+      #     if [[ "${GITHUB_REF_NAME}" == draft* ]]; then
+      #       echo "BUILD_TYPE=draft" >> $GITHUB_ENV
+      #     elif [[ "${GITHUB_REF_NAME}" == release* ]]; then
+      #       echo "BUILD_TYPE=release" >> $GITHUB_ENV
+      #     else
+      #       echo "BUILD_TYPE=default" >> $GITHUB_ENV
+      #     fi
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -220,6 +220,7 @@ jobs:
             REPO_DIR="$HOME/ONDC-automation-framework/api-service/automation-api-service-${{ github.ref_name }}"
             rm -rf $REPO_DIR
             mkdir -p $REPO_DIR
+            echo "$BUILD_TYPE is the build type"
 
             echo "Writing .env file..."
             cd $REPO_DIR
