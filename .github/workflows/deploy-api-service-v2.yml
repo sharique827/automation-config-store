@@ -32,7 +32,7 @@ jobs:
           echo "Detected BUILD_TYPE=$BUILD_TYPE"
           echo "Detected BUILD_TYPE=${{ steps.set_build_type.outputs.build_type }}"
 
-
+          exit 0
 
 
       - name: Prepare build repo
@@ -202,16 +202,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}  # environment exactly matches branch name
     steps:
-      - name: Detect build type
-        run: |
-          if [[ "${GITHUB_REF_NAME}" == draft* ]]; then
-            echo "BUILD_TYPE=draft" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF_NAME}" == release* ]]; then
-            echo "BUILD_TYPE=release" >> $GITHUB_ENV
-          else
-            echo "BUILD_TYPE=default" >> $GITHUB_ENV
-          fi
-
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -219,9 +209,22 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # derive BUILD_TYPE from branch/tag name
+            if [[ "${{ github.ref_name }}" == draft* ]]; then
+              BUILD_TYPE=draft
+            elif [[ "${{ github.ref_name }}" == release* ]]; then
+              BUILD_TYPE=release
+            else
+              BUILD_TYPE=default
+            fi
+  
+            echo "BUILD_TYPE=$BUILD_TYPE"
+  
             REPO_DIR="$HOME/ONDC-automation-framework/api-service/automation-api-service-${{ github.ref_name }}"
             rm -rf $REPO_DIR
             mkdir -p $REPO_DIR
+
+
             echo $BUILD_TYPE
             echo "BUILD_TYPE=${{ needs.detect-build-type.outputs.build_type }}"
 
