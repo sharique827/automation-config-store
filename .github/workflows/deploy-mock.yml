@@ -160,7 +160,7 @@ jobs:
           docker push $IMAGE_NAME:stable
 
   deploy:
-    # needs: build-and-verify
+    needs: build-and-verify
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}  # environment exactly matches branch name
     steps:
