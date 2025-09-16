@@ -1,6 +1,6 @@
 /**
  * Init Generator for TRV14
- * 
+ *
  * Logic:
  * 1. Use same structure as select generator
  * 2. Pull data from session stored by select: selected_items, selected_fulfillments, selected_provider
@@ -13,22 +13,25 @@ export async function initGenerator(existingPayload: any, sessionData: any) {
   if (sessionData.selected_items) {
     existingPayload.message.order.items = sessionData.selected_items;
   }
-  
+
   // Use selected fulfillments from session (stored by select)
-  if (sessionData.selected_fulfillments) {
-    existingPayload.message.order.fulfillments = sessionData.selected_fulfillments;
+
+  //need to change fulfillments
+  if (Array.isArray(sessionData.selected_fulfillments)) {
+    sessionData.selected_fulfillments.forEach((fulfillment: any) => {
+      (fulfillment.customer.contact = {
+        email: "joe.adam@abc.org",
+        phone: "+91-9999999999",
+      }),
+        (fulfillment.customer.person.name = "Joe");
+    });
+    existingPayload.message.order.fulfillments =
+      sessionData.selected_fulfillments;
   }
-  
   // Use selected provider from session (stored by select)
   if (sessionData.selected_provider) {
     existingPayload.message.order.provider = sessionData.selected_provider;
   }
-  
-  
+
   return existingPayload;
-} 
-
-
-
-
-
+}

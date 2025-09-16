@@ -27,7 +27,8 @@ export async function onConfirmGenerator(existingPayload: any, sessionData: any)
         // Add hardcoded fulfillment state
         fulfillment.state = {
           descriptor: {
-            code: "CONFIRMED"
+            code: "COMPLETED",
+            name: "completed"
           }
         };
         
