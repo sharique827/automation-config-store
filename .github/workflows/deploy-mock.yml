@@ -179,17 +179,10 @@ jobs:
             else
               BUILD_TYPE=default
             fi
-            REPO_DIR="~/ONDC-automation-framework/mock/automation-mock-service-${{ github.ref_name }}"
+            REPO_DIR="$HOME/ONDC-automation-framework/mock/automation-mock-service-${{ github.ref_name }}"
             mkdir -p $REPO_DIR
+            cd $REPO_DIR
 
-            # derive BUILD_TYPE from branch/tag name
-            if [[ "${{ github.ref_name }}" == draft* ]]; then
-              BUILD_TYPE=draft
-            elif [[ "${{ github.ref_name }}" == release* ]]; then
-              BUILD_TYPE=release
-            else
-              BUILD_TYPE=default
-            fi
 
 
             echo "Writing .env file..."
@@ -224,6 +217,11 @@ jobs:
             NODE_ENV=${{ vars.NODE_ENV }}
             LOKI_HOST=${{ vars.LOKI_HOST }}
             EOF
+            else
+            cat > .env <<EOF
+            BUILD_TYPE=$BUILD_TYPE
+            EOF
+            echo "buildtype is not dev or staging"
             fi
 
 
