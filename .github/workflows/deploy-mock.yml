@@ -83,7 +83,7 @@ jobs:
           DOMAIN=${{ vars.DOMAIN }}
           CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
           API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_DEV }}
-          FORM_SERVICE=${{ vars.FORM_SERVICE }}
+          FORM_SERVICE=${{ vars.FORM_SERVICE_DEV }}
           NODE_ENV=${{ vars.NODE_ENV }}
           LOKI_HOST=${{ vars.LOKI_HOST }}
           EOF
@@ -99,7 +99,7 @@ jobs:
           DOMAIN=${{ vars.DOMAIN }}
           CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL_STAGING }}
           API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_STAGING }}
-          FORM_SERVICE=${{ vars.FORM_SERVICE }}
+          FORM_SERVICE=${{ vars.FORM_SERVICE_STAGING }}
           NODE_ENV=${{ vars.NODE_ENV }}
           LOKI_HOST=${{ vars.LOKI_HOST }}
           EOF
@@ -197,7 +197,7 @@ jobs:
             DOMAIN=${{ vars.DOMAIN }}
             CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
             API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_DEV }}
-            FORM_SERVICE=${{ vars.FORM_SERVICE }}
+            FORM_SERVICE=${{ vars.FORM_SERVICE_DEV }}
             NODE_ENV=${{ vars.NODE_ENV }}
             LOKI_HOST=${{ vars.LOKI_HOST }}
             EOF
@@ -213,7 +213,7 @@ jobs:
             DOMAIN=${{ vars.DOMAIN }}
             CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL_STAGING }}
             API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_STAGING }}
-            FORM_SERVICE=${{ vars.FORM_SERVICE }}
+            FORM_SERVICE=${{ vars.FORM_SERVICE_STAGING }}
             NODE_ENV=${{ vars.NODE_ENV }}
             LOKI_HOST=${{ vars.LOKI_HOST }}
             EOF
