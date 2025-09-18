@@ -74,3 +74,18 @@ codes:
     action: on_update
     default: FIS12/2.0.2/on_update_unsolicited/default.yaml
     message_id: true
+  - code: 211
+    action_id: status
+    action: status
+    default: FIS12/2.0.2/status/default.yaml
+    message_id: true
+  - code: 212
+    action_id: on_status
+    action: on_status
+    default: FIS12/2.0.2/on_status/default.yaml
+    message_id: false
+  - code: 213
+    action_id: on_status_unsolicited
+    action: on_status
+    default: FIS12/2.0.2/on_status_unsolicited/default.yaml
+    message_id: true
