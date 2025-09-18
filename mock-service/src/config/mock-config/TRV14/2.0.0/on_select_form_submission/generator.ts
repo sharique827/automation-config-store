@@ -26,7 +26,7 @@ export async function onSelect2Generator(existingPayload: any, sessionData: any)
   }
   
   if (sessionData.cancellation_terms) {
-    existingPayload.message.order.cancellation_terms = sessionData.cancellation_terms[0];
+    existingPayload.message.order.cancellation_terms = [sessionData.cancellation_terms[0]];
   }
   
   if (sessionData.replacement_terms) {
