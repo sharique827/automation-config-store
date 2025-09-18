@@ -96,12 +96,12 @@ export async function onConfirmTechnicalCancellationGenerator(existingPayload: a
   
   // Load cancellation_terms from session
   if (sessionData.cancellation_terms) {
-    existingPayload.message.order.cancellation_terms = sessionData.cancellation_terms[0];
+    existingPayload.message.order.cancellation_terms = [sessionData.cancellation_terms[0]];
   }
   
   // Load replacement_terms from session
   if (sessionData.replacement_terms) {
-    existingPayload.message.order.replacement_terms = sessionData.replacement_terms[0];
+    existingPayload.message.order.replacement_terms = [sessionData.replacement_terms[0]];
   }
   
   // Load quote from session
