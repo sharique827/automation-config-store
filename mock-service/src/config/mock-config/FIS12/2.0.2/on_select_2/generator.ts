@@ -22,8 +22,8 @@ export async function onSelect2Generator(existingPayload: any, sessionData: any)
 
   // Generate loan adjustment form URL for on_select_2
   if (existingPayload.message?.order?.items?.[0]?.xinput?.form) {
-    const url = `${process.env.FORM_SERVICE}/forms/${sessionData.domain}/loan_adjustment_form?session_id=${sessionData.session_id}&flow_id=${sessionData.flow_id}&transaction_id=${existingPayload.context.transaction_id}`;
-    console.log("URL for loan_adjustment_form in on_select_2", url);
+    const url = `${process.env.FORM_SERVICE}/forms/${sessionData.domain}/kyc_verification_status?session_id=${sessionData.session_id}&flow_id=${sessionData.flow_id}&transaction_id=${existingPayload.context.transaction_id}`;
+    console.log("URL for kyc_verification_status in on_select_2", url);
     existingPayload.message.order.items[0].xinput.form.url = url;
   }
 

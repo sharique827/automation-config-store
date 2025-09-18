@@ -41169,7 +41169,7 @@ x-validations:
               - _NAME_: REGEX_CONTEXT_LOCATION_CITY_CODE
                 attr: $.context.location.city.code
                 reg:
-                  - (\\*)|(^std\\:[0-9]{2,4}$)
+                  - ^\*$
                 _CONTINUE_: '!(attr are present)'
                 _RETURN_: attr follow regex reg
               - _NAME_: REGEX_CONTEXT_TIMESTAMP_1
@@ -42236,6 +42236,125 @@ x-validations:
       # - _NAME_: REQUIRED_DOCUMENT_URL
       #   attr: $.message.order.documents[*].url
       #   _RETURN_: attr are present
+
+    status:
+      - _NAME_: STATUS_CONTEXT
+        action:
+          - status
+        domain:
+          - ONDC:FIS12
+        version:
+          - 2.0.2
+        _RETURN_: *COMMON_CONTEXT
+
+      # Order ID mandatory for status request
+      - _NAME_: REQUIRED_ORDER_ID
+        attr: $.message.order_id
+        _RETURN_: attr are present
+
+    on_status:
+      - _NAME_: ON_STATUS_CONTEXT
+        action:
+          - on_status
+        domain:
+          - ONDC:FIS12
+        version:
+          - 2.0.2
+        _RETURN_: *COMMON_CONTEXT
+
+      # -------------------- Provider Validations --------------------
+      - _NAME_: REQUIRED_PROVIDER_ID
+        attr: $.message.order.provider.id
+        _RETURN_: attr are present
+
+      - _NAME_: REQUIRED_PROVIDER_NAME
+        attr: $.message.order.provider.descriptor.name
+        _RETURN_: attr are present
+
+      - _NAME_: REQUIRED_PROVIDER_IMAGE_URL
+        attr: $.message.order.provider.descriptor.images[*].url
+        _RETURN_: attr are present
+
+      # Provider Contact / Tags
+      - _NAME_: REQUIRED_PROVIDER_CONTACT_TAGS
+        attr: $.message.order.provider.tags[*].descriptor.code
+        enumList:
+          - CONTACT_INFO
+          - LSP_INFO
+        _RETURN_: attr all in enumList
+
+      # -------------------- Items Validations -----------------------
+      - _NAME_: REQUIRED_ITEM_ID
+        attr: $.message.order.items[*].id
+        _RETURN_: attr are present
+
+      - _NAME_: REQUIRED_ITEM_DESCRIPTOR_NAME
+        attr: $.message.order.items[*].descriptor.name
+        _RETURN_: attr are present
+
+      - _NAME_: REQUIRED_ITEM_PRICE_CURRENCY
+        attr: $.message.order.items[*].price.currency
+        enumList:
+          - INR
+        _RETURN_: attr all in enumList
+
+      - _NAME_: REQUIRED_ITEM_PRICE_VALUE
+        attr: $.message.order.items[*].price.value
+        _RETURN_: attr are present
+
+      # -------------------- Form Response Validations ---------------
+      - _NAME_: REQUIRED_FORM_RESPONSE_STATUS
+        attr: $.message.order.items[*].xinput.form_response.status
+        enumList:
+          - PENDING
+          - APPROVED
+          - REJECTED
+        _RETURN_: attr any in enumList
+
+      - _NAME_: REQUIRED_FORM_RESPONSE_SUBMISSION_ID
+        attr: $.message.order.items[*].xinput.form_response.submission_id
+        _RETURN_: attr are present
+
+      # -------------------- Quote Validations -----------------------
+      - _NAME_: REQUIRED_QUOTE_ID
+        attr: $.message.order.quote.id
+        _RETURN_: attr are present
+
+      - _NAME_: REQUIRED_QUOTE_PRICE_CURRENCY
+        attr: $.message.order.quote.price.currency
+        enumList:
+          - INR
+        _RETURN_: attr all in enumList
+
+      - _NAME_: REQUIRED_QUOTE_BREAKUP
+        attr: $.message.order.quote.breakup[*].title
+        _RETURN_: attr are present
+
+      # -------------------- Fulfillment Validations -----------------
+      - _NAME_: REQUIRED_FULFILLMENT_TYPE
+        attr: $.message.order.fulfillments[*].type
+        enumList:
+          - LOAN
+        _RETURN_: attr all in enumList
+
+      - _NAME_: REQUIRED_FULFILLMENT_CUSTOMER_NAME
+        attr: $.message.order.fulfillments[*].customer.person.name
+        _RETURN_: attr are present
+
+      - _NAME_: REQUIRED_FULFILLMENT_CUSTOMER_PHONE
+        attr: $.message.order.fulfillments[*].customer.contact.phone
+        _RETURN_: attr are present
+
+      - _NAME_: REQUIRED_FULFILLMENT_CUSTOMER_EMAIL
+        attr: $.message.order.fulfillments[*].customer.contact.email
+        _RETURN_: attr are present
+
+      - _NAME_: REQUIRED_FULFILLMENT_STATE_CODE
+        attr: $.message.order.fulfillments[*].state.descriptor.code
+        enumList:
+          - DISBURSED
+          - SANCTIONED
+        _RETURN_: attr any in enumList
 
   _SESSION_DATA_:
     trans: {}

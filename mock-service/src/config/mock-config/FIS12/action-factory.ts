@@ -15,7 +15,10 @@ import { MockOnUpdateClass } from "./2.0.2/on_update/class";
 import { MockOnUpdateUnsolicitedClass } from "./2.0.2/on_update_unsolicited/class";
 import type { MockAction } from "./classes/mock-action";
 import { MockConsumerInformationFormClass } from "./2.0.2/form/consumer_information_form";
-import { MockLoanAdjustmentFormClass } from "./2.0.2/form_2/loan_adjustment_form";
+import { MockKycVerificationStatusClass } from "./2.0.2/form_2/kyc_verification_status";
+import { MockStatusClass } from "./2.0.2/status/class";
+import { MockOnStatusClass } from "./2.0.2/on_status/class";
+import { MockOnStatusUnsolicitedClass } from "./2.0.2/on_status_unsolicited/class";
 
 // types/helpers
 type Ctor<T> = new () => T;
@@ -46,12 +49,17 @@ const registry = {
 	confirm: MockConfirmClass,
 	on_confirm: MockOnConfirmClass,
 
+	// status / on_status
+	status: MockStatusClass,
+	on_status: MockOnStatusClass,
+	on_status_unsolicited: MockOnStatusUnsolicitedClass,
+
 	// update / on_update
 	update: MockUpdateClass,
 	on_update: MockOnUpdateClass,
 	on_update_unsolicited: MockOnUpdateUnsolicitedClass,
 	consumer_information_form: MockConsumerInformationFormClass,
-	loan_adjustment_form: MockLoanAdjustmentFormClass,
+	kyc_verification_status: MockKycVerificationStatusClass,
 
 } as const satisfies Record<string, Ctor<MockAction>>;
 
