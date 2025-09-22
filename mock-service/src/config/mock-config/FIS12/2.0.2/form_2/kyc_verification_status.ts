@@ -56,7 +56,7 @@ export class MockKycVerificationStatusClass extends MockAction {
 		return Promise.resolve({ valid: true });
 	}
 	get saveData(): saveType {
-		return { "save-data": {} };
+		return { "save-data": { kyc_verification_status: "kyc_verification_status" } };
 	}
 	get defaultData(): any {
 		return {};
