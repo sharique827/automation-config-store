@@ -1,7 +1,7 @@
 // iterate -> generate -> save -> log
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "fs";
 import { updateAllJsonPaths } from "../../../utils/json-editor-utils/jsonPathEditor";
-import { createMockResponseTRV14_200 } from "../TRV14/2.0.0/generaton-pipeline";
+import { createMockResponseTRV12_200 } from "../TRV12/2.0.0/generaton-pipeline";
 import {
 	customConsoleLog,
 	loadFlowConfig,
@@ -103,7 +103,7 @@ export async function testUnitApi(
 	const sesData = loadMockSessionDataUnit(lastAction, flowId);
 	// @ts-ignore
 	sesData.user_inputs = inputsData["RTO_And_Part_Cancellation_Flow"][actionId];
-	let mockResponse = await createMockResponseTRV14_200(actionId, sesData);
+	let mockResponse = await createMockResponseTRV12_200(actionId, sesData);
 	// @ts-ignore
 	if (inputPathChanges[flowId] && inputPathChanges[flowId][actionId]) {
 		// @ts-ignore

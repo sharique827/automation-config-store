@@ -1,0 +1,76 @@
+codes:
+  - code: 100
+    action_id: search_1
+    action: search
+    default: TRV12/2.0.0/search/search_1/default.yaml
+    message_id: true
+  - code: 101
+    action_id: on_search_1
+    action: on_search
+    default: TRV12/2.0.0/on_search/on_search_1/default.yaml
+    message_id: false
+  - code: 102
+    action_id: on_search_2
+    action: on_search
+    default: TRV12/2.0.0/on_search/on_search_2/default.yaml
+    message_id: true
+  - code: 103
+    action_id: on_search_3
+    action: on_search
+    default: TRV12/2.0.0/on_search/on_search_3/default.yaml
+    message_id: true
+  - code: 104
+    action_id: on_search_4
+    action: on_search
+    default: TRV12/2.0.0/on_search/on_search_4/default.yaml
+    message_id: true
+  - code: 105
+    action_id: select_1
+    action: select
+    default: TRV12/2.0.0/select/select_1/default.yaml
+    message_id: true
+  - code: 106
+    action_id: on_select_1
+    action: on_select
+    default: TRV12/2.0.0/on_select/on_select_1/default.yaml
+    message_id: false
+  - code: 107
+    action_id: select_2
+    action: select
+    default: TRV12/2.0.0/select/select_2/default.yaml
+    message_id: true
+  - code: 108
+    action_id: on_select_2
+    action: on_select
+    default: TRV12/2.0.0/on_select/on_select_2/default.yaml
+    message_id: false
+  - code: 109
+    action_id: init
+    action: init
+    default: TRV12/2.0.0/init/default.yaml
+    message_id: true
+  - code: 110
+    action_id: on_init
+    action: on_init
+    default: TRV12/2.0.0/on_init/default.yaml
+    message_id: false
+  - code: 111
+    action_id: confirm
+    action: confirm
+    default: TRV12/2.0.0/confirm/default.yaml
+    message_id: true
+  - code: 112
+    action_id: on_confirm
+    action: on_confirm
+    default: TRV12/2.0.0/on_confirm/default.yaml
+    message_id: false
+  - code: 113
+    action_id: cancel
+    action: cancel
+    default: TRV12/2.0.0/cancel/default.yaml
+    message_id: true
+  - code: 114
+    action_id: on_cancel
+    action: on_cancel
+    default: TRV12/2.0.0/on_cancel/default.yaml
+    message_id: false

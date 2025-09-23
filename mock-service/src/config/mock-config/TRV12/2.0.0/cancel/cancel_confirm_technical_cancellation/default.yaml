@@ -1,0 +1,5 @@
+order_id: O1
+cancellation_reason_id: "TECHNICAL_CONFIRM"
+descriptor:
+  name: Technical Confirm Cancellation
+  code: TECHNICAL_CONFIRM

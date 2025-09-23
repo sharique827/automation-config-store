@@ -1,0 +1,31 @@
+order:
+  provider:
+    id: "P1"
+    descriptor:
+        name: ABC Operator Fights Services
+        images:
+          - url: https://operator1.com/logos/logo.ico
+            size_type: xs
+  items:
+    - id: "Accommodation-1"
+      descriptor: 
+        name: "Adult" 
+        code: "ADULT_TICKET"   
+      add_ons:
+        - id: "full-board"
+      payment_ids:
+        - "pymnt-3"
+      price:
+        currency: "INR"
+        value: "2000.00" 
+      quantity:
+        selected:
+          count: 1  
+      fulfillment_ids:
+        - "fulfillment-1"    
+      category_ids:
+        - "cat-1"  
+  fulfillments:
+    - id: "fulfillment-1"
+      type: "TRIP"       
+
