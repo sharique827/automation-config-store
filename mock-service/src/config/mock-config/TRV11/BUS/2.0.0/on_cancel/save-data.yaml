@@ -1,0 +1,3 @@
+save-data:
+  status: "$.message.order.status"
+  quote: "$.message.order.quote"

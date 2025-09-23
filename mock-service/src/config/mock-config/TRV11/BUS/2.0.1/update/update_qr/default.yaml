@@ -1,0 +1,13 @@
+message:
+  update_target: order.fulfillments
+  order:
+    id: O1
+    fulfillments:
+      - id: F5
+        stops:
+          - authorization:
+              status: CLAIMED
+      - id: F6
+        stops:
+          - authorization:
+              status: CLAIMED
