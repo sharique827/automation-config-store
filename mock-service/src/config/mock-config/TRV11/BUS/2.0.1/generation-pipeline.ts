@@ -32,7 +32,7 @@ function getDetailsByActionId(
   }
   throw new Error("Invalid action id found! " + actionId);
 }
-function yamlToJson(filePath: string): object {
+function yamlToJson(filePath: string): any {
   try {
     // Read the YAML file contents
     const fileContents = fs.readFileSync(filePath, "utf8");
@@ -54,7 +54,7 @@ export async function createMockResponseTRV11_BUS_201(
   sessionData: SessionData
 ) {
   const factoryData = loadFactoryYaml(
-    path.resolve(__dirname, "../factory.yaml")
+    path.resolve(__dirname, "../../factory.yaml")
   );
   let api_details: any = {};
   if (actionID.startsWith("dyn_on_status")) {
@@ -86,7 +86,7 @@ export async function createMockResponseTRV11_BUS_201(
   );
   const payload: any = {
     context: context,
-    message: default_message,
+    message: default_message.message,
   };
   if (sessionData.error_code && sessionData.error_message) {
     const error_message = {
