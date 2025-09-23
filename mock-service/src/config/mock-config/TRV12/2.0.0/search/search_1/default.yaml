@@ -1,0 +1,52 @@
+intent:
+  category:
+    descriptor:
+      code: ECONOMY
+  fulfillment:
+    stops:
+      - type: START
+        location:
+          descriptor:
+            code: DEL
+        time:
+          label: "Date Of Journey"
+          timestamp: "2023-10-15T00:32:19.000Z"
+      - type: END
+        location:
+          descriptor:
+            code: BLR
+    vehicle:
+      category: AIRLINE
+  provider:
+    items:
+      - descriptor:
+          name: Adult
+          code: ADULT_TICKET
+        quantity:
+          selected:
+            count: 3
+      - descriptor:
+          name: Child
+          code: CHILD_TICKET
+        quantity:
+          selected:
+            count: 2
+  payment:
+    tags:
+      - descriptor:
+          code: BUYER_FINDER_FEES
+        display: false
+        list:
+          - descriptor:
+              code: BUYER_FINDER_FEES_PERCENTAGE
+            value: "1"
+      - descriptor:
+          code: SETTLEMENT_TERMS
+        display: false
+        list:
+          - descriptor:
+              code: DELAY_INTEREST
+            value: "2.5"
+          - descriptor:
+              code: STATIC_TERMS
+            value: "https://api.example-bap.com/booking/terms"

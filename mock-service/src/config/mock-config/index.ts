@@ -1,19 +1,20 @@
 import { readFileSync } from "fs";
 import path from "path";
-import yaml from "js-yaml";
-import { SessionData as MockSessionData } from "./TRV14/session-types";
-import { createMockResponse } from "./TRV14/version-factory";
-import { getMockAction, listMockActions } from "./TRV14/action-factory";
 import logger from "@ondc/automation-logger";
+import yaml from "js-yaml";
+import { SessionData as MockSessionData } from "./TRV12/session-types";
+import { createMockResponse } from "./TRV12/version-factory";
+import { getMockAction } from "./TRV12/action-factory";
+
 export { MockSessionData };
 
 export const actionConfig = yaml.load(
-	readFileSync(path.join(__dirname, "./TRV14/factory.yaml"), "utf8")
+	readFileSync(path.join(__dirname, "./TRV12/factory.yaml"), "utf8")
 ) as any;
 
 export const defaultSessionData = () =>
 	yaml.load(
-		readFileSync(path.join(__dirname, "./TRV14/session-data.yaml"), "utf8")
+		readFileSync(path.join(__dirname, "./TRV12/session-data.yaml"), "utf8")
 	) as { session_data: MockSessionData };
 
 export async function generateMockResponse(
@@ -41,10 +42,6 @@ export function getMockActionObject(actionId: string) {
 	return getMockAction(actionId);
 }
 
-export function getAllMockActionIds() {
-	return listMockActions();
-}
-
 export function getActionData(code: number) {
 	const actionData = actionConfig.codes.find(
 		(action: any) => action.code === code
@@ -58,7 +55,7 @@ export function getActionData(code: number) {
 export function getSaveDataContent(version: string, action: string) {
 	let actionFolderPath = path.resolve(
 		__dirname,
-		`./TRV14/${version}/${action}`
+		`./TRV12/${version}/${action}`
 	);
 	const saveDataFilePath = path.join(actionFolderPath, "save-data.yaml");
 	const fileContent = readFileSync(saveDataFilePath, "utf8");
@@ -68,5 +65,5 @@ export function getSaveDataContent(version: string, action: string) {
 }
 
 export function getUiMetaKeys(): (keyof MockSessionData)[] {
-	return ["first_form_testing"];
+  return [];
 }

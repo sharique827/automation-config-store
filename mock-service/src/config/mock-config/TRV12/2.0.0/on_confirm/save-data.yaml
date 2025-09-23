@@ -1,0 +1,18 @@
+save-data:
+  message_id: "$.context.message_id"
+  transaction_id: "$.context.transaction_id"
+  start_location: "$.message.intent.fulfillment.stops[?(@.type=='START')].location.gps"
+  intermediate_location: "$.message.intent.fulfillment.stops[?(@.type=='INTERMEDIATE_STOP')].location.gps"
+  end_location: "$.message.intent.fulfillment.stops[?(@.type=='END')].location.gps"
+  payment_collected_by: "$.message.intent.payment.collected_by"
+  stops: "$.message.intent.fulfillment.stops[*]"
+  collected_by: "$.message.intent.payment.collected_by"
+  on_confirm_orderID: "$.message.order.id"
+  on_confirm_items: "$.message.order.items[*]"
+  on_confirm_fulfillments: "$.message.order.fulfillments[*]"
+  on_confirm_payments: "$.message.order.payments[*]"
+  on_confirm_provider: "$.message.order.provider"
+  on_confirm_quote: "$.message.order.quote"
+  on_confirm_billing: $.message.order.billing
+  on_confirm_created_at: "$.message.order.created_at"
+  on_confirm_cancellation_terms: "$.message.order.cancellation_terms[*]"
