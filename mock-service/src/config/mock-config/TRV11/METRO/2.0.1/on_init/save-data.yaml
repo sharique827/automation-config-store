@@ -1,0 +1,3 @@
+save-data:
+  payments: "$.message.order.payments[*]"
+  payment_id: "$.message.order.payments[*].id"

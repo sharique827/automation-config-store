@@ -1,0 +1,11 @@
+message:
+  update_target: order.fulfillments
+  order:
+    id: O1
+    fulfillments:
+      - id: F5
+        vehicle:
+          registration: GL90
+      - id: F6
+        vehicle:
+          registration: GL90
