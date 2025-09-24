@@ -38,10 +38,10 @@ export class MockOnCancelInitBus201Class extends MockAction {
   sessionData: SessionData
 ): Promise<MockOutput> {
   const order = targetPayload?.message?.order;
-  const { order_id, descriptor } = targetPayload?.message || {};
+  const id = order?.id;
 
   // -1. check message.order_id
-  if (order_id !== sessionData.order_id) {
+  if (id !== sessionData.order_id) {
     return {
       valid: false,
       message: "Incorrect order_id in the payload",
