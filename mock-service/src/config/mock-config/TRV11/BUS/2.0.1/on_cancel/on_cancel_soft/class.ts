@@ -36,23 +36,18 @@ export class MockOnCancelSoftBus201Class extends MockAction {
     targetPayload: any,
     sessionData: SessionData
   ): Promise<MockOutput> {
-    const { order_id, descriptor } = targetPayload.message;
+    const order = targetPayload?.message?.order;
+    const id = order?.id;
 
-    if (order_id !== sessionData.order_id) {
-      return {
-        valid: false,
-        message: "Incorrect order_id in the payload",
-        code: "MISSING_ORDER_ID",
-      };
-    }
+  // -1. check message.order_id
+  if (id !== sessionData.order_id) {
+    return {
+      valid: false,
+      message: "Incorrect order_id in the payload",
+      code: "MISSING_ORDER_ID",
+    };
+  }
 
-    if (descriptor?.code !== "SOFT_CANCEL") {
-      return {
-        valid: false,
-        message: "Incorrect descriptor code in the payload",
-        code: "INVALID_DESCRIPTOR_CODE",
-      };
-    }
 
     return { valid: true };
   }
