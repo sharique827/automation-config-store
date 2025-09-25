@@ -9,7 +9,7 @@
  */
 
 export async function confirmDefaultGenerator(existingPayload: any, sessionData: any) {
-  console.log("existingPayload on confirm generator", existingPayload);
+
   
   // Load items from session
   if (sessionData.selected_items) {
