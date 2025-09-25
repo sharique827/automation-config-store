@@ -86,6 +86,7 @@ jobs:
           FORM_SERVICE=${{ vars.FORM_SERVICE_DEV }}
           NODE_ENV=${{ vars.NODE_ENV }}
           LOKI_HOST=${{ vars.LOKI_HOST }}
+          SERVICE_NAME=automation-mock-service-${{ vars.CONTAINER_NAME }}
           EOF
 
           elif [[ "$BUILD_TYPE" == "release" ]]; then
@@ -102,6 +103,7 @@ jobs:
           FORM_SERVICE=${{ vars.FORM_SERVICE_STAGING }}
           NODE_ENV=${{ vars.NODE_ENV }}
           LOKI_HOST=${{ vars.LOKI_HOST }}
+          SERVICE_NAME=automation-mock-service-${{ vars.CONTAINER_NAME }}
           EOF
           fi
 
@@ -200,6 +202,7 @@ jobs:
             FORM_SERVICE=${{ vars.FORM_SERVICE_DEV }}
             NODE_ENV=${{ vars.NODE_ENV }}
             LOKI_HOST=${{ vars.LOKI_HOST }}
+            SERVICE_NAME=automation-mock-service-${{ vars.CONTAINER_NAME }}
             EOF
   
             elif [[ "$BUILD_TYPE" == "release" ]]; then
@@ -216,6 +219,7 @@ jobs:
             FORM_SERVICE=${{ vars.FORM_SERVICE_STAGING }}
             NODE_ENV=${{ vars.NODE_ENV }}
             LOKI_HOST=${{ vars.LOKI_HOST }}
+            SERVICE_NAME=automation-mock-service-${{ vars.CONTAINER_NAME }}
             EOF
             else
             cat > .env <<EOF
