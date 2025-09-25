@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import logger from "@ondc/automation-logger";
 
 /**
  * Resolves <form action> URLs in an HTML string against a base URL.
@@ -10,6 +11,7 @@ import * as cheerio from "cheerio";
  */
 export function resolveFormActions(baseUrl: string, html: string): string {
 	// Validate baseUrl
+	logger.info("Resolving form actions", { baseUrl, html });
 	let base: URL;
 	try {
 		base = new URL(baseUrl);
@@ -47,6 +49,7 @@ export function resolveFormActions(baseUrl: string, html: string): string {
 		}
 		$form.attr("action", resolved);
 	});
+	logger.info("Resolved form actions", { html: $.html() });
 
 	// Return the modified HTML
 	return $.html();
