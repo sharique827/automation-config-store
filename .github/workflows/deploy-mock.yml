@@ -83,9 +83,11 @@ jobs:
           DOMAIN=${{ vars.DOMAIN }}
           CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
           API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_DEV }}
-          FORM_SERVICE=${{ vars.FORM_SERVICE_DEV }}
+          FORM_SERVICE=${{ vars.FORM_SERVICE }}
           NODE_ENV=${{ vars.NODE_ENV }}
           LOKI_HOST=${{ vars.LOKI_HOST }}
+          SERVICE_NAME=automation-mock-service-${{ vars.CONTAINER_NAME }}
+
           EOF
 
           elif [[ "$BUILD_TYPE" == "release" ]]; then
@@ -99,9 +101,10 @@ jobs:
           DOMAIN=${{ vars.DOMAIN }}
           CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL_STAGING }}
           API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_STAGING }}
-          FORM_SERVICE=${{ vars.FORM_SERVICE_STAGING }}
+          FORM_SERVICE=${{ vars.FORM_SERVICE }}
           NODE_ENV=${{ vars.NODE_ENV }}
           LOKI_HOST=${{ vars.LOKI_HOST }}
+          SERVICE_NAME=automation-mock-service-${{ vars.CONTAINER_NAME }}
           EOF
           fi
 
@@ -197,9 +200,10 @@ jobs:
             DOMAIN=${{ vars.DOMAIN }}
             CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL }}
             API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_DEV }}
-            FORM_SERVICE=${{ vars.FORM_SERVICE_DEV }}
+            FORM_SERVICE=${{ vars.FORM_SERVICE }}
             NODE_ENV=${{ vars.NODE_ENV }}
             LOKI_HOST=${{ vars.LOKI_HOST }}
+            SERVICE_NAME=automation-mock-service-${{ vars.CONTAINER_NAME }}
             EOF
   
             elif [[ "$BUILD_TYPE" == "release" ]]; then
@@ -213,9 +217,10 @@ jobs:
             DOMAIN=${{ vars.DOMAIN }}
             CONFIG_SERVICE_URL=${{ vars.CONFIG_SERVICE_URL_STAGING }}
             API_SERVICE_KEY=${{ secrets.API_SERVICE_KEY_STAGING }}
-            FORM_SERVICE=${{ vars.FORM_SERVICE_STAGING }}
+            FORM_SERVICE=${{ vars.FORM_SERVICE }}
             NODE_ENV=${{ vars.NODE_ENV }}
             LOKI_HOST=${{ vars.LOKI_HOST }}
+            SERVICE_NAME=automation-mock-service-${{ vars.CONTAINER_NAME }}
             EOF
             else
             cat > .env <<EOF
