@@ -63,7 +63,7 @@ export interface SessionData {
 	selected_location_id?: string;
 	flow_variant?: string; // WITH_AA | WITHOUT_AA | other
 	stage?: string; // optional transient stage marker
-	loan_adjustment_form?: string;
+	kyc_verification_status?: string;
 	consumer_information_form?: string;
 }
 

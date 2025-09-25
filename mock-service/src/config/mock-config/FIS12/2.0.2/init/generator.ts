@@ -16,7 +16,7 @@ export async function initDefaultGenerator(existingPayload: any, sessionData: an
     existingPayload.context.action = "init";
   }
 
-  const submission_id = sessionData?.form_data?.loan_adjustment_form?.form_submission_id;
+  const submission_id = sessionData?.form_data?.kyc_verification_status?.form_submission_id;
   
   // Update transaction_id from session data
   if (sessionData.transaction_id && existingPayload.context) {

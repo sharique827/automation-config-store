@@ -56,7 +56,7 @@ export class MockConsumerInformationFormClass extends MockAction {
 		return Promise.resolve({ valid: true });
 	}
 	get saveData(): saveType {
-		return { "save-data": {} };
+		return { "save-data": { consumer_information_form: "consumer_information_form" } };
 	}
 	get defaultData(): any {
 		return {};
