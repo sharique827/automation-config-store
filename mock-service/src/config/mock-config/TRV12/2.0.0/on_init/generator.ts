@@ -38,7 +38,7 @@ export async function onInitDefaultGenerator(
   );
 
   const addOnsItem = existingPayload.message.order.items.filter(
-    (i: any) => i.parent_item_id
+    (i: any) => i.add_ons
   );
 
   const tax = existingPayload.message.order.items
@@ -85,18 +85,25 @@ export async function onInitDefaultGenerator(
   //     };
   //   });
 
-  const seatFare = sessionData?.select_2_items.map((i: any) => {
-    return {
-      title: "SEAT_FARE",
-      item: {
-        id: i?.id ?? "",
-      },
-      price: {
-        currency: "INR",
-        value: "200",
-      },
-    };
+  const isSame = sessionData?.select_2_items?.some((i: any) => {
+    return i.id === i.parent_item_id;
   });
+
+  let seatFare = [] as any[];
+  if (!isSame) {
+     seatFare = sessionData?.select_2_items.map((i: any) => {
+      return {
+        title: "SEAT_FARE",
+        item: {
+          id: i?.id ?? "",
+        },
+        price: {
+          currency: "INR",
+          value: "200",
+        },
+      };
+    });
+  }
 
   existingPayload.message.order.quote = {
     id: "Q1",

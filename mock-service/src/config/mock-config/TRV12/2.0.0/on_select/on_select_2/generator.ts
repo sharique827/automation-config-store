@@ -17,7 +17,16 @@ export async function onSelect_2_DefaultGenerator(
     (item: any) => !item.parent_item_id
   );
 
-  existingPayload.message.order.items = [...data, ...items];
+  const isParentItem =
+    sessionData?.select_2_items?.some((i: any) => i.id === i.parent_item_id) ||
+    false;
+
+  if (isParentItem) {
+    existingPayload.message.order.items = [...data];
+  } else {
+    existingPayload.message.order.items = [...data, ...items];
+  }
+  // existingPayload.message.order.items = [...data, ...items];
 
   const fulfillment = (sessionData?.select_2_fulfillments || []).map(
     (i: any) => {
@@ -95,9 +104,32 @@ export async function onSelect_2_DefaultGenerator(
       type,
     };
   });
-  existingPayload.message.order.fulfillments = [
-    ...fulfillments,
-    ...restFulfillment,
-  ];
+
+  if (isParentItem) {
+    const fulfillment =
+      sessionData?.select_2_fulfillments?.map((i: any) => {
+        return (sessionData?.on_select_1_fulfillments || []).find(
+          (f: any) => f.id === i.id
+        );
+      }) || [];
+    const fulfillments = fulfillment
+      .map((item: any) => {
+        if (item.type === "TRIP") {
+          const tags =
+            item.tags?.filter((t: any) => t.descriptor?.code === "INFO") || [];
+          return { ...item, tags };
+        } else {
+          const { id, type } = item;
+          return { id, type };
+        }
+      });
+
+    existingPayload.message.order.fulfillments = fulfillments;
+  } else {
+    existingPayload.message.order.fulfillments = [
+      ...fulfillments,
+      ...restFulfillment,
+    ];
+  }
   return existingPayload;
 }
