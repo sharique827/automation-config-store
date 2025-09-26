@@ -145,7 +145,7 @@ export async function initDefaultGenerator(
   const fulfillments = sessionData?.on_select_2_fulfillments.map(
     (item: any, index: number) => {
       if (item?.id?.includes("-")) {
-        return { id: item?.id, customer: customer_array[index - 1] };
+        return { id: item?.id, customer: customer_array[0] };
       } else {
         const { id, stops, vehicle } = item;
         const simplifiedStops = stops.map((stop: any) => ({ id: stop.id }));
