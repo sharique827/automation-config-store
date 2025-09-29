@@ -1104,7 +1104,7 @@ export const on_search_default = {
                   },
                   time: {
                     label: "DATE_TIME",
-                    timestamp: "2023-10-15T20:00:00.000Z",
+                    timestamp: "2025-11-29T09:25:04.455Z",
                   },
                 },
                 {
@@ -1118,7 +1118,7 @@ export const on_search_default = {
                   },
                   time: {
                     label: "DATE_TIME",
-                    timestamp: "2023-10-15T20:00:00.000Z",
+                    timestamp: "2025-11-29T11:25:04.455Z",
                   },
                 },
               ],
@@ -1159,7 +1159,7 @@ export const on_search_default = {
                   },
                   time: {
                     label: "DATE_TIME",
-                    timestamp: "2023-10-15T20:00:00.000Z",
+                    timestamp: "2025-11-29T09:25:04.455Z",
                   },
                 },
                 {
@@ -1174,10 +1174,10 @@ export const on_search_default = {
                   time: {
                     label: "DATE_TIME",
                     range: {
-                      start: "2024-12-26T15:00:00Z",
-                      end: "2024-12-27T05:05:00Z",
+                      start: "2025-11-29T10:25:04.455Z",
+                      end: "2025-11-29T11:25:04.455Z",
                     },
-                    duration: "PT14H5M",
+                    duration: "PT1H",
                   },
                 },
                 {
@@ -1191,7 +1191,7 @@ export const on_search_default = {
                   },
                   time: {
                     label: "DATE_TIME",
-                    timestamp: "2023-10-15T20:00:00.000Z",
+                    timestamp: "2025-11-29T12:25:04.455Z",
                   },
                 },
               ],
@@ -1238,7 +1238,7 @@ export const on_search_default = {
                   },
                   time: {
                     label: "DATE_TIME",
-                    timestamp: "2023-10-15T20:00:00.000Z",
+                    timestamp: "2025-11-29T09:25:04.455Z",
                   },
                 },
                 {
@@ -1252,7 +1252,7 @@ export const on_search_default = {
                   },
                   time: {
                     label: "DATE_TIME",
-                    timestamp: "2023-10-17T20:00:00.000Z",
+                    timestamp: "2025-11-29T11:25:04.455Z",
                   },
                 },
               ],
@@ -1299,7 +1299,7 @@ export const on_search_default = {
                   },
                   time: {
                     label: "DATE_TIME",
-                    timestamp: "2023-10-19T20:00:00.000Z",
+                    timestamp: "2025-11-29T13:25:04.455Z",
                   },
                 },
                 {
@@ -1313,7 +1313,7 @@ export const on_search_default = {
                   },
                   time: {
                     label: "DATE_TIME",
-                    timestamp: "2023-10-21T20:00:00.000Z",
+                    timestamp: "2025-11-29T15:25:04.455Z",
                   },
                 },
               ],

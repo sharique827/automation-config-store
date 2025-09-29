@@ -69,4 +69,5 @@ session_data:
   on_confirm_fulfillments: []
   on_confirm_payments: []
   on_confirm_cancellation_terms: []
+  on_search_1_items: []
 

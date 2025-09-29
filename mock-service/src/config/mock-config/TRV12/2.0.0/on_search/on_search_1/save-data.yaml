@@ -7,3 +7,4 @@ save-data:
   on_search_1_catalog_descriptor: "$.message.catalog.descriptor"
   on_search_1_providers: "$.message.catalog.providers[*]"
   on_search_1_tags: "$.message.catalog.tags[*]"
+  on_search_1_items: "$.message.catalog.providers[*].items[*]"
