@@ -178,5 +178,26 @@ export async function onSelect_1_DefaultGenerator(
     ...extraFulfillments,
   ];
 
+  const getFulfillmentId =
+    existingPayload?.message?.order?.fulfillments?.filter((i: any) => {
+      return i.id.includes("-");
+    });
+
+  let index = 0;
+
+  const filteredItem = existingPayload?.message?.order?.items?.map((i: any) => {
+    if (i.parent_item_id) {
+      const updatedItem = {
+        ...i,
+        fulfillment_ids: [...i.fulfillment_ids, getFulfillmentId[index]?.id],
+      };
+      index++;
+      return updatedItem;
+    } else {
+      return i;
+    }
+  });
+
+  existingPayload.message.order.items = filteredItem;
   return existingPayload;
 }
