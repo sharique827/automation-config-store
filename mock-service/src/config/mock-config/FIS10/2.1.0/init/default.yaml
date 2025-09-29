@@ -1,0 +1,58 @@
+order:
+  provider:
+    id: "P1"
+  fulfillments:
+    - id: "F1"
+      type: "BPP_ONLINE_EMAIL_SMS"
+      stops:
+        - contact:
+            phone: "9999888867"
+            email: "receiver1@test.com"
+          person:
+            name: "Receiver Name 1"
+    - id: "F2"
+      type: "BPP_ONLINE_EMAIL_SMS"
+      stops:
+        - contact:
+            phone: "9999888868"
+            email: "receiver2@test.com"
+          person:
+            name: "Receiver Name 2"
+    - id: "F3"
+      type: "BPP_ONLINE_EMAIL_SMS"
+      stops:
+        - contact:
+            phone: "9999888869"
+            email: "receiver3@test.com"
+          person:
+            name: "Receiver Name 3"
+  items:
+    - id: "GC1"
+      quantity:
+        selected:
+          count: "3"
+      fulfillment_ids:
+        - "F1"
+        - "F2"
+        - "F3"
+      tags:
+        - descriptor:
+            code: "CUSTOMIZATION"
+          list:
+            - descriptor:
+                code: "RECEIVER_NAME"
+              value: "Test Name"
+            - descriptor:
+                code: "MESSAGE"
+              value: "Happy Birthday to you!!"
+  billing:
+    name: "House #"
+    address: "B005 Aspire Heights"
+    city:
+      name: "Bangalore"
+      code: "BAN"
+    state:
+      name: "Karnataka"
+      code: "KA"
+    email: "test@test.com"
+    phone: "9999888877"

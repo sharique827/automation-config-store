@@ -2,9 +2,9 @@ import { readFileSync } from "fs";
 import logger from "@ondc/automation-logger";
 import path from "path";
 import yaml from "js-yaml";
-import { SessionData as MockSessionData } from "./FIS12/session-types";
-import { createMockResponse as createFIS12MockResponse } from "./FIS12/version-factory";
-import { getMockAction as getFIS12MockAction } from "./FIS12/action-factory";
+import { SessionData as MockSessionData } from "./FIS10/session-types";
+import { createMockResponse as createFIS10MockResponse } from "./FIS10/version-factory";
+import { getMockAction as getFIS10MockAction } from "./FIS10/action-factory";
 
 export { MockSessionData };
 
@@ -12,7 +12,7 @@ export { MockSessionData };
 const defaultDomain = process.env.DOMAIN || "ONDC:FIS10";
 
 export const actionConfig = yaml.load(
-	readFileSync(path.join(__dirname, "./FIS12/factory.yaml"), "utf8")
+	readFileSync(path.join(__dirname, "./FIS10/factory.yaml"), "utf8")
 ) as any;
 
 export const defaultSessionData = (domain: string = defaultDomain) => {
@@ -52,7 +52,7 @@ export async function generateMockResponse(
 		console.log("generateMockResponse - defaultDomain:", defaultDomain);
 		console.log("generateMockResponse - sessionData", sessionData);
 		
-		let response = await createFIS12MockResponse(
+		let response = await createFIS10MockResponse(
 			session_id,
 			sessionData,
 			action_id,
@@ -67,7 +67,7 @@ export async function generateMockResponse(
 }
 
 export function getMockActionObject(actionId: string, domain: string = defaultDomain) {
-		return getFIS12MockAction(actionId);
+		return getFIS10MockAction(actionId);
 		}
 
 export function getActionData(code: number, domain: string = defaultDomain) {
@@ -113,5 +113,5 @@ export function getSaveDataContent(version: string, action: string, domain: stri
 }
 
 export function getUiMetaKeys(): (keyof MockSessionData)[] {
-	return ["kyc_verification_status", "consumer_information_form"];
+	return [];
 }
