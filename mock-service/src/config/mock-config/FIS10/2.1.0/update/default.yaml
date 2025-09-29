@@ -1,0 +1,22 @@
+
+  update_target: "fulfillments[0].stops"
+  order:
+    id: "O1"
+    fulfillments:
+      - stops:
+          - id: "F1"
+            contact:
+              phone: "9999888867"
+              email: "receiver@test.com"
+            person:
+              name: "Receiver Name 1"
+        tags:
+          - descriptor:
+              code: "UPDATE_RECEIVER_INFO"
+            list:
+              - descriptor:
+                  code: "EMAIL"
+                value: "updated_rec@test.com"
+              - descriptor:
+                  code: "PHONE"
+                value: "9865432190" 

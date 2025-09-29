@@ -1,0 +1,29 @@
+
+  order:
+    provider:
+      id: "P1"
+    fulfillments:
+      - type: "BPP_ONLINE_EMAIL_SMS"
+    items:
+      - id: "GC1"
+        quantity:
+          selected:
+            count: 3
+      - id: "GC2"
+        quantity:
+          selected:
+            count: 1
+      - id: "GC5"
+        quantity:
+          selected:
+            count: 1
+        price:
+          currency: "INR"
+          offered_value: "1500"
+    offers:
+      - id: "DISCA100"
+        item_ids:
+          - "GC1"
+      - id: "FREEBIE123"
+        item_ids:
+          - "GC2" 
