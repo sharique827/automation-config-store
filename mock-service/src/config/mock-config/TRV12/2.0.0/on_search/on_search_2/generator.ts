@@ -1,5 +1,3 @@
-import { existsSync } from "fs";
-
 export async function onSearch_2_Generator(
   existingPayload: any,
   sessionData: any
@@ -7,11 +5,29 @@ export async function onSearch_2_Generator(
   delete existingPayload.context.bpp_uri;
   delete existingPayload.context.bpp_id;
 
+  console.log(sessionData?.search_1_fulfillment);
+  const dateOfJourney = sessionData?.search_1_fulfillment?.stops?.find(
+    (stop: any) => stop.type === "START"
+  )?.time?.timestamp;
+
+  // if (!dateOfJourney) return existingPayload;
+  console.log("dateOfJourney", dateOfJourney);
+
+  const addHours = (dateStr: string, hrs: number) => {
+    const d = new Date(dateStr);
+    d.setHours(d.getHours() + hrs);
+    return d.toISOString();
+  };
+
+  const startTime = dateOfJourney;
+  const endTime = addHours(startTime, 2);
+
   existingPayload.message.catalog.descriptor =
     sessionData?.on_search_1_catalog_descriptor ?? {};
   existingPayload.message.catalog.providers =
     sessionData?.on_search_1_providers ?? [];
   existingPayload.message.catalog.tags = sessionData?.on_search_1_tags ?? [];
+
   existingPayload.message.catalog.providers[0].fulfillments = [
     {
       id: "F1",
@@ -20,51 +36,22 @@ export async function onSearch_2_Generator(
         {
           id: "S1",
           type: "START",
-          location: {
-            descriptor: {
-              name: "Delhi",
-              code: "DEL",
-            },
-          },
-          time: {
-            label: "DATE_TIME",
-            timestamp: "2023-10-15T20:00:00.000Z",
-          },
+          location: { descriptor: { name: "Delhi", code: "DEL" } },
+          time: { label: "DATE_TIME", timestamp: startTime },
         },
         {
           id: "S2",
           type: "END",
-          location: {
-            descriptor: {
-              name: "Bengaluru",
-              code: "BLR",
-            },
-          },
-          time: {
-            label: "DATE_TIME",
-            timestamp: "2023-10-15T20:00:00.000Z",
-          },
+          location: { descriptor: { name: "Bengaluru", code: "BLR" } },
+          time: { label: "DATE_TIME", timestamp: endTime },
         },
       ],
-      vehicle: {
-        category: "AIRLINE",
-        code: "6E284",
-      },
+      vehicle: { category: "AIRLINE", code: "6E284" },
       tags: [
         {
-          descriptor: {
-            code: "INFO",
-            name: "Info",
-          },
+          descriptor: { code: "INFO", name: "Info" },
           display: true,
-          list: [
-            {
-              descriptor: {
-                code: "OPERATED_BY",
-              },
-              value: "AirIndia",
-            },
-          ],
+          list: [{ descriptor: { code: "OPERATED_BY" }, value: "AirIndia" }],
         },
       ],
     },
@@ -75,74 +62,37 @@ export async function onSearch_2_Generator(
         {
           id: "S1",
           type: "START",
-          location: {
-            descriptor: {
-              name: "Delhi",
-              code: "DEL",
-            },
-          },
-          time: {
-            label: "DATE_TIME",
-            timestamp: "2023-10-15T20:00:00.000Z",
-          },
+          location: { descriptor: { name: "Delhi", code: "DEL" } },
+          time: { label: "DATE_TIME", timestamp: startTime },
         },
         {
           id: "S2",
           type: "LAYOVER",
-          location: {
-            descriptor: {
-              name: "Mumbai",
-              code: "BOM",
-            },
-          },
+          location: { descriptor: { name: "Mumbai", code: "BOM" } },
           time: {
             label: "DATE_TIME",
             range: {
-              start: "2024-12-26T15:00:00Z",
-              end: "2024-12-27T05:05:00Z",
+              start: addHours(startTime, 1), // +1h from START
+              end: addHours(startTime, 2), // +2h from START
             },
-            duration: "PT14H5M",
+            duration: "PT1H", // 1 hour layover
           },
         },
         {
           id: "S3",
           type: "END",
-          location: {
-            descriptor: {
-              name: "Bengaluru",
-              code: "BLR",
-            },
-          },
-          time: {
-            label: "DATE_TIME",
-            timestamp: "2023-10-15T20:00:00.000Z",
-          },
+          location: { descriptor: { name: "Bengaluru", code: "BLR" } },
+          time: { label: "DATE_TIME", timestamp: addHours(startTime, 3) },
         },
       ],
-      vehicle: {
-        category: "AIRLINE",
-        code: "6E281",
-      },
+      vehicle: { category: "AIRLINE", code: "6E281" },
       tags: [
         {
-          descriptor: {
-            code: "INFO",
-            name: "Info",
-          },
+          descriptor: { code: "INFO", name: "Info" },
           display: true,
           list: [
-            {
-              descriptor: {
-                code: "FULFILLMENT_SEQUENCE",
-              },
-              value: "F3, F4",
-            },
-            {
-              descriptor: {
-                code: "OPERATED_BY",
-              },
-              value: "AirIndia",
-            },
+            { descriptor: { code: "FULFILLMENT_SEQUENCE" }, value: "F3, F4" },
+            { descriptor: { code: "OPERATED_BY" }, value: "AirIndia" },
           ],
         },
       ],
@@ -154,56 +104,24 @@ export async function onSearch_2_Generator(
         {
           id: "S1",
           type: "START",
-          location: {
-            descriptor: {
-              name: "Delhi",
-              code: "DEL",
-            },
-          },
-          time: {
-            label: "DATE_TIME",
-            timestamp: "2023-10-15T20:00:00.000Z",
-          },
+          location: { descriptor: { name: "Delhi", code: "DEL" } },
+          time: { label: "DATE_TIME", timestamp: startTime },
         },
         {
           id: "S2",
           type: "END",
-          location: {
-            descriptor: {
-              name: "Mumbai",
-              code: "BOM",
-            },
-          },
-          time: {
-            label: "DATE_TIME",
-            timestamp: "2023-10-17T20:00:00.000Z",
-          },
+          location: { descriptor: { name: "Mumbai", code: "BOM" } },
+          time: { label: "DATE_TIME", timestamp: endTime },
         },
       ],
-      vehicle: {
-        category: "AIRLINE",
-        code: "6E286",
-      },
+      vehicle: { category: "AIRLINE", code: "6E286" },
       tags: [
         {
-          descriptor: {
-            code: "INFO",
-            name: "Info",
-          },
+          descriptor: { code: "INFO", name: "Info" },
           display: true,
           list: [
-            {
-              descriptor: {
-                code: "PARENT_ID",
-              },
-              value: "F2",
-            },
-            {
-              descriptor: {
-                code: "OPERATED_BY",
-              },
-              value: "AirIndia",
-            },
+            { descriptor: { code: "PARENT_ID" }, value: "F2" },
+            { descriptor: { code: "OPERATED_BY" }, value: "AirIndia" },
           ],
         },
       ],
@@ -215,63 +133,31 @@ export async function onSearch_2_Generator(
         {
           id: "S1",
           type: "START",
-          location: {
-            descriptor: {
-              name: "Mumbai",
-              code: "BOM",
-            },
-          },
-          time: {
-            label: "DATE_TIME",
-            timestamp: "2023-10-19T20:00:00.000Z",
-          },
+          location: { descriptor: { name: "Mumbai", code: "BOM" } },
+          time: { label: "DATE_TIME", timestamp: addHours(startTime, 4) },
         },
         {
           id: "S2",
           type: "END",
-          location: {
-            descriptor: {
-              name: "Bengaluru",
-              code: "BLR",
-            },
-          },
-          time: {
-            label: "DATE_TIME",
-            timestamp: "2023-10-21T20:00:00.000Z",
-          },
+          location: { descriptor: { name: "Bengaluru", code: "BLR" } },
+          time: { label: "DATE_TIME", timestamp: addHours(startTime, 6) },
         },
       ],
-      vehicle: {
-        category: "AIRLINE",
-        code: "6E287",
-      },
+      vehicle: { category: "AIRLINE", code: "6E287" },
       tags: [
         {
-          descriptor: {
-            code: "INFO",
-            name: "Info",
-          },
+          descriptor: { code: "INFO", name: "Info" },
           display: true,
           list: [
-            {
-              descriptor: {
-                code: "PARENT_ID",
-              },
-              value: "F2",
-            },
-            {
-              descriptor: {
-                code: "OPERATED_BY",
-              },
-              value: "AirIndia",
-            },
+            { descriptor: { code: "PARENT_ID" }, value: "F2" },
+            { descriptor: { code: "OPERATED_BY" }, value: "AirIndia" },
           ],
         },
       ],
     },
   ];
 
-  const items = existingPayload.message.catalog.providers[0].items?.map(
+  const items = sessionData?.on_search_1_items?.map(
     (item: any) => {
       if (item?.descriptor?.code === "ADULT_TICKET") {
         return {
