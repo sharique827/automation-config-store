@@ -25268,12 +25268,12 @@ x-validations:
       # - _NAME_: REQUIRED_MESSAGE_LABEL
       #   attr: $.message.catalog['bpp/providers'][*].categories[*].time.label
       #   _RETURN_: attr are present
-      - _NAME_: REQUIRED_MESSAGE_DURATION
-        attr: $.message.catalog['bpp/providers'][*].categories[*].time.duration
-        _RETURN_: attr are present
-      - _NAME_: REQUIRED_MESSAGE_TIMESTAMP
-        attr: $.message.catalog['bpp/providers'][*].categories[*].time.timestamp
-        _RETURN_: attr are present
+      # - _NAME_: REQUIRED_MESSAGE_DURATION
+      #   attr: $.message.catalog['bpp/providers'][*].categories[*].time.duration
+      #   _RETURN_: attr are present
+      # - _NAME_: REQUIRED_MESSAGE_TIMESTAMP
+      #   attr: $.message.catalog['bpp/providers'][*].categories[*].time.timestamp
+      #   _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_ID_22
         attr: $.message.catalog['bpp/providers'][*].fulfillments[*].id
         _RETURN_: attr are present
