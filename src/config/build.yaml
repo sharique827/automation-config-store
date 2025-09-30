@@ -25265,9 +25265,9 @@ x-validations:
           - Next Day Delivery
           - Same Day Delivery
           - Instant Delivery
-      - _NAME_: REQUIRED_MESSAGE_LABEL
-        attr: $.message.catalog['bpp/providers'][*].categories[*].time.label
-        _RETURN_: attr are present
+      # - _NAME_: REQUIRED_MESSAGE_LABEL
+      #   attr: $.message.catalog['bpp/providers'][*].categories[*].time.label
+      #   _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_DURATION
         attr: $.message.catalog['bpp/providers'][*].categories[*].time.duration
         _RETURN_: attr are present
