@@ -1599,8 +1599,6 @@ components:
       properties:
         name:
           type: string
-        code:
-          type: string
         symbol:
           type: string
         short_desc:
@@ -3083,15 +3081,15 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Payment"
-        locations:
-          type: array
-          items:
-            allOf:
-              - $ref: "#/components/schemas/Location"
-              - type: object
-                properties:
-                  rateable:
-                    $ref: "#/components/schemas/Rateable"
+        # locations:
+        #   type: array
+        #   items:
+        #     allOf:
+        #       - $ref: "#/components/schemas/Location"
+        #       - type: object
+        #         properties:
+        #           rateable:
+        #             $ref: "#/components/schemas/Rateable"
         offers:
           type: array
           items:
@@ -3608,10 +3606,10 @@ components:
         duration; or a structured timetable of operations
       type: object
       properties:
-        label:
-          type: string
-        timestamp:
-          type: string
+        # label:
+        #   type: string
+        # timestamp:
+        #   type: string
         duration:
           $ref: "#/components/schemas/Duration"
         range:
@@ -25268,12 +25266,12 @@ x-validations:
       # - _NAME_: REQUIRED_MESSAGE_LABEL
       #   attr: $.message.catalog['bpp/providers'][*].categories[*].time.label
       #   _RETURN_: attr are present
-      # - _NAME_: REQUIRED_MESSAGE_DURATION
-      #   attr: $.message.catalog['bpp/providers'][*].categories[*].time.duration
-      #   _RETURN_: attr are present
-      # - _NAME_: REQUIRED_MESSAGE_TIMESTAMP
-      #   attr: $.message.catalog['bpp/providers'][*].categories[*].time.timestamp
-      #   _RETURN_: attr are present
+      - _NAME_: REQUIRED_MESSAGE_DURATION
+        attr: $.message.catalog['bpp/providers'][*].categories[*].time.duration
+        _RETURN_: attr are present
+      - _NAME_: REQUIRED_MESSAGE_TIMESTAMP
+        attr: $.message.catalog['bpp/providers'][*].categories[*].time.timestamp
+        _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_ID_22
         attr: $.message.catalog['bpp/providers'][*].fulfillments[*].id
         _RETURN_: attr are present
@@ -25439,6 +25437,7 @@ x-validations:
       - _NAME_: validate_tag_2
         validTags:
           - type
+          - weight_slab
         tagPath: $.message.catalog['bpp/providers'][*].items[*].tags[*].code
         _CONTINUE_: "!(tagPath are present)"
         _RETURN_: tagPath all in validTags
@@ -25448,6 +25447,8 @@ x-validations:
         validValues:
           - type
           - unit
+          - lower
+          - upper
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_3
         validTags:
