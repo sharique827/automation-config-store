@@ -1,0 +1,8 @@
+save-data:
+  message_id: "$.context.message_id"
+  transaction_id: "$.context.transaction_id"
+  fulfillments: "$.message.order.fulfillments[*]"   
+  items: "$.message.order.items[*]"   
+  provider: "$.message.order.provider"   
+  items_id: "$.message.order.items[*].id"   
+  city_code : "$.context.location.city.code"

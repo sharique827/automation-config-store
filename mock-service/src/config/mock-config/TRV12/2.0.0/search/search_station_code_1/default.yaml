@@ -1,0 +1,35 @@
+intent:
+  fulfillment:
+    stops:
+      - type: START
+        location:
+          descriptor:
+            code: std:080
+    vehicle:
+      category: BUS
+      variant: AC
+      capacity: 47
+      wheels_count: "6"
+      energy_type: DIESEL
+  payment:
+    tags:
+      - descriptor:
+          code: BUYER_FINDER_FEES
+        display: false
+        list:
+          - descriptor:
+              code: BUYER_FINDER_FEES_PERCENTAGE
+            value: "1"
+          - descriptor:
+              code: BUYER_FINDER_FEES_TYPE
+            value: percent
+      - descriptor:
+          code: SETTLEMENT_TERMS
+        display: false
+        list:
+          - descriptor:
+              code: DELAY_INTEREST
+            value: "2.5"
+          - descriptor:
+              code: STATIC_TERMS
+            value: https://api.example-bap.com/booking/terms
