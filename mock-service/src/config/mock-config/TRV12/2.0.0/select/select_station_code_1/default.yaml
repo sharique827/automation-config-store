@@ -1,0 +1,15 @@
+order:
+  items:
+    - id: I1
+      quantity:
+        selected:
+          count: 2
+  fulfillments:
+    - id: F1
+      stops:
+        - id: S2
+          type: PICKUP
+        - id: S5
+          type: DROP
+  provider:
+    id: P1

@@ -1,0 +1,9 @@
+save-data:
+  message_id: "$.context.message_id"
+  transaction_id: "$.context.transaction_id"
+  fulfillment: "$.message.intent.fulfillment" 
+  vehicle_info: "$.message.intent.fulfillment.vehicle" 
+  payment: "$.message.intent.payment" 
+  city_code: "$.context.location.city.code"
+  start_location: "$.message.intent.fulfillment.stops[*].location.descriptor.code"
+  end_code: "$.message.intent.fulfillment.stops[*].location.descriptor.code"
