@@ -10,6 +10,15 @@ export async function onStatusUnsolicitedGenerator(existingPayload: any, session
 
   const form_status = sessionData?.form_data?.kyc_verification_status?.idType;
   
+  // Update transaction_id and message_id from session data (carry-forward mapping)
+  if (sessionData.transaction_id && existingPayload.context) {
+    existingPayload.context.transaction_id = sessionData.transaction_id;
+  }
+  
+  if (sessionData.message_id && existingPayload.context) {
+    existingPayload.context.message_id = sessionData.message_id;
+  }
+  
   // Update order ID from session data if available
   if (sessionData.order_id) {
     existingPayload.message = existingPayload.message || {};
@@ -17,22 +26,36 @@ export async function onStatusUnsolicitedGenerator(existingPayload: any, session
     existingPayload.message.order.id = sessionData.order_id;
   }
 
-  // Update provider information from session data
+  // Update provider information from session data (carry-forward from on_select_2)
   if (sessionData.provider_id) {
     existingPayload.message = existingPayload.message || {};
     existingPayload.message.order = existingPayload.message.order || {};
     existingPayload.message.order.provider = existingPayload.message.order.provider || {};
     existingPayload.message.order.provider.id = sessionData.provider_id;
   }
+  
+  // Update item.id from session data (carry-forward from on_select_2)
+  const selectedItem = sessionData.item || (Array.isArray(sessionData.items) ? sessionData.items[0] : undefined);
+  if (selectedItem?.id && existingPayload.message?.order?.items?.[0]) {
+    existingPayload.message.order.items[0].id = selectedItem.id;
+    console.log("Updated item.id:", selectedItem.id);
+  }
+  
+  
+  // Update form ID to FO3 (carry-forward from on_select_2)
+  if (existingPayload.message?.order?.items?.[0]?.xinput?.form) {
+    existingPayload.message.order.items[0].xinput.form.id = "FO3";
+    console.log("Updated form ID to FO3");
+  }
 
   // Update form response status - on_status_unsolicited uses APPROVED status
   if (existingPayload.message?.order?.items?.[0]?.xinput?.form_response) {
     const formResponse = existingPayload.message.order.items[0].xinput.form_response;
-    if (sessionData.form_status) {
-      formResponse.status = sessionData.form_status;
-    } else {
-      formResponse.status = "APPROVED";
-    }
+    // if (sessionData.form_status) {
+    //   formResponse.status = sessionData.form_status;
+    // } else {
+    //   formResponse.status = "APPROVED";
+    // }
     
     // Update submission ID if provided
     if (sessionData.submission_id) {
@@ -40,21 +63,10 @@ export async function onStatusUnsolicitedGenerator(existingPayload: any, session
     }
   }
 
-  // Update fulfillment state based on session data or default to SANCTIONED
-  if (existingPayload.message?.order?.fulfillments?.[0]) {
-    const fulfillment = existingPayload.message.order.fulfillments[0];
-    fulfillment.state = fulfillment.state || {};
-    fulfillment.state.descriptor = fulfillment.state.descriptor || {};
-    
-    // Set status based on session data or default
-    if (sessionData.loan_status) {
-      fulfillment.state.descriptor.code = sessionData.loan_status;
-    } else {
-      fulfillment.state.descriptor.code = "SANCTIONED";
-    }
-    
-    fulfillment.state.descriptor.name = fulfillment.state.descriptor.name || "Loan Sanctioned";
-    fulfillment.state.descriptor.short_desc = fulfillment.state.descriptor.short_desc || "Loan has been sanctioned and is ready for disbursement";
+  // Update customer name in fulfillments if available from session data
+  if (sessionData.customer_name && existingPayload.message?.order?.fulfillments?.[0]?.customer?.person) {
+    existingPayload.message.order.fulfillments[0].customer.person.name = sessionData.customer_name;
+    console.log("Updated customer name:", sessionData.customer_name);
   }
 
   // Note: Gold loans don't have payments in status responses
@@ -74,8 +86,5 @@ export async function onStatusUnsolicitedGenerator(existingPayload: any, session
     existingPayload.message.order.items[0].xinput.form_response.submission_id = submission_id;
   }
 
-  if(form_status){
-    existingPayload.message.order.items[0].xinput.form_response.status = form_status;
-  }
   return existingPayload;
 }

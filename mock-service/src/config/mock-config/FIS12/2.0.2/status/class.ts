@@ -18,8 +18,8 @@ export class MockStatusClass extends MockAction {
     }
     get inputs(): any {
         return {
-            order_id: {
-                label: "Order ID",
+            transaction_id: {
+                label: "Transaction ID",
                 type: "text",
                 required: true
             }
@@ -30,10 +30,10 @@ export class MockStatusClass extends MockAction {
     generator(existingPayload: any, sessionData: SessionData): Promise<any> { return statusGenerator(existingPayload, sessionData); }
     async validate(targetPayload: any): Promise<MockOutput> { return { valid: true }; }
     async meetRequirements(sessionData: SessionData): Promise<MockOutput> { 
-        if (!sessionData.order_id) {
+        if (!sessionData.transaction_id) {
             return { 
                 valid: false, 
-                message: "No order_id available in session data" 
+                message: "No transaction_id available in session data" 
             };
         }
         return { valid: true }; 

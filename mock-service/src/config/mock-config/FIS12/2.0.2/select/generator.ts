@@ -1,19 +1,19 @@
 /**
- * Select Generator for FIS10
+ * Select Generator for FIS12 Gold Loan
  * 
  * Logic:
  * 1. Update context with current timestamp
- * 2. Update transaction_id and message_id from session data
- * 3. Load provider, items, fulfillments, and payments from session data
+ * 2. Update transaction_id and message_id from session data (carry-forward mapping)
+ * 3. Update form_response with status and submission_id (preserve existing structure)
  */
 
 export async function selectDefaultGenerator(existingPayload: any, sessionData: any) {
   console.log("Select generator - Available session data:", {
     selected_provider: !!sessionData.selected_provider,
     selected_items: !!sessionData.selected_items,
-    selected_fulfillments: !!sessionData.selected_fulfillments,
     items: !!sessionData.items,
-    fulfillments: !!sessionData.fulfillments
+    transaction_id: sessionData.transaction_id,
+    message_id: sessionData.message_id
   });
 
   // Update context timestamp
@@ -21,7 +21,7 @@ export async function selectDefaultGenerator(existingPayload: any, sessionData: 
     existingPayload.context.timestamp = new Date().toISOString();
   }
   
-  // Update transaction_id from session data
+  // Update transaction_id from session data (carry-forward mapping)
   if (sessionData.transaction_id && existingPayload.context) {
     existingPayload.context.transaction_id = sessionData.transaction_id;
   }
@@ -31,33 +31,27 @@ export async function selectDefaultGenerator(existingPayload: any, sessionData: 
     existingPayload.context.message_id = sessionData.message_id;
   }
   
-  // Load provider from session data
-  if (sessionData.selected_provider && existingPayload.message && existingPayload.message.order) {
-    existingPayload.message.order.provider = sessionData.selected_provider;
-    console.log("Loaded selected_provider to order");
+  // Update provider.id if available from session data (carry-forward from on_search)
+  if (sessionData.selected_provider?.id && existingPayload.message?.order?.provider) {
+    existingPayload.message.order.provider.id = sessionData.selected_provider.id;
+    console.log("Updated provider.id:", sessionData.selected_provider.id);
   }
   
-  // Load items from catalog data (from on_search)
-  if (sessionData.items && existingPayload.message && existingPayload.message.order) {
-    // Take first 2 items as selected items
-    const selectedItems = sessionData.items.slice(0, 2).map((item: any) => ({
-      ...item,
-      quantity: {
-        selected: {
-          count: 1
-        }
-      }
-    }));
-    existingPayload.message.order.items = selectedItems;
-    console.log("Loaded items from catalog data:", selectedItems.length, "items");
+  // Update item.id if available from session data (carry-forward from on_search)
+  if (sessionData.items && Array.isArray(sessionData.items) && sessionData.items.length > 0) {
+    const selectedItem = sessionData.items[0];
+    if (existingPayload.message?.order?.items?.[0]) {
+      existingPayload.message.order.items[0].id = selectedItem.id;
+      console.log("Updated item.id:", selectedItem.id);
+    }
   }
   
-  // Load fulfillments from catalog data (from on_search)
-  if (sessionData.fulfillments && existingPayload.message && existingPayload.message.order) {
-    existingPayload.message.order.fulfillments = sessionData.fulfillments;
-    console.log("Loaded fulfillments from catalog data:", sessionData.fulfillments.length, "fulfillments");
+  // Update form_response with status and submission_id (preserve existing structure)
+  if (existingPayload.message?.order?.items?.[0]?.xinput?.form_response) {
+    existingPayload.message.order.items[0].xinput.form_response.status = "SUCCESS";
+    existingPayload.message.order.items[0].xinput.form_response.submission_id = `F01_SUBMISSION_ID_${Date.now()}`;
+    console.log("Updated form_response with status and submission_id");
   }
-  
   
   return existingPayload;
 } 

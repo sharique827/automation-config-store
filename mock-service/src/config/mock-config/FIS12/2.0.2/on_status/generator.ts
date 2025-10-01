@@ -9,14 +9,16 @@ export async function onStatusGenerator(existingPayload: any, sessionData: any) 
   
   const form_status = sessionData?.form_data?.kyc_verification_status?.idType;
   
-  // Update order ID from session data if available
-  if (sessionData.order_id) {
-    existingPayload.message = existingPayload.message || {};
-    existingPayload.message.order = existingPayload.message.order || {};
-    existingPayload.message.order.id = sessionData.order_id;
+  // Update transaction_id and message_id from session data (carry-forward mapping)
+  if (sessionData.transaction_id && existingPayload.context) {
+    existingPayload.context.transaction_id = sessionData.transaction_id;
   }
-
-  // Update provider information from session data
+  
+  if (sessionData.message_id && existingPayload.context) {
+    existingPayload.context.message_id = sessionData.message_id;
+  }
+  
+  // Update provider information from session data (carry-forward from previous flows)
   if (sessionData.provider_id) {
     existingPayload.message = existingPayload.message || {};
     existingPayload.message.order = existingPayload.message.order || {};
@@ -24,21 +26,54 @@ export async function onStatusGenerator(existingPayload: any, sessionData: any) 
     existingPayload.message.order.provider.id = sessionData.provider_id;
   }
 
-  // Update fulfillment state based on session data or default to SANCTIONED
-  if (existingPayload.message?.order?.fulfillments?.[0]) {
-    const fulfillment = existingPayload.message.order.fulfillments[0];
-    fulfillment.state = fulfillment.state || {};
-    fulfillment.state.descriptor = fulfillment.state.descriptor || {};
+  // Fix items: ensure ID consistency and form status
+  if (existingPayload.message?.order?.items?.[0]) {
+    const item = existingPayload.message.order.items[0];
     
-    // Set status based on session data or default
-    if (sessionData.loan_status) {
-      fulfillment.state.descriptor.code = sessionData.loan_status;
+    // Ensure item ID matches previous calls (carry-forward from previous flows)
+    if (sessionData.item_id) {
+      item.id = sessionData.item_id;
     } else {
-      fulfillment.state.descriptor.code = "SANCTIONED";
+      item.id = "ITEM_ID_GOLD_LOAN_2"; // Consistent ID
     }
     
-    fulfillment.state.descriptor.name = fulfillment.state.descriptor.name || "Loan Sanctioned";
-    fulfillment.state.descriptor.short_desc = fulfillment.state.descriptor.short_desc || "Loan has been sanctioned and is ready for disbursement";
+    // Update location_ids from session data (carry-forward from previous flows)
+    const selectedLocationId = sessionData.selected_location_id;
+    if (selectedLocationId) {
+      item.location_ids = [selectedLocationId];
+      console.log("Updated location_ids:", selectedLocationId);
+    }
+    
+    // Update form ID from session data (carry-forward from previous flows)
+    if (item.xinput?.form) {
+      // Use form ID from session data or default to FO3 (from on_select_2/on_status_unsolicited)
+      const formId = sessionData.form_id || "FO3";
+      item.xinput.form.id = formId;
+      console.log("Updated form ID:", formId);
+    }
+    
+    // Set form status to OFFLINE_PENDING
+    if (item.xinput?.form_response) {
+      item.xinput.form_response.status = form_status;
+      if (submission_id) {
+        item.xinput.form_response.submission_id = submission_id;
+      }
+    }
+  }
+
+  // Fix fulfillments: remove customer details and state
+  if (existingPayload.message?.order?.fulfillments) {
+    existingPayload.message.order.fulfillments.forEach((fulfillment: any) => {
+      // Remove customer details
+      delete fulfillment.customer;
+      // Remove state
+      delete fulfillment.state;
+    });
+  }
+
+  // Remove documents section completely
+  if (existingPayload.message?.order?.documents) {
+    delete existingPayload.message.order.documents;
   }
 
   // Update quote information if provided
@@ -49,14 +84,6 @@ export async function onStatusGenerator(existingPayload: any, sessionData: any) 
   // Update loan amount in items if provided
   if (sessionData.loan_amount && existingPayload.message?.order?.items?.[0]) {
     existingPayload.message.order.items[0].price.value = sessionData.loan_amount;
-  }
-  
-  if(existingPayload.message?.order?.items?.[0]?.xinput?.form_response){
-    existingPayload.message.order.items[0].xinput.form_response.submission_id = submission_id;
-  }
-
-  if(form_status){
-    existingPayload.message.order.items[0].xinput.form_response.status = form_status;
   }
 
   return existingPayload;

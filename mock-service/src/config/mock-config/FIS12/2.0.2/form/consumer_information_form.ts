@@ -40,6 +40,7 @@ export class MockConsumerInformationFormClass extends MockAction {
 	override async __forceSaveData(
 		sessionData: SessionData
 	): Promise<Record<string, any>> {
+		
 		const formLink = sessionData["consumer_information_form"];
 		if (!formLink) {
 			throw new Error("Form link not found in session data");
