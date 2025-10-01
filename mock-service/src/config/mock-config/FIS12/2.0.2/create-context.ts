@@ -9,7 +9,7 @@ export function createContext(partialContext: Partial<BecknContext>) {
         domain: "ONDC:FIS12",
         location: {
             city: {
-                code: "std:011",
+                code: "*",
             },
             country: {
                 code: "IND",

@@ -1,14 +1,13 @@
 order:
-  id: "LOAN_LEAD_ID_OR_SIMILAR_ORDER_ID"
   provider:
     id: "PROVIDER_ID"
     descriptor:
-      name: "ICICI Bank"
-      short_desc: "ICICI Bank Ltd"
-      long_desc: "ICICI Bank Ltd, India."
       images:
         - url: "https://www.icicibank.com/content/dam/icicibank/india/assets/images/header/logo.png"
           size_type: "sm"
+      name: "ICICI Bank"
+      short_desc: "ICICI Bank Ltd"
+      long_desc: "ICICI Bank Ltd, India."
     tags:
       - descriptor:
           code: "CONTACT_INFO"
@@ -157,7 +156,7 @@ order:
             - descriptor:
                 code: "COOL_OFF_PERIOD"
                 name: "cool off period"
-                short_desc: "Cooling off/look-up period during which borrower shall not be charged any penalty"
+                short_desc: "Cooling off/look-up period during which borrower shall not be\tTAGS m jayega charged any penalty"
               value: "PT30D"
             - descriptor:
                 code: "INSTALLMENT_AMOUNT"
@@ -167,12 +166,14 @@ order:
             - descriptor:
                 code: "KFS_LINK"
                 name: "Key Facts Statement Link"
-                short_desc: "Link to Key Facts Statement document"
+                short_desc: "A link provided by the BPP points to a Key Fact Statement (KFS) document related to a loan. When accessed, the document is returned in text/html format, with the loan details organized in a standard HTML table."
               value: "https://icicibank.com/loan/kfs-terms"
       xinput:
+        form:
+          id: "F03"
         form_response:
-          status: "APPROVED"
-          submission_id: "79850933-4e41-4c76-bbe6-c5a392481226"
+          status: "OFFLINE_PENDING"
+          submission_id: "F03_SUBMISSION_ID"
 
   quote:
     id: "LOAN_LEAD_ID_OR_SIMILAR"
@@ -212,28 +213,8 @@ order:
 
   fulfillments:
     - type: "LOAN"
-      customer:
-        person:
-          name: "John Doe"
-        contact:
-          phone: "+91-9999999999"
-          email: "john.doe@example.com"
-      state:
-        descriptor:
-          code: "SANCTIONED"
-          name: "Loan Sanctioned"
-          short_desc: "Loan has been sanctioned and is ready for disbursement"
       agent:
         person:
           name: "Rajesh Sharma"
         contact:
           phone: "+91-99xx99xx99xx"
-
-  documents:
-    - descriptor:
-        code: "LOAN_AGREEMENT"
-        name: "Loan Agreement Document"
-        short_desc: "Download your Loan Agreement document here"
-        long_desc: "A Loan Agreement Document is a legal contract outlining terms such as loan amount, interest rate, repayment schedule, and collateral, binding a lender and borrower in a formal financial arrangement."
-      mime_type: "application/pdf"
-      url: "https://lender.com/loan/loan-agreement/O1.pdf"

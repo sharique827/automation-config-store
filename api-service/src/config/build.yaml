@@ -41095,6 +41095,7 @@ x-testcasesui:
 x-changeLog:
   filenames:
     - FIS12_2.0.2_030924.md
+    
 x-validations:
   _TESTS_:
     search:
@@ -41298,6 +41299,7 @@ x-validations:
               - AA_PERSONAL_LOAN
               - GOLD_LOAN
               - AA_LOAN
+              - LOAN
             _RETURN_: attr all in enumList
           - _NAME_: ON_SEARCH_CATEGORIES_ID
             attr: $.message.catalog.providers[*].categories[*].id
@@ -42134,16 +42136,6 @@ x-validations:
         attr: $.message.order.fulfillments[*].customer.contact.phone
         _RETURN_: attr are present
 
-      - _NAME_: REQUIRED_FULFILLMENT_CUSTOMER_EMAIL
-        attr: $.message.order.fulfillments[*].customer.contact.email
-        _RETURN_: attr are present
-
-      - _NAME_: REQUIRED_FULFILLMENT_STATE_CODE
-        attr: $.message.order.fulfillments[*].state.descriptor.code
-        enumList:
-          - DISBURSED
-          - SANCTIONED
-        _RETURN_: attr any in enumList
 
       # -------------------- Payments Validations --------------------
       - _NAME_: REQUIRED_PAYMENT_TYPE
@@ -42248,8 +42240,8 @@ x-validations:
         _RETURN_: *COMMON_CONTEXT
 
       # Order ID mandatory for status request
-      - _NAME_: REQUIRED_ORDER_ID
-        attr: $.message.order_id
+      - _NAME_: REQUIRED_REF_ID
+        attr: $.message.ref_id
         _RETURN_: attr are present
 
     on_status:
@@ -42309,6 +42301,8 @@ x-validations:
           - PENDING
           - APPROVED
           - REJECTED
+          - OFFLINE_PENDING
+          - COMPLETED
         _RETURN_: attr any in enumList
 
       - _NAME_: REQUIRED_FORM_RESPONSE_SUBMISSION_ID
@@ -42338,23 +42332,14 @@ x-validations:
         _RETURN_: attr all in enumList
 
       - _NAME_: REQUIRED_FULFILLMENT_CUSTOMER_NAME
-        attr: $.message.order.fulfillments[*].customer.person.name
+        attr: $.message.order.fulfillments[*].agent.person.name
         _RETURN_: attr are present
 
       - _NAME_: REQUIRED_FULFILLMENT_CUSTOMER_PHONE
-        attr: $.message.order.fulfillments[*].customer.contact.phone
+        attr: $.message.order.fulfillments[*].agent.contact.phone
         _RETURN_: attr are present
 
-      - _NAME_: REQUIRED_FULFILLMENT_CUSTOMER_EMAIL
-        attr: $.message.order.fulfillments[*].customer.contact.email
-        _RETURN_: attr are present
 
-      - _NAME_: REQUIRED_FULFILLMENT_STATE_CODE
-        attr: $.message.order.fulfillments[*].state.descriptor.code
-        enumList:
-          - DISBURSED
-          - SANCTIONED
-        _RETURN_: attr any in enumList
 
   _SESSION_DATA_:
     trans: {}

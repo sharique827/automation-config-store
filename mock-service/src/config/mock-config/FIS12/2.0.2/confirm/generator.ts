@@ -1,92 +1,46 @@
 /**
- * Confirm Generator for FIS10
+ * Confirm Generator for FIS12 Gold Loan
  * 
  * Logic:
- * 1. Load fields from session: items, fulfillments, provider, billing, tags
- * 2. Update payments with transaction_id and amount from session
- * 3. Create quote based on items
- * 4. Payments structure comes pre-injected from default.yaml
+ * 1. Update context with current timestamp and correct action
+ * 2. Update transaction_id and message_id from session data (carry-forward mapping)
+ * 3. Update provider.id and item.id from session data (carry-forward mapping)
+ * 4. Preserve existing structure from default.yaml
  */
 
 export async function confirmDefaultGenerator(existingPayload: any, sessionData: any) {
+  console.log("sessionData for confirm", sessionData);
+  
+  // Update context timestamp and action
+  if (existingPayload.context) {
+    existingPayload.context.timestamp = new Date().toISOString();
+    existingPayload.context.action = "confirm";
+  }
 
-  
-  // Load items from session
-  if (sessionData.selected_items) {
-    existingPayload.message.order.items = sessionData.selected_items;
-  } else if (sessionData.item) {
-    existingPayload.message.order.items = [sessionData.item];
+  // Update transaction_id from session data (carry-forward mapping)
+  if (sessionData.transaction_id && existingPayload.context) {
+    existingPayload.context.transaction_id = sessionData.transaction_id;
   }
   
-  // // Load fulfillments from session
-  // if (sessionData.selected_fulfillments) {
-  //   existingPayload.message.order.fulfillments = sessionData.selected_fulfillments;
-  // }
-  
-  // Load provider from session
-  if (sessionData.selected_provider) {
-    existingPayload.message.order.provider = sessionData.selected_provider;
+  // Generate new UUID message_id for confirm (new API call)
+  if (existingPayload.context) {
+    existingPayload.context.message_id = crypto.randomUUID();
+    console.log("Generated new UUID message_id for confirm:", existingPayload.context.message_id);
   }
   
-  // Load billing from session
-  if (sessionData.billing) {
-    existingPayload.message.order.billing = sessionData.billing;
+  // Update provider.id if available from session data (carry-forward from previous flows)
+  if (sessionData.selected_provider?.id && existingPayload.message?.order?.provider) {
+    existingPayload.message.order.provider.id = sessionData.selected_provider.id;
+    console.log("Updated provider.id:", sessionData.selected_provider.id);
   }
   
-  // Load tags from session (BAP_TERMS and BPP_TERMS)
-  if (sessionData.tags) {
-    existingPayload.message.order.tags = sessionData.tags;
+  // Update item.id if available from session data (carry-forward from previous flows)
+  const selectedItem = sessionData.item || (Array.isArray(sessionData.items) ? sessionData.items[0] : undefined);
+  if (selectedItem?.id && existingPayload.message?.order?.items?.[0]) {
+    existingPayload.message.order.items[0].id = selectedItem.id;
+    console.log("Updated item.id:", selectedItem.id);
   }
   
-  // Create quote based on items
-  if (existingPayload.message.order.items && Array.isArray(existingPayload.message.order.items)) {
-    let totalValue = 0;
-    
-    existingPayload.message.order.items.forEach((item: any) => {
-      if (item.price && item.price.value) {
-        const itemValue = parseFloat(item.price.value);
-        const quantity = item.quantity?.selected?.count || 1;
-        totalValue += itemValue * quantity;
-      }
-    });
-    
-    existingPayload.message.order.quote = {
-      price: {
-        currency: "INR",
-        value: totalValue.toString()
-      },
-      breakup: existingPayload.message.order.items.map((item: any) => ({
-        title: item.descriptor?.name || item.id,
-        price: {
-          currency: "INR",
-          value: item.price?.value || "0"
-        },
-        item: {
-          id: item.id,
-          quantity: item.quantity
-        }
-      }))
-    };
-    
-    console.log("Created quote with total value:", totalValue);
-  }
-  
-  // Update payments with transaction_id and amount from session
-  if (existingPayload.message.order.payments && Array.isArray(existingPayload.message.order.payments)) {
-    existingPayload.message.order.payments.forEach((payment: any) => {
-      if (payment.params) {
-        // Update transaction_id from session
-        if (sessionData.transaction_id) {
-          payment.params.transaction_id = sessionData.transaction_id;
-        }
-        // Optionally mirror payable amount
-        if (existingPayload.message.order.quote?.price?.value) {
-          payment.params.amount = existingPayload.message.order.quote.price.value;
-          payment.params.currency = existingPayload.message.order.quote.price.currency || 'INR';
-        }
-      }
-    });
-  }
-  
+
   return existingPayload;
 }

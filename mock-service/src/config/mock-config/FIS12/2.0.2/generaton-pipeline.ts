@@ -75,7 +75,7 @@ export async function createMockResponseFIS12_200(
 		bpp_uri: sessionData?.bpp_uri,
 		location: {
 			city: {
-				code: sessionData.city_code ?? "std:011",
+				code: sessionData.city_code ?? "*",
 			},
 			country: {
 				code: "IND",
