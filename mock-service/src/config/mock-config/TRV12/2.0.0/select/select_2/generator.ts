@@ -122,18 +122,16 @@ export async function select_2_DefaultGenerator(
 
   let mappedFulfillments = [] as any[];
   if (isSeat) {
-    mappedFulfillments = existingPayload.message.order.items.map(
-      (_i: any, index: number) => {
-        return ticketFulfillment[index];
-      }
-    );
+    mappedFulfillments = existingPayload.message.order.items
+      .map((_i: any, index: number) => ticketFulfillment[index])
+      .filter(Boolean);
   } else {
     let totalCount = 0;
     existingPayload.message.order.items.map((_i: any, index: number) => {
       totalCount = totalCount + Number(_i.quantity?.selected?.count || 1);
     });
     for (let i = 0; i < totalCount; i++) {
-      mappedFulfillments.push(ticketFulfillment[i]);
+      ticketFulfillment[i] && mappedFulfillments.push(ticketFulfillment[i]);
     }
   }
 

@@ -189,7 +189,12 @@ export async function onSelect_1_DefaultGenerator(
     if (i.parent_item_id) {
       const updatedItem = {
         ...i,
-        fulfillment_ids: [...i.fulfillment_ids, getFulfillmentId[index]?.id],
+        fulfillment_ids: [
+          ...(i.fulfillment_ids || []),
+          ...(getFulfillmentId?.[index]?.id
+            ? [getFulfillmentId[index].id]
+            : []),
+        ],
       };
       index++;
       return updatedItem;
