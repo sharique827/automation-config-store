@@ -1,0 +1,13 @@
+save-data:
+  transaction_id: "$.context.transaction_id"
+  message_id: "$.context.message_id"
+  catalog_descriptor: "$.message.catalog.descriptor"
+  fulfillments: "$.message.catalog.providers[*].fulfillments[*]"
+  payments: "$.message.catalog.providers[*].payments[*]"
+  providers: "$.message.catalog.providers[*]"
+  items: "$.message.catalog.providers[*].items[*]"
+  item_ids: "$.message.catalog.providers[*].items[*].id"
+  cancellation_terms: "$.message.catalog.providers[*].items[*].cancellation_terms"
+  provider_id: "$.message.catalog.providers[*].id"
+  end_code: "$.message.catalog.providers[*].fulfillments[*].stops[?(@.type=='END')].location.descriptor.code"
+  

@@ -1,0 +1,5 @@
+order_id: O1
+ratings:
+  - rating_category: FULFILLMENT
+    id: O1
+    value: "4"

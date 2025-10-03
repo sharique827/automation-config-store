@@ -12,7 +12,7 @@ export interface SessionData {
 	start_location: string | undefined;
 	buyer_app_fee: string | undefined;
 	vehicle_type: string | undefined;
-	fulfillments: any[] | undefined;
+	fulfillments: any | undefined;
 	category_ids: string[]; // Assuming these are strings; adjust if needed
 	provider_id: string | undefined;
 	fullfillment_ids: string[]; // Assuming these are strings; adjust if needed
@@ -46,7 +46,7 @@ export interface SessionData {
 	start_time: string | undefined;
 	end_time: string | undefined;
 	selected_item_ids: string[] | undefined;
-	selected_item_counts: number[] | undefined;
+	selected_item_counts: number[] | undefined | any;
 	tags: any[] | undefined;
 	item: any | undefined;
 	selected_provider: any | undefined;
@@ -71,6 +71,19 @@ export interface SessionData {
 	on_select_2_fulfillments: any;
 	select_2_items: any;
 	select_2_fulfillments: any;
+	select_items: any;
+	on_select_items: any;
+	on_init_provider: any;
+	on_init_fulfillments: any;
+	catalog_descriptor: any;
+	on_select_fulfillments: any;
+	providers: any;
+	selected_quantity: any;
+	fulfillment: any;
+	on_select_fulfillments_tags: any;
+	price: any;
+	end_code: any;
+	select_fulfillments: any;
 }
 
 export type BecknContext = {

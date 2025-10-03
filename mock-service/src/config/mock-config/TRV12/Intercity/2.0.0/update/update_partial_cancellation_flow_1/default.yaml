@@ -1,0 +1,9 @@
+update_target: order.fulfillments
+order:
+  id: O1
+  fulfillments:
+    - id: FT1
+      type: TICKET
+      state:
+        descriptor:
+          code: SOFT_CANCEL
