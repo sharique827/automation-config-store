@@ -1,0 +1,12 @@
+save-data:
+  message_id: "$.context.message_id"
+  transaction_id: "$.context.transaction_id"
+  init_items: "$.message.order.items[*]"
+  fulfillments: "$.message.order.fulfillments[*]"
+  init_customers: "$.message.order.fulfillments[*].customer"
+  init_fulfillment_tags: "$.message.order.fulfillments[*].tags[*]"
+  provider: "$.message.order.provider"
+  billing: "$.message.order.billing"
+  payments: "$.message.order.payments[*]"
+  payment_id: "$.message.order.payments[*].id"
+  collected_by: "$.message.order.payments[*].collected_by"

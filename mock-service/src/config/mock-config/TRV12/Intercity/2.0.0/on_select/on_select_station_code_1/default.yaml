@@ -1,0 +1,203 @@
+order:
+  items:
+    - id: I1
+      descriptor:
+        name: Seater Ticket
+        code: SEAT
+      price:
+        currency: INR
+        value: "800"
+      quantity:
+        selected:
+          count: 2
+      fulfillment_ids:
+        - F1
+        - FT1
+        - FT2
+      category_ids:
+        - C1
+  provider:
+    id: P1
+    descriptor:
+      name: ABC Operator 1 Bus Services
+      images:
+        - url: https://operator1.com/logos/logo.ico
+  fulfillments:
+    - id: F1
+      type: TRIP
+      stops:
+        - id: S2
+          type: PICKUP
+          location:
+            descriptor:
+              name: Agara
+              code: std:080-pincode:560034
+            gps: 12.924479, 77.648999
+          time:
+            label: DATE_TIME
+            timestamp: 2023-09-06T06:30:00.000Z
+        - id: S5
+          type: DROP
+          location:
+            descriptor:
+              name: Ameerpet
+              code: std:040-pincode:500016
+            gps: 17.441586, 78.441581
+          time:
+            label: DATE_TIME
+            timestamp: 2023-09-06T15:10:00.000Z
+      vehicle:
+        category: BUS
+        variant: AC
+        capacity: 47
+        wheels_count: "6"
+        energy_type: DIESEL
+      tags:
+        - descriptor:
+            code: SEAT_GRID
+          list:
+            - descriptor:
+                code: X
+              value: "0"
+            - descriptor:
+                code: Y
+              value: "0"
+            - descriptor:
+                code: Z
+              value: "0"
+            - descriptor:
+                code: X_SIZE
+              value: "1"
+            - descriptor:
+                code: Y_SIZE
+              value: "1"
+            - descriptor:
+                code: NUMBER
+              value: A1
+            - descriptor:
+                code: RESTRICTED_GENDER
+              value: FEMALE
+            - descriptor:
+                code: SINGLE_SEAT
+              value: TRUE
+            - descriptor:
+                code: SEAT_PRICE
+              value: "50"
+            - descriptor:
+                code: ITEM_ID
+              value: I1
+            - descriptor:
+                code: AVAILABLE
+              value: "true"
+        - descriptor:
+            code: SEAT_GRID
+          list:
+            - descriptor:
+                code: X
+              value: "1"
+            - descriptor:
+                code: Y
+              value: "0"
+            - descriptor:
+                code: Z
+              value: "1"
+            - descriptor:
+                code: X_SIZE
+              value: "1"
+            - descriptor:
+                code: Y_SIZE
+              value: "2"
+            - descriptor:
+                code: NUMBER
+              value: F1
+            - descriptor:
+                code: RESTRICTED_GENDER
+              value: MALE
+            - descriptor:
+                code: SINGLE_SEAT
+              value: TRUE
+            - descriptor:
+                code: SEAT_PRICE
+              value: "50"
+            - descriptor:
+                code: ITEM_ID
+              value: I1
+            - descriptor:
+                code: AVAILABLE
+              value: "true"
+        - descriptor:
+            code: SEAT_GRID
+          list:
+            - descriptor:
+                code: X
+              value: "1"
+            - descriptor:
+                code: Y
+              value: "1"
+            - descriptor:
+                code: Z
+              value: "1"
+            - descriptor:
+                code: X_SIZE
+              value: "1"
+            - descriptor:
+                code: Y_SIZE
+              value: "2"
+            - descriptor:
+                code: NUMBER
+              value: F2
+            - descriptor:
+                code: RESTRICTED_GENDER
+              value: MALE
+            - descriptor:
+                code: SINGLE_SEAT
+              value: TRUE
+            - descriptor:
+                code: SEAT_PRICE
+              value: "50"
+            - descriptor:
+                code: ITEM_ID
+              value: I1
+            - descriptor:
+                code: AVAILABLE
+              value: "true"
+        - descriptor:
+            code: SEAT_GRID
+          list:
+            - descriptor:
+                code: X
+              value: "0"
+            - descriptor:
+                code: Y
+              value: ""
+            - descriptor:
+                code: Z
+              value: "1"
+            - descriptor:
+                code: X_SIZE
+              value: "1"
+            - descriptor:
+                code: Y_SIZE
+              value: "2"
+            - descriptor:
+                code: NUMBER
+              value: A3
+            - descriptor:
+                code: RESTRICTED_GENDER
+              value: MALE
+            - descriptor:
+                code: SINGLE_SEAT
+              value: TRUE
+            - descriptor:
+                code: SEAT_PRICE
+              value: "50"
+            - descriptor:
+                code: ITEM_ID
+              value: I1
+            - descriptor:
+                code: AVAILABLE
+              value: "true"
+    - id: FT1
+      type: TICKET
+    - id: FT2
+      type: TICKET

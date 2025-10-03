@@ -1,0 +1,6 @@
+rating:
+  order_id: O1_INVALID
+  ratings:
+    - rating_category: FULFILLMENT
+      id: O1
+      value: "4"

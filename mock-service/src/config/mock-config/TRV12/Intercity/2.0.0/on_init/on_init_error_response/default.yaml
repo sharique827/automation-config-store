@@ -1,0 +1,4 @@
+error:
+  code: "90203"
+  message: Buyer app did not respond with in seat locking period
+

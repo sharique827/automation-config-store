@@ -1,0 +1,216 @@
+catalog:
+  descriptor:
+    name: ABC Bus Services Solutions
+    images:
+      - url: https://abc-bus.in/logos/logo.ico
+  providers:
+    - id: P1
+      descriptor:
+        name: ABC Operator 1 Bus Services
+        images:
+          - url: https://operator1.com/logos/logo.ico
+      categories:
+        - id: C1
+          descriptor:
+            name: Seater
+            code: SEATER
+        - id: C2
+          descriptor:
+            name: Sleeper
+            code: SLEEPER
+        - id: C3
+          descriptor:
+            name: Semi Sleeper
+            code: SEMI_SLEEPER
+      items:
+        - id: I1
+          descriptor:
+            name: Seater Ticket
+            code: SEAT
+          price:
+            currency: INR
+            value: "899"
+          quantity:
+            available:
+              count: "1"
+            maximum:
+              count: "1"
+          fulfillment_ids:
+            - F1
+          category_ids:
+            - C1
+          cancellation_terms:
+            - external_ref:
+                mimetype: text/html
+                url: https://api.unreserved-entry-pass.com/beckn/tnc.html
+              cancellation_eligible: true
+            - cancellation_fee:
+                percentage: "10"
+              fulfillment_state:
+                descriptor:
+                  code: CONFIRMED
+              cancel_by:
+                label: DURATION
+                duration: PT1H30M
+              cancellation_eligible: true
+        - id: I2
+          descriptor:
+            name: Sleeper Ticket
+            code: SEAT
+          price:
+            currency: INR
+            value: "1899"
+          quantity:
+            available:
+              count: "1"
+          fulfillment_ids:
+            - F1
+          category_ids:
+            - C2
+          cancellation_terms:
+            - cancellation_fee:
+                percentage: "10"
+              cancel_by:
+                label: DURATION
+                duration: PT1H30M
+              cancellation_eligible: true
+      fulfillments:
+        - id: F1
+          type: TRIP
+          rateable: true
+          rating: "4.5"
+          stops:
+            - id: S1
+              type: START
+              location:
+                descriptor:
+                  name: Bangalore
+                  code: std:080
+            - id: S2
+              type: PICKUP
+              location:
+                descriptor:
+                  name: Agara
+                  code: std:080-pincode:560034
+                gps: "12.924479, 77.648999"
+              time:
+                label: DATE_TIME
+                timestamp: "2023-09-06T06:30:00.000Z"
+            - id: S3
+              type: PICKUP
+              location:
+                descriptor:
+                  name: Bellandur
+                  code: std:080-pincode:560103
+                gps: "12.930839, 77.677941"
+              time:
+                label: DATE_TIME
+                timestamp: "2023-09-06T06:45:00.000Z"
+            - id: S4
+              type: END
+              location:
+                descriptor:
+                  name: Hyderabad
+                  code: std:040
+            - id: S5
+              type: DROP
+              location:
+                descriptor:
+                  name: Ameerpet
+                  code: std:040-pincode:500016
+                gps: "17.441586, 78.441581"
+              time:
+                label: DATE_TIME
+                timestamp: "2023-09-06T15:10:00.000Z"
+            - id: S6
+              type: DROP
+              location:
+                descriptor:
+                  name: Central Bus Station
+                  code: std:040-pincode:500012
+                gps: "17.379024, 78.482443"
+              time:
+                label: DATE_TIME
+                timestamp: "2023-09-06T15:30:00.000Z"
+          vehicle:
+            category: BUS
+            variant: AC
+            capacity: "47"
+            wheels_count: "6"
+            energy_type: DIESEL
+          tags:
+            - descriptor:
+                code: VEHICLE_GRID
+              display: false
+              list:
+                - descriptor:
+                    code: X_MAX
+                  value: "14"
+                - descriptor:
+                    code: Y_MAX
+                  value: "3"
+                - descriptor:
+                    code: Z_MAX
+                  value: "1"
+                - descriptor:
+                    code: X_LOBBY_START
+                  value: "0"
+                - descriptor:
+                    code: X_LOBBY_SIZE
+                  value: "12"
+                - descriptor:
+                    code: Y_LOBBY_START
+                  value: "1"
+                - descriptor:
+                    code: Y_LOBBY_SIZE
+                  value: "1"
+                - descriptor:
+                    code: SEAT_SELECTION
+                  value: mandatory
+            - descriptor:
+                code: VEHICLE_AVAIBALITY
+              display: false
+              list:
+                - descriptor:
+                    code: AVALIABLE_SEATS
+                  value: "20"
+            - descriptor:
+                code: VEHICLE_AMENITIES
+              list:
+                - value: WATER_BOTTLE
+                - value: WIFI
+                - value: BLANKET
+                - value: CCTV
+      payments:
+        - collected_by: BPP
+          tags:
+            - descriptor:
+                code: BUYER_FINDER_FEES
+              display: false
+              list:
+                - descriptor:
+                    code: BUYER_FINDER_FEES_PERCENTAGE
+                  value: "1"
+                - descriptor:
+                    code: BUYER_FINDER_FEES_TYPE
+                  value: percent
+            - descriptor:
+                code: SETTLEMENT_TERMS
+              display: false
+              list:
+                - descriptor:
+                    code: SETTLEMENT_WINDOW
+                  value: P30D
+                - descriptor:
+                    code: SETTLEMENT_BASIS
+                  value: INVOICE_RECEIPT
+                - descriptor:
+                    code: MANDATORY_ARBITRATION
+                  value: "TRUE"
+                - descriptor:
+                    code: COURT_JURISDICTION
+                  value: New Delhi
+                - descriptor:
+                    code: STATIC_TERMS
+                  value: https://api.transit-solutions.com/booking/terms
+
