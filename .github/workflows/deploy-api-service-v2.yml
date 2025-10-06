@@ -13,7 +13,8 @@ on:
       
 jobs:
   build-and-verify:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: ${{ github.ref_name }}  # environment exactly matches branch name
 
     steps:
