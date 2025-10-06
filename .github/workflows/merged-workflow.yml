@@ -61,7 +61,7 @@ jobs:
           password: ${{ secrets.GIT_PAT }}
 
 
-      - name: Build Docker image
+      - name: Build Docker image api service
         run: |
           cd automation-api-service-generator
           echo "TAG in this step: $TAG"
@@ -197,9 +197,9 @@ jobs:
 
 
   # build mock service 
-      - name: Prepare build repo
+      - name: Prepare build repo mock service
         run: |
-          cd $HOME
+          cd $GITHUB_WORKSPACE
           echo "Cloning generator repo..."
           # ls -R $GITHUB_WORKSPACE
           git clone --single-branch --branch main https://github.com/ONDC-Official/automation-mock-service-generator.git automation-mock-service-generator
@@ -225,7 +225,7 @@ jobs:
           password: ${{ secrets.GIT_PAT }}
 
 
-      - name: Build Docker image
+      - name: Build Docker image mock service
         run: |
           cd automation-mock-service-generator
           echo "TAG in this step: $TAG"
