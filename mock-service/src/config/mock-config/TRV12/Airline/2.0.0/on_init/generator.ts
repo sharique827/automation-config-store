@@ -228,7 +228,7 @@ export async function onInitDefaultGenerator(
       if (found) return found;
       switch (code) {
         case "SETTLEMENT_WINDOW":
-          return { descriptor: { code }, value: "PT30D" };
+          return { descriptor: { code }, value: "P30D" };
         case "SETTLEMENT_BASIS":
           return { descriptor: { code }, value: "INVOICE_RECEIPT" };
         case "MANDATORY_ARBITRATION":
