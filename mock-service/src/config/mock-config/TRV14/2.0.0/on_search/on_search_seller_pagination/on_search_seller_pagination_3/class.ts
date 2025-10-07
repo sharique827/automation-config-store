@@ -13,7 +13,7 @@ export class MockOnSearchSellerPagination3Class extends MockAction {
     }
     get defaultData(): any {
         return yaml.load(
-            readFileSync(path.resolve(__dirname, "./on_search_seller_pagination_3.yaml"), "utf8")
+            readFileSync(path.resolve(__dirname, "./default.yaml"), "utf8")
         );
     }
     get inputs(): any {

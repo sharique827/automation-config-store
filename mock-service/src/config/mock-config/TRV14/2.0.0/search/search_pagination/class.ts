@@ -14,7 +14,7 @@ export class search_seller_pagination_class extends MockAction {
 	get defaultData(): any {
 		return yaml.load(
 			readFileSync(
-				path.resolve(__dirname, "./search_incremental_pull.yaml"),
+				path.resolve(__dirname, "./default.yaml"),
 				"utf8"
 			)
 		);
@@ -23,10 +23,10 @@ export class search_seller_pagination_class extends MockAction {
 		return {};
 	}
 	name(): string {
-		return "search_incremental_pull";
+		return "search_seller_pagination";
 	}
 	get description(): string {
-		return "Mock for search_incremental_pull";
+		return "Mock for search_seller_pagination";
 	}
 	generator(existingPayload: any, sessionData: SessionData): Promise<any> {
 		return search_seller_pagination_generator(existingPayload, sessionData);

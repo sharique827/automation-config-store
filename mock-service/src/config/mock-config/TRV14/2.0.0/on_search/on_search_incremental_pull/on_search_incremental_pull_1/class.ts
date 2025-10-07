@@ -13,7 +13,7 @@ export class MockOnSearchIncrementalPull1Class extends MockAction {
     }
     get defaultData(): any {
         return yaml.load(
-            readFileSync(path.resolve(__dirname, "./on_search_incremental_pull_1.yaml"), "utf8")
+            readFileSync(path.resolve(__dirname, "./default.yaml"), "utf8")
         );
     }
     get inputs(): any {
