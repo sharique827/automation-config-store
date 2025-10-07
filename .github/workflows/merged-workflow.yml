@@ -332,6 +332,6 @@ jobs:
           git clone --single-branch --branch main https://github.com/ONDC-Official/automation-winx.git automation-winx
           cd automation-winx
           cp -rf $GITHUB_WORKSPACE/api-service/src/config/* ./src/config/api-service/
-          cp -rf $GITHUB_WORKSPACE/mock-service/src/config/mock-config ./src/config/
+          cp -rf $GITHUB_WORKSPACE/mock-service/src/config/mock-config/* ./src/config/mock-config/
           cp -rf $GITHUB_WORKSPACE/config-service/* ./src/config/config-service/
           
