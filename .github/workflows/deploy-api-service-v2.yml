@@ -301,8 +301,8 @@ jobs:
             IMAGE_NAME=ghcr.io/ondc-official/automation-api-service-${{vars.CONTAINER_NAME}}
 
             echo "Pulling latest image..."
-            docker pull $IMAGE_NAME:stable || docker pull $IMAGE_NAME:stable
-
+            # docker pull $IMAGE_NAME:stable || docker pull $IMAGE_NAME:stable
+            docker pull --quiet --disable-content-trust=false --no-cache $IMAGE_NAME:stable
             echo "Restarting container..."
             docker stop automation-api-service-${{ vars.CONTAINER_NAME }} || true
             docker rm automation-api-service-${{ vars.CONTAINER_NAME }} || true
