@@ -195,7 +195,7 @@ export async function onSearch_1_Generator(
     settlementTag.list = [
       {
         descriptor: { code: "SETTLEMENT_WINDOW" },
-        value: "PT30D",
+        value: "P30D",
       },
       {
         descriptor: { code: "SETTLEMENT_BASIS" },

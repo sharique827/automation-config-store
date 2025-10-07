@@ -84,6 +84,7 @@ export interface SessionData {
 	price: any;
 	end_code: any;
 	select_fulfillments: any;
+	on_select_2_quote: any
 }
 
 export type BecknContext = {

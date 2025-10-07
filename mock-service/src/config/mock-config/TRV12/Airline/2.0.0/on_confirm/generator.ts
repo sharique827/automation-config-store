@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 export async function onConfirmDefaultGenerator(
   existingPayload: any,
   sessionData: any
@@ -10,8 +9,32 @@ export async function onConfirmDefaultGenerator(
   existingPayload.message.order.status = "ACTIVE";
   existingPayload.message.order.provider = sessionData?.on_init_provider ?? {};
   existingPayload.message.order.items = sessionData?.on_init_items ?? [];
-  existingPayload.message.order.fulfillments =
-    sessionData?.on_init_fulfillments ?? [];
+  // existingPayload.message.order.fulfillments =
+  //   sessionData?.on_init_fulfillments ?? [];
+  const fulfillment = sessionData?.on_init_fulfillments?.map((i: any) => {
+    if (i.type === "TRIP") {
+      return {
+        ...i,
+        stops:
+          i?.stops?.map((stop: any) => {
+            if (stop?.type === "START") {
+              return {
+                ...stop,
+                authorization: {
+                  type: "QR",
+                  token:
+                    "iVBORw0KGgoAAAANSUhEUgAAAH0AAAB9AQAAAACn+1GIAAAApklEQVR4Xu2UMQ4EMQgD/QP+/0vK6zjsvayUMmavWxQpMAUBkwS12wcveAAkgNSCD3rR5Lkgoai3GUCMgWqbAEYR3HxAkZlzU/0MyBisYRsgI1ERFfcpBpA+ze6k56Cj7KTdXNigFWZvSOpsgqLfd18i2aAukXh9TXBNmdWt5gzA/oqzWkkN8HtA7G8CNOwYAiZt3wZixUfkA32OHNQq7Bxs9oI/gC/9fV8AVCkPjQAAAABJRU5ErkJggg==",
+                },
+              };
+            }
+            return stop;
+          }) ?? [],
+      };
+    } else return i;
+  });
+
+  existingPayload.message.order.fulfillments = fulfillment;
+
   existingPayload.message.order.quote = sessionData?.on_init_quote ?? {};
 
   const payments = sessionData?.on_init_payments?.map((payment: any) => {
@@ -57,4 +80,3 @@ export async function onConfirmDefaultGenerator(
 
   return existingPayload;
 }
-

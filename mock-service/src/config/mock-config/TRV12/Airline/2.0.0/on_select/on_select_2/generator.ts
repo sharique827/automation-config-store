@@ -112,17 +112,16 @@ export async function onSelect_2_DefaultGenerator(
           (f: any) => f.id === i.id
         );
       }) || [];
-    const fulfillments = fulfillment
-      .map((item: any) => {
-        if (item.type === "TRIP") {
-          const tags =
-            item.tags?.filter((t: any) => t.descriptor?.code === "INFO") || [];
-          return { ...item, tags };
-        } else {
-          const { id, type } = item;
-          return { id, type };
-        }
-      });
+    const fulfillments = fulfillment.map((item: any) => {
+      if (item.type === "TRIP") {
+        const tags =
+          item.tags?.filter((t: any) => t.descriptor?.code === "INFO") || [];
+        return { ...item, tags };
+      } else {
+        const { id, type } = item;
+        return { id, type };
+      }
+    });
 
     existingPayload.message.order.fulfillments = fulfillments;
   } else {
@@ -131,5 +130,163 @@ export async function onSelect_2_DefaultGenerator(
       ...restFulfillment,
     ];
   }
+
+  const baseItem = existingPayload.message.order.items.filter(
+    (i: any) => !i.parent_item_id
+  );
+
+  const addOnsItem = existingPayload.message.order.items.filter(
+    (i: any) => i.add_ons
+  );
+
+  const tax = existingPayload.message.order.items
+    ?.filter((i: any) => !i.parent_item_id)
+    .map((i: any) => {
+      const itemPrice = Number(i?.price?.value) || 0;
+      const quantity = i?.quantity?.selected?.count || 1;
+
+      return {
+        title: "TAX",
+        item: {
+          id: i?.id ?? "",
+          tags: [
+            {
+              descriptor: { code: "TAX" },
+              list: [
+                { descriptor: { name: "cgst" }, value: "5" },
+                { descriptor: { name: "sgst" }, value: "5" },
+                { descriptor: { name: "fuel tax" }, value: "0" },
+                { descriptor: { name: "cess" }, value: "0" },
+              ],
+            },
+          ],
+        },
+        price: {
+          currency: "INR",
+          value: String(itemPrice * 0.1 * quantity),
+        },
+      };
+    });
+
+
+  existingPayload.message.order.quote = {
+    id: "Q1",
+    price: {
+      value: "42159",
+      currency: "INR",
+    },
+  };
+  const BaseQuote = baseItem.map((item: any) => {
+    return {
+      title: "BASE_FARE",
+      item: {
+        id: item?.id ?? "",
+        quantity: {
+          selected: {
+            count: item.quantity.selected.count ?? 0,
+          },
+        },
+        price: {
+          currency: "INR",
+          value: item?.price?.value ?? 0,
+        },
+      },
+      price: {
+        currency: "INR",
+        value: String(
+          Number(item?.price?.value ?? 0) * Number(item.quantity.selected.count)
+        ),
+      },
+    };
+  });
+  const addOnsQuote = addOnsItem.map((item: any) => {
+    return {
+      title: "ADD_ONS",
+      item: {
+        id: item?.id ?? "",
+        add_ons: [
+          {
+            id: item?.add_ons[0]?.id ?? "",
+          },
+        ],
+      },
+      price: {
+        value: item?.add_ons[0]?.price?.value ?? 0,
+        currency: "INR",
+      },
+    };
+  });
+
+  const isSame = sessionData?.select_2_items?.some((i: any) => {
+    return i.id === i.parent_item_id;
+  });
+
+  let seatFare = [] as any[];
+  if (!isSame) {
+     seatFare = sessionData?.select_2_items.map((i: any) => {
+      return {
+        title: "SEAT_FARE",
+        item: {
+          id: i?.id ?? "",
+        },
+        price: {
+          currency: "INR",
+          value: "200",
+        },
+      };
+    });
+  }
+  
+  existingPayload.message.order.quote.breakup = [
+    ...BaseQuote,
+    ...addOnsQuote,
+    ...tax,
+    {
+      title: "CONVENIENCE_FEE",
+      price: {
+        currency: "INR",
+        value: "19",
+      },
+    },
+    ...seatFare,
+    {
+      title: "OTHER_CHARGES",
+      item: {
+        tags: [
+          {
+            descriptor: {
+              code: "OTHER_CHARGES",
+            },
+            list: [
+              {
+                descriptor: {
+                  name: "fuel charge",
+                },
+                value: "0",
+              },
+              {
+                descriptor: {
+                  code: "surcharge",
+                },
+                value: "0",
+              },
+            ],
+          },
+        ],
+      },
+      price: {
+        currency: "INR",
+        value: "0",
+      },
+    },
+  ];
+
+  const totalPrice = existingPayload.message.order.quote.breakup.reduce(
+    (acc: number, i: any) => acc + Number(i?.price?.value),
+    0
+  );
+
+  existingPayload.message.order.quote.price.value = String(totalPrice);
+
   return existingPayload;
 }

@@ -53,7 +53,7 @@ export async function initDefaultGenerator(
               descriptor: {
                 code: "SETTLEMENT_AMOUNT",
               },
-              value: "10421",
+              value: String(sessionData?.on_select_2_quote?.price?.value ?? 0),
             },
             {
               descriptor: {

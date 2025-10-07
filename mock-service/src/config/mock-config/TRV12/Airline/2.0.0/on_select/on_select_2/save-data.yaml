@@ -11,3 +11,4 @@ save-data:
   on_select_2_fulfillments: "$.message.order.fulfillments[*]"
   on_select_2_provider: "$.message.order.provider"
   on_select_2_provider_id: "$.message.order.provider.id"
+  on_select_2_quote: "$.message.order.quote"
