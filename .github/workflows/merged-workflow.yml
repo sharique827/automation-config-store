@@ -324,3 +324,14 @@ jobs:
           docker push $IMAGE_NAME:$TAG
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:stable
+          
+#automation runner
+      - name: Clone automation winx
+        run: |
+          cd $GITHUB_WORKSPACE
+          git clone --single-branch --branch main https://github.com/ONDC-Official/automation-winx.git automation-winx
+          cd automation-winx
+          cp -rf $GITHUB_WORKSPACE/api-service/src/config/* ./src/config/api-service/
+          cp -rf $GITHUB_WORKSPACE/mock-service/src/config/mock-config ./src/config/
+          cp -rf $GITHUB_WORKSPACE/config-service/* ./src/config/config-service/
+          
