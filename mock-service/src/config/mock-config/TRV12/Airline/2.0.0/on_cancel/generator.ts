@@ -15,7 +15,7 @@ export async function onCancelDefaultGenerator(
     sessionData?.on_confirm_provider ?? {};
   existingPayload.message.order.items = sessionData?.on_confirm_items ?? [];
   existingPayload.message.order.fulfillments =
-    sessionData?.on_confirm_fulfillments ?? [];
+    sessionData?.on_init_fulfillments ?? [];
 
   const quote = sessionData?.on_confirm_quote ?? {};
 
