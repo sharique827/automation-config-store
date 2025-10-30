@@ -491,19 +491,19 @@ const onSelect = async (data: any) => {
             if (ff.state) {
                 const ffDesc = ff.state.descriptor;
                 function checkFFOrgCategory(selfPickupOrDelivery: number) {
-                    if (
-                        !ff["@ondc/org/category"] ||
-                        !ffCategory[selfPickupOrDelivery].includes(ff["@ondc/org/category"])
-                    ) {
-                        result.push({
-                            valid: false,
-                            code: 20000,
-                            description: `In Fulfillment${idx}, @ondc/org/category is not a valid value in ${constants.ON_SELECT
-                                } and should have one of these values ${[
-                                    ffCategory[selfPickupOrDelivery],
-                                ]}`,
-                        });
-                    }
+                    // if (
+                    //     !ff["@ondc/org/category"] ||
+                    //     !ffCategory[selfPickupOrDelivery].includes(ff["@ondc/org/category"])
+                    // ) {
+                    //     result.push({
+                    //         valid: false,
+                    //         code: 20000,
+                    //         description: `In Fulfillment${idx}, @ondc/org/category is not a valid value in ${constants.ON_SELECT
+                    //             } and should have one of these values ${[
+                    //                 ffCategory[selfPickupOrDelivery],
+                    //             ]}`,
+                    //     });
+                    // }
                     const domain = data.context.domain.split(":")[1];
                     if (
                         ff.type === "Delivery" &&
