@@ -831,26 +831,6 @@ const onSelect = async (data: any) => {
     }
 
     try {
-        console.info("Checking Fulfillment TAT...");
-        on_select.fulfillments.forEach((ff: { [x: string]: any; id: any }) => {
-            if (!ff["@ondc/org/TAT"]) {
-                console.info(
-                    `Fulfillment TAT must be present for Fulfillment ID: ${ff.id}`
-                );
-                result.push({
-                    valid: false,
-                    code: 20000,
-                    description: `Fulfillment TAT must be present for fulfillment ID: ${ff.id}`,
-                });
-            }
-        });
-    } catch (error: any) {
-        console.info(
-            `Error while checking fulfillments TAT in /${constants.ON_SELECT}`
-        );
-    }
-
-    try {
         console.info("Checking fulfillment.id, fulfillment.type and tracking");
         on_select.fulfillments.forEach(async (ff: any) => {
             let ffId = "";
