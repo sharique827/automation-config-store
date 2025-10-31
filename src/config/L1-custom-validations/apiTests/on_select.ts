@@ -381,7 +381,7 @@ const onSelect = async (data: any) => {
                     description: `/fulfillments[${indx}]/@ondc/org/TAT (O2D) in /${constants.ON_SELECT} can't be less than @ondc/org/time_to_ship (O2S) in /${constants.ON_SEARCH}`,
                 });
             }
-            if (tat === tts) {
+            if (tat && tts && tat === tts && tat !== 0) {
                 result.push({
                     valid: false,
                     code: 20000,
