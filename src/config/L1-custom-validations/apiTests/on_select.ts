@@ -786,7 +786,7 @@ const onSelect = async (data: any) => {
             on_select.quote.breakup.forEach(
                 (item: { [x: string]: any; title: string }) => {
                     if (
-                        item["@ondc/org/title_type"] != "item" &&
+                        item["@ondc/org/title_type"] != "item" && item["@ondc/org/title_type"] != "offer" &&
                         !Object.values(retailPymntTtl).includes(
                             item["@ondc/org/title_type"]
                         )

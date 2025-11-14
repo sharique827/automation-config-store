@@ -2248,7 +2248,7 @@ export default async function onSearch(
       providers.forEach((provider: any) => {
         let customGroupDetails: any = {};
 
-        provider?.categories.forEach((category: any) => {
+        provider?.categories?.forEach((category: any) => {
           const id: string = category?.id;
           const customGroupTag = category.tags.find(
             (tag: any) =>
@@ -2292,7 +2292,7 @@ export default async function onSearch(
 
         let combinedIds: any = [];
 
-        provider?.items.forEach((item: any) => {
+        provider?.items?.forEach((item: any) => {
           const typeTag = item.tags.find((tag: any) => tag.code === "type");
           const typeValue = typeTag
             ? typeTag.list.find((listItem: any) => listItem.code === "type")
@@ -2341,7 +2341,7 @@ export default async function onSearch(
           }
         });
 
-        combinedIds.forEach((id: any) => {
+        combinedIds?.forEach((id: any) => {
           if (customGroupDetails[id]) {
             const group = customGroupDetails[id];
             const min = group.min;
@@ -2364,7 +2364,7 @@ export default async function onSearch(
         });
 
         const customGroupIds = Object.keys(customGroupDetails);
-        customGroupIds.forEach((id) => {
+        customGroupIds?.forEach((id) => {
           const group = customGroupDetails[id];
           const max = group.max;
 
