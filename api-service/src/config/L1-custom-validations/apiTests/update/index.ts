@@ -36,6 +36,7 @@ export const updateRouter = async (data: any) => {
   let apiSeq = "update";
   let result: any = [];
 
+  // Fetch settlement details set
   let settlementDetailSet = await fetchRedisSet(
     transaction_id,
     "settlementDetailSet"
@@ -43,6 +44,9 @@ export const updateRouter = async (data: any) => {
 
   const updateTarget = data?.message?.update_target;
   if (updateTarget) {
+    if (updateTarget === "fulfillment") {
+      return [];
+    }
     if (updateTarget === "payment") {
       result = await checkUpdate(data, settlementDetailSet, apiSeq, "payment");
     } else if (updateTarget === "item") {
