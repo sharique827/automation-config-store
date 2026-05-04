@@ -8,3 +8,7 @@ save-data:
   confirm_order: "$.message.order"
   tags: "$.message.order.tags"
   confirm_cancellation_terms: "$.message.order.cancellation_terms"
+  bap_id: "$.context.bap_id"
+  bap_uri: "$.context.bap_uri"
+  bpp_id: "$.context.bpp_id"
+  bpp_uri: "$.context.bpp_uri"

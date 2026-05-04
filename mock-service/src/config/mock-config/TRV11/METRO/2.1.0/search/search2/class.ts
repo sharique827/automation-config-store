@@ -5,6 +5,8 @@ import { MockAction, MockOutput, saveType } from "../../../../classes/mock-actio
 import { SessionData } from "../../../../session-types";
 import { search2Generator} from "./generator";
 
+import { exampleFullfillment } from "../../on_search/fullfillment-generator";
+
 export class MockSearch2Metro210Class extends MockAction {
   get saveData(): saveType {
     return yaml.load(
@@ -32,6 +34,40 @@ export class MockSearch2Metro210Class extends MockAction {
     targetPayload: any,
     sessionData: SessionData
   ): Promise<MockOutput> {
+    const stops = targetPayload.message.intent.fulfillment.stops;
+    const startStop = stops.find((s: any) => s.type === "START");
+    const endStop = stops.find((s: any) => s.type === "END");
+
+    const startCode = startStop?.location?.descriptor?.code;
+    const endCode = endStop?.location?.descriptor?.code;
+
+    const validStops = exampleFullfillment.fulfillments[0].stops;
+    const validCodes = validStops.map((s: any) => s.location.descriptor.code);
+
+    if (!startCode || !validCodes.includes(startCode)) {
+      return {
+        valid: false,
+        message: `Invalid start station code: ${startCode}. It must be one of the stations present in the catalog.`,
+      };
+    }
+
+    if (!endCode || !validCodes.includes(endCode)) {
+      return {
+        valid: false,
+        message: `Invalid end station code: ${endCode}. It must be one of the stations present in the catalog.`,
+      };
+    }
+
+    const startIndex = validCodes.indexOf(startCode);
+    const endIndex = validCodes.indexOf(endCode);
+
+    if (endIndex <= startIndex) {
+      return {
+        valid: false,
+        message: `End station (${endCode}) must be after start station (${startCode}).`,
+      };
+    }
+
     return { valid: true };
   }
   async meetRequirements(sessionData: SessionData): Promise<MockOutput> {

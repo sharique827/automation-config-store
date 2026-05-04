@@ -1,19 +1,24 @@
 import { readFileSync } from "fs";
 import yaml from "js-yaml";
 import path from "path";
-import { MockAction, MockOutput, saveType } from "../../../../classes/mock-action";
+import {
+  MockAction,
+  MockOutput,
+  saveType,
+} from "../../../../classes/mock-action";
 import { selectUnlimitedPassGenerator } from "./generator";
 import { SessionData } from "../../../../session-types";
+import { masterOnSearchPayload } from "../../on_search/master_on_search_payload";
 
 export class MockSelectMetroUnlimitedPass210Class extends MockAction {
   get saveData(): saveType {
     return yaml.load(
-      readFileSync(path.resolve(__dirname, "../save-data.yaml"), "utf8")
+      readFileSync(path.resolve(__dirname, "../save-data.yaml"), "utf8"),
     ) as saveType;
   }
   get defaultData(): any {
     return yaml.load(
-      readFileSync(path.resolve(__dirname, "./default.yaml"), "utf8")
+      readFileSync(path.resolve(__dirname, "./default.yaml"), "utf8"),
     );
   }
   get inputs(): any {
@@ -30,79 +35,98 @@ export class MockSelectMetroUnlimitedPass210Class extends MockAction {
   }
   async validate(
     targetPayload: any,
-    sessionData: SessionData
+    sessionData: SessionData,
   ): Promise<MockOutput> {
-    const items = targetPayload?.message?.order?.items || [];
-    const fulfillments = targetPayload?.message?.order?.fulfillments || [];
+    const order = targetPayload?.message?.order;
+    const providerId = order?.provider?.id;
+    const items = order?.items || [];
+    const fulfillments = order?.fulfillments || [];
 
-    // Extract all fulfillment ids from payload
-    const payloadFulfillmentIds = fulfillments.map((f: any) => f.id);
+    const providers = masterOnSearchPayload.message.catalog.providers;
+    const provider = providers.find((p: any) => p.id === providerId);
 
+    // 1. Provider ID Existence
+    if (!provider) {
+      return {
+        valid: false,
+        message: `Provider ID ${providerId} not found in master catalog.`,
+      };
+    }
+
+    // 2. Item ID Existence and Type Check
     for (const item of items) {
-      // 1. check item id in sessionData.selected_item_ids
-      if (!sessionData.selected_item_ids.includes(item.id)) {
+      const catalogItem = provider.items.find((i: any) => i.id === item.id);
+      if (!catalogItem) {
         return {
           valid: false,
-          message: `Item id ${item.id} not found in sessionData.selected_item_ids: ${sessionData.selected_item_ids}`,
+          message: `Item ID ${item.id} not found for provider ${providerId} in master catalog.`,
         };
       }
 
-      // 2. check item.fulfillment_ids are present in payload.fulfillments
-      const itemFulfillmentIds = item.fulfillment_ids || [];
-      if (
-        !itemFulfillmentIds.every((fid: string) =>
-          payloadFulfillmentIds.includes(fid)
-        )
-      ) {
+      // Check if item has type PASS (either via category or descriptor code)
+      // Based on master_on_search_payload, PASS items have descriptor.code === 'PASS'
+      if (catalogItem.descriptor?.code !== "PASS") {
         return {
           valid: false,
-          message: `Item ${item.id} has invalid fulfillment ids. Expected subset of ${payloadFulfillmentIds}, got ${itemFulfillmentIds}`,
+          message: `Item ${item.id} is not of type 'PASS'. Found type: ${catalogItem.descriptor?.code}.`,
         };
       }
 
-      // 3. check quantity within min and max for that item in sessionData.items
-      const sessionItem = sessionData.items?.find((i: any) => i.id === item.id);
-      const selectedCount = item?.quantity?.selected?.count;
-
-      if (!sessionItem) {
+      // 4. Item Quantity Check
+      const selectedCount = item?.quantity?.selected?.count || 0;
+      const maxCount = catalogItem.quantity?.maximum?.count;
+      if (maxCount !== undefined && selectedCount > maxCount) {
         return {
           valid: false,
-          message: `Item ${item.id} not found in sessionData.items`,
+          message: `Quantity ${selectedCount} for item ${item.id} exceeds maximum allowed: ${maxCount} in master catalog.`,
+        };
+      }
+    }
+
+    // 3. Fulfillment ID Existence and Type Check
+    for (const fulfillment of fulfillments) {
+      const catalogFulfillment = provider.fulfillments.find(
+        (f: any) => f.id === fulfillment.id,
+      );
+      if (fulfillment.type !== "PASS") {
+        return {
+          valid: false,
+          message: `Fulfillment ${fulfillment.id} type should be 'PASS'.`,
+        };
+      }
+      if (!catalogFulfillment) {
+        return {
+          valid: false,
+          message: `Fulfillment ID ${fulfillment.id} not found for provider ${providerId} in master catalog.`,
         };
       }
 
-      const min = sessionItem?.quantity?.minimum?.count ?? 1;
-      const max = sessionItem?.quantity?.maximum?.count ?? Infinity;
-
-      if (selectedCount < min || selectedCount > max) {
+      // Check if fulfillment has type PASS
+      if (catalogFulfillment.type !== "PASS") {
         return {
           valid: false,
-          message: `Item ${item.id} quantity out of range. Expected between ${min} and ${max}, got ${selectedCount}`,
+          message: `Fulfillment ${fulfillment.id} is not of type 'PASS'. Found type: ${catalogFulfillment.type}.`,
         };
+      }
+
+      // 5. Creds Type Validation
+      const allowedCredTypes = ["AADHAR", "DL", "PAN", "VOTER ID"];
+      const creds = fulfillment.customer?.person?.creds || [];
+      for (const cred of creds) {
+        if (!allowedCredTypes.includes(cred.type)) {
+          return {
+            valid: false,
+            message: `Invalid credential type: ${cred.type}. Allowed types are: ${allowedCredTypes.join(
+              ", ",
+            )}.`,
+          };
+        }
       }
     }
 
     return { valid: true };
   }
   async meetRequirements(sessionData: SessionData): Promise<MockOutput> {
-  // Check for items
-  if (!sessionData.items || sessionData.items.length === 0) {
-    return {
-      valid: false,
-      message: "No items available in session data",
-      code: "MISSING_ITEMS",
-    };
+    return { valid: true };
   }
-  // Check for provider_id
-  if (!sessionData.provider_id) {
-    return {
-      valid: false,
-      message: "No provider_id available in session data",
-      code: "MISSING_PROVIDER_ID",
-    };
-  }
-
-  // All requirements satisfied
-  return { valid: true };
-}
 }
