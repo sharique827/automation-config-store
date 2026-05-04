@@ -1,165 +1,155 @@
+import { masterOnSearchPayload } from "../../on_search/master_on_search_payload";
+
 export async function onSelectRechargeGenerator(
   existingPayload: any,
   sessionData: any,
 ) {
+  const masterOnSearch = masterOnSearchPayload?.message?.catalog?.providers[0];
+
   existingPayload.context.location.city.code =
     sessionData?.select_city_code ?? "std:080";
-  const selectedItemId = sessionData?.selected_item_ids?.[0];
-  const selectedFulfillmentId = sessionData?.selected_fulfillment_ids;
 
-  const items = (sessionData?.items ?? []).flat();
-  const fulfillments = (sessionData?.fulfillments ?? []).flat();
-
-  existingPayload.message.order.items = selectedItemId
-    ? items.reduce((acc: any[], item: any) => {
-        if (item?.id === selectedItemId) {
-          acc.push({
-            ...item,
-            price: {
-              currency: item.price.currency,
-              value: item.price.value,
-            },
-          });
-        }
-        return acc;
-      }, [])
-    : [];
-
-  const buyerCustomers =
-    sessionData?.buyer_side_fulfillment_ids
-      ?.flat()
-      ?.map((f: any) => f?.customer)
-      ?.filter(Boolean) ?? [];
-
-  existingPayload.message.order.fulfillments = selectedFulfillmentId
-    ? fulfillments
-        .filter((f: any) => f?.id === selectedFulfillmentId)
-        .map((f: any) => ({
-          ...f,
-          customer: buyerCustomers[0],
-        }))
-    : [];
-
-  existingPayload.message.order.provider = {
-    id: sessionData?.provider_id ?? "Provider1",
-    descriptor: sessionData?.provider_descriptor ?? {},
-  };
-
-  const baseFareBreakup = existingPayload.message.order.items.map(
-    (item: any) => ({
-      title: "BASE_FARE",
-      item: {
-        id: item?.id ?? "I1",
-        price: {
-          currency: "INR",
-          value: String(item?.price?.value ?? "200"),
-        },
-      },
-    }),
+  const Items = masterOnSearch?.items?.find((item: any) => {
+    return item.id === sessionData?.selected_unlimited_pass_item?.id;
+  });
+  const Fulfillments = masterOnSearch?.fulfillments?.find(
+    (fulfillment: any) => {
+      return (
+        fulfillment.id === sessionData?.selected_unlimited_pass_fulfillments?.id
+      );
+    },
   );
 
-  const getBreakupPrice = (breakupItem: any): number =>
-    Number(breakupItem?.price?.value ?? breakupItem?.item?.price?.value ?? 0);
-
-  const baseFareTotal = baseFareBreakup.reduce(
-    (sum: number, item: any) => sum + getBreakupPrice(item),
-    0,
-  );
-
-  const CGST_PERCENT = 4;
-  const SGST_PERCENT = 4;
-
-  const cgstAmount = (baseFareTotal * CGST_PERCENT) / 100;
-  const sgstAmount = (baseFareTotal * SGST_PERCENT) / 100;
-  const totalTax = cgstAmount + sgstAmount;
-
-  const convenienceFee = 10;
-  const otherCharges = 0;
-  const offerDiscount = -10;
-
-  const breakUp = [
-    ...baseFareBreakup,
+  existingPayload.message.order.items = [
     {
-      title: "CONVENIENCE_FEE",
+      id: Items?.id ?? "I3",
+      category_ids: Items?.category_ids ?? [],
+      descriptor: Items?.descriptor ?? {},
+      fulfillment_ids: [sessionData?.selected_unlimited_pass_fulfillments?.id],
       price: {
-        currency: "INR",
-        value: String(convenienceFee),
-      },
-    },
-    {
-      title: "TAX",
-      price: {
-        currency: "INR",
-        value: totalTax.toFixed(2),
-      },
-      item: {
-        tags: [
-          {
-            descriptor: { code: "TAX" },
-            list: [
-              {
-                descriptor: { code: "CGST" },
-                value: `${CGST_PERCENT}%`,
-              },
-              {
-                descriptor: { code: "SGST" },
-                value: `${SGST_PERCENT}%`,
-              },
-            ],
-          },
-        ],
-      },
-    },
-    {
-      title: "OTHER_CHARGES",
-      price: {
-        currency: "INR",
-        value: String(otherCharges),
-      },
-      item: {
-        tags: [
-          {
-            descriptor: {
-              code: "OTHER_CHARGES",
-            },
-            list: [
-              {
-                descriptor: {
-                  code: "SURCHARGE",
-                },
-                value: "0",
-              },
-            ],
-          },
-        ],
-      },
-    },
-    {
-      title: "OFFER",
-      price: {
-        currency: "INR",
-        value: String(offerDiscount),
+        currency: Items?.price?.currency ?? "INR",
+        value: sessionData?.selected_unlimited_pass_item?.price?.value ?? "200",
       },
     },
   ];
 
-  const totalQuoteValue = breakUp.reduce(
-    (sum: number, item: any) => sum + getBreakupPrice(item),
-    0,
+  existingPayload.message.order.fulfillments = [
+    {
+      id: Fulfillments?.id ?? "F2",
+      stops: [
+        {
+          instructions: {
+            name: "How to use?",
+            short_desc: "short description about how to use?",
+            long_desc: "Description about how to use?",
+          },
+        },
+      ],
+      customer: sessionData?.selected_unlimited_pass_fulfillments?.customer,
+      type: Fulfillments?.type ?? "PASS",
+    },
+  ];
+
+  existingPayload.message.order.provider = {
+    id: sessionData?.select_unlimited_pass_provider_id ?? "P1",
+    descriptor: masterOnSearch?.descriptor ?? {},
+  };
+
+  // ── Dynamic Quote ─────────────────────────────────────────────
+  const currency = Items?.price?.currency ?? "INR";
+  const baseFarePrice = Number(
+    sessionData?.selected_unlimited_pass_item?.price?.value ?? 0,
   );
 
-  function generate5DigitId(): string {
-    const id = Math.floor(10000 + Math.random() * 90000).toString();
-    return `Q${id}`;
-  }
+  // Tax: CGST 2% + SGST 2% of base fare
+  const cgstPct = 0.02;
+  const sgstPct = 0.02;
+  const taxValue = baseFarePrice * (cgstPct + sgstPct);
+
+  // Static line items
+  const convenienceFee = 10;
+  const otherCharges = 0;
+  const offer = -10;
+
+  const totalValue =
+    baseFarePrice + convenienceFee + taxValue + otherCharges + offer;
 
   existingPayload.message.order.quote = {
-    id: generate5DigitId(),
+    id: "Q1",
     price: {
-      value: totalQuoteValue.toFixed(2),
-      currency: "INR",
+      value: String(totalValue),
+      currency,
     },
-    breakup: breakUp,
+    breakup: [
+      {
+        title: "BASE_FARE",
+        item: {
+          id: Items?.id ?? "I3",
+          price: {
+            currency,
+            value: String(baseFarePrice),
+          },
+        },
+      },
+      {
+        title: "CONVENIENCE_FEE",
+        price: {
+          currency,
+          value: String(convenienceFee),
+        },
+      },
+      {
+        title: "TAX",
+        price: {
+          currency,
+          value: String(taxValue),
+        },
+        item: {
+          tags: [
+            {
+              descriptor: { code: "TAX" },
+              list: [
+                {
+                  descriptor: { code: "CGST" },
+                  value: "2%",
+                },
+                {
+                  descriptor: { code: "SGST" },
+                  value: "2%",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        title: "OTHER_CHARGES",
+        price: {
+          currency,
+          value: String(otherCharges),
+        },
+        item: {
+          tags: [
+            {
+              descriptor: { code: "OTHER_CHARGES" },
+              list: [
+                {
+                  descriptor: { code: "SURCHARGE" },
+                  value: "0",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        title: "OFFER",
+        price: {
+          currency,
+          value: String(offer),
+        },
+      },
+    ],
   };
   return existingPayload;
 }

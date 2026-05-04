@@ -1,171 +1,167 @@
+import { masterOnSearchPayload } from "../../on_search/master_on_search_payload";
+
+/**
+ * Parses an ISO 8601 duration string (e.g. "P1D", "P7D", "PT2H", "P1Y2M3DT4H5M6S")
+ * and returns a new Date that is the given base date offset by that duration.
+ */
+function addIsoDuration(base: Date, duration: string): Date {
+  const match = duration.match(/P(\d+)D/);
+  if (!match) return base;
+  const days = parseInt(match[1]);
+  const result = new Date(base);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
 export async function onSelectUnlimitedPassGenerator(
   existingPayload: any,
   sessionData: any,
 ) {
+  const masterOnSearch = masterOnSearchPayload?.message?.catalog?.providers[0];
+  const date = new Date().toISOString();
+
   existingPayload.context.location.city.code =
     sessionData?.select_city_code ?? "std:080";
-  const creds = sessionData?.selected_unlimitedpass_fulfillments
-    ?.flat()
-    ?.find((item: any) => {
-      return item.type === "PASS";
-    });
-  const selectedItemId = sessionData?.selected_item_ids?.[0];
-  const selectedFulfillmentId = sessionData?.selected_fulfillment_ids;
 
-  const items = (sessionData?.items ?? []).flat();
-  const fulfillments = (sessionData?.fulfillments ?? []).flat();
+  const Items = masterOnSearch?.items?.find((item: any) => {
+    return item.id === sessionData?.selected_unlimited_pass_item?.id;
+  });
+  const Fulfillments = masterOnSearch?.fulfillments?.find(
+    (fulfillment: any) => {
+      return (
+        fulfillment.id === sessionData?.selected_unlimited_pass_fulfillments?.id
+      );
+    },
+  );
 
-  existingPayload.message.order.items = selectedItemId
-    ? items.reduce((acc: any[], item: any) => {
-        if (item?.id === selectedItemId) {
-          acc.push({
-            ...item,
-            quantity:
-              sessionData?.selected_unlimitedpass_item?.flat?.()?.[0]
-                ?.quantity ?? "0",
-            price: {
-              currency: item?.price?.currency,
-              value: item?.price?.value,
-            },
-            time: {
-              ...item?.time,
-              range:
-                sessionData?.on_search_unlimited_pass_provider?.flat?.()?.[0]
-                  ?.time?.range ?? {},
-            },
-          });
-        }
-        return acc;
-      }, [])
-    : [];
+  existingPayload.message.order.items = [
+    {
+      id: Items?.id ?? "I5",
+      descriptor: Items?.descriptor ?? {},
+      category_ids: Items?.category_ids ?? [],
+      fulfillment_ids: [sessionData?.selected_unlimited_pass_fulfillments?.id],
+      price: Items?.price ?? {},
+      quantity: sessionData?.selected_unlimited_pass_item?.quantity ?? {},
+      time: Items?.time ?? {},
+    },
+  ];
+  const itemDuration =
+    existingPayload.message.order.items[0]?.time?.duration ?? "P1D";
+  const endDate = addIsoDuration(new Date(), itemDuration);
 
-  existingPayload.message.order.fulfillments = selectedFulfillmentId
-    ? fulfillments
-        .filter((f: any) => f?.id === selectedFulfillmentId)
-        .map((fulfillment: any) => {
-          if (fulfillment?.type === "PASS" && fulfillment?.customer) {
-            return {
-              ...fulfillment,
-              customer: creds?.customer ?? {},
-            };
-          }
-          return fulfillment;
-        })
-    : [];
-
-  existingPayload.message.order.provider = {
-    id: sessionData?.provider_id ?? "Provider1",
-    descriptor: sessionData?.provider_descriptor ?? {},
-    time: sessionData?.on_search_unlimited_pass_provider?.flat()[0]?.time ?? {},
+  existingPayload.message.order.items[0].time.timestamp = date;
+  existingPayload.message.order.items[0].time.range = {
+    start: date,
+    end: endDate.toISOString(),
   };
 
-  const selectedQty = sessionData?.selected_unlimitedpass_item.flat()[0];
-
-  const baseFareBreakup = (existingPayload?.message?.order?.items || []).map(
-    (item: any) => {
-      const itemPrice = Number(item?.price?.value) || 200;
-
-      return {
-        title: "BASE_FARE",
-        item: {
-          id: item?.id ?? "I1",
-          price: {
-            currency: "INR",
-            value: String(itemPrice),
-          },
-          quantity: selectedQty?.quantity ?? {},
-        },
-        price: {
-          currency: "INR",
-          value: String(
-            itemPrice * Number(selectedQty?.quantity?.selected?.count),
-          ),
-        },
-      };
-    },
-  );
-  const getBreakupPrice = (breakupItem: any): number =>
-    Number(breakupItem?.price?.value ?? breakupItem?.item?.price?.value ?? 0);
-
-  const baseFareTotal = baseFareBreakup.reduce(
-    (sum: number, item: any) => sum + getBreakupPrice(item),
-    0,
-  );
-
-  const CGST_PERCENT = 2;
-  const SGST_PERCENT = 2;
-
-  const cgstAmount = (baseFareTotal * CGST_PERCENT) / 100;
-  const sgstAmount = (baseFareTotal * SGST_PERCENT) / 100;
-  const totalTax = cgstAmount + sgstAmount;
-
-  const convenienceFee = 10;
-  const otherCharges = 0;
-  const offerDiscount = 0;
-
-  const breakUp = [
-    ...baseFareBreakup,
+  existingPayload.message.order.fulfillments = [
     {
-      title: "TAX",
-      price: {
-        currency: "INR",
-        value: totalTax.toFixed(2),
-      },
-      item: {
-        tags: [
-          {
-            descriptor: { code: "TAX" },
-            list: [
-              {
-                descriptor: { code: "CGST" },
-                value: `${CGST_PERCENT}%`,
-              },
-              {
-                descriptor: { code: "SGST" },
-                value: `${SGST_PERCENT}%`,
-              },
-            ],
-          },
-        ],
-      },
-    },
-    {
-      title: "OTHER_CHARGES",
-      price: {
-        currency: "INR",
-        value: String(otherCharges),
-      },
-      item: {
-        tags: [
-          {
-            descriptor: {
-              code: "OTHER_CHARGES",
-            },
-            list: [
-              {
-                descriptor: {
-                  code: "SURCHARGE",
-                },
-                value: "0",
-              },
-            ],
-          },
-        ],
-      },
+      id: Fulfillments?.id ?? "F2",
+      type: Fulfillments?.type ?? "PASS",
+      customer:
+        sessionData?.selected_unlimited_pass_fulfillments?.customer ?? {},
+      stops: Fulfillments?.stops ?? [],
+      vehicle: Fulfillments?.vehicle ?? {},
+      tags: Fulfillments?.tags ?? [],
     },
   ];
 
-  const totalQuoteValue = breakUp.reduce(
-    (sum: number, item: any) => sum + getBreakupPrice(item),
-    0,
-  );
+  const today = date.split("T")[0];
+  existingPayload.message.order.provider = {
+    id: sessionData?.select_unlimited_pass_provider_id ?? "P1",
+    descriptor: masterOnSearch?.descriptor ?? {},
+    time: {
+      range: {
+        start: `${today}T05:30:00.000Z`,
+        end: `${today}T23:30:00.000Z`,
+      },
+    },
+  };
+
+  const count =
+    sessionData?.selected_unlimited_pass_item?.quantity?.selected?.count ?? 1;
+  const unitPrice = Number(Items?.price?.value ?? 0);
+  const totalValue = String(unitPrice * count);
+  const currency = Items?.price?.currency ?? "INR";
 
   existingPayload.message.order.quote = {
     price: {
-      value: totalQuoteValue.toFixed(2),
-      currency: "INR",
+      value: totalValue,
+      currency: currency,
     },
-    breakup: breakUp,
+    breakup: [
+      {
+        title: "BASE_FARE",
+        item: {
+          id: Items?.id ?? "I5",
+          price: Items?.price ?? {},
+          quantity: {
+            selected: {
+              count: count,
+            },
+          },
+        },
+        price: {
+          currency: currency,
+          value: totalValue,
+        },
+      },
+      {
+        title: "TAX",
+        price: {
+          currency: currency,
+          value: "0",
+        },
+        item: {
+          tags: [
+            {
+              descriptor: {
+                code: "TAX",
+              },
+              list: [
+                {
+                  descriptor: {
+                    code: "CGST",
+                  },
+                  value: "0",
+                },
+                {
+                  descriptor: {
+                    code: "SGST",
+                  },
+                  value: "0",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        title: "OTHER_CHARGES",
+        price: {
+          currency: currency,
+          value: "0",
+        },
+        item: {
+          tags: [
+            {
+              descriptor: {
+                code: "OTHER_CHARGES",
+              },
+              list: [
+                {
+                  descriptor: {
+                    code: "SURCHARGE",
+                  },
+                  value: "0",
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ],
   };
 
   return existingPayload;

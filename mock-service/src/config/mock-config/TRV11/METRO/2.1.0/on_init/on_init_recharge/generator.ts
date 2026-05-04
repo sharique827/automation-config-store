@@ -34,7 +34,7 @@ export async function onInitRechargeGenerator(
   const tags = existingPayload?.message?.order?.tags;
   if (!tags) return;
 
-  const collectedBy = sessionData?.collected_by;
+  const collectedBy = sessionData?.payments?.flat()?.[0]?.collected_by
   const price = Number(
     existingPayload?.message?.order?.quote?.price?.value ?? 0,
   );
