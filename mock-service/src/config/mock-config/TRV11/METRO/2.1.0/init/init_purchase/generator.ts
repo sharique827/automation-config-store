@@ -12,7 +12,7 @@ export async function initPurchaseGenerator(
       return fulfillment.type === "PASS";
     });
   existingPayload.message.order.provider.id =
-    sessionData?.provider_id ?? "Provider1";
+    (sessionData as any)?.select_unlimited_pass_provider_id ?? "Provider1";
   existingPayload.message.order.items = [
     {
       id: sessionData?.selected_items?.[0]?.id ?? "itemid",
@@ -34,6 +34,6 @@ export async function initPurchaseGenerator(
     },
   ];
   existingPayload.message.order.payments[0].collected_by =
-    sessionData.collected_by;
+    sessionData?.user_inputs?.collected_by;
   return existingPayload;
 }
