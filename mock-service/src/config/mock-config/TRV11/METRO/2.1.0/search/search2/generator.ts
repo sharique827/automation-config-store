@@ -27,6 +27,7 @@ export async function search2Generator(
   const user_input =
     typeof rawData === "string" ? JSON.parse(rawData) : rawData;
   existingPayload.context.bpp_id = user_input?.bpp_id ?? "xyz.com";
+  existingPayload.context.bpp_uri = sessionData?.subscriber_url
   existingPayload.context.location.city.code =
     user_input?.city_code ?? "std:011";
   existingPayload.message.intent.fulfillment = {

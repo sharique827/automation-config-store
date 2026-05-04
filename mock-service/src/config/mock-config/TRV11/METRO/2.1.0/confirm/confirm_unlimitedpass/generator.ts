@@ -26,9 +26,9 @@ export async function confirmUnlimitedPassGenerator(
   if (sessionData.selected_items && sessionData.selected_items.length > 0) {
     existingPayload.message.order.items = sessionData?.init_items?.flat() ?? [];
   }
-  if (sessionData.provider_id) {
-    existingPayload.message.order.provider.id = sessionData.provider_id;
-  }
+  
+  existingPayload.message.order.provider.id = sessionData.select_unlimited_pass_provider_id;
+  
   if (sessionData.payments) {
     existingPayload.message.order.payments = transformPaymentsToPaid(
       sessionData.payments,

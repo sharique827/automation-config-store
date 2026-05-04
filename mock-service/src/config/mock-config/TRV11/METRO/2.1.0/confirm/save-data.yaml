@@ -5,3 +5,7 @@ save-data:
   buyer_side_fulfillment_ids: "$.message.order.fulfillments[*]"
   tags: "$.message.order.tags"
   confirm_tags: "$.message.order.tags"
+  bap_id: "$.context.bap_id"
+  bpp_id: "$.context.bpp_id"
+  bap_uri: "$.context.bap_uri"
+  bpp_uri: "$.context.bpp_uri"

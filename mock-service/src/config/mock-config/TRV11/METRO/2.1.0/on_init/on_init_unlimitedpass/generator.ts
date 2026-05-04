@@ -5,7 +5,6 @@ export async function onInitUnlimitedPassGenerator(
 ) {
   existingPayload.context.location.city.code =
     sessionData?.select_city_code ?? "std:080";
-  console.log(sessionData?.items, sessionData?.fulfillments);
   existingPayload.message.order.provider = sessionData.provider;
   existingPayload.message.order.items = sessionData?.items ?? [];
   existingPayload.message.order.fulfillments = sessionData?.fulfillments ?? [];

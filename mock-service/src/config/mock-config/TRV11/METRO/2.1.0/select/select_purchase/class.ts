@@ -4,6 +4,7 @@ import path from "path";
 import { MockAction, MockOutput, saveType } from "../../../../classes/mock-action";
 import { selectPurchaseGenerator } from "./generator";
 import { SessionData } from "../../../../session-types";
+import { masterOnSearchPayload } from "../../on_search/master_on_search_payload";
 
 export class MockSelectMetroPurchase210Class extends MockAction {
   get saveData(): saveType {
@@ -29,80 +30,81 @@ export class MockSelectMetroPurchase210Class extends MockAction {
     return selectPurchaseGenerator(existingPayload, sessionData);
   }
   async validate(
-    targetPayload: any,
-    sessionData: SessionData
-  ): Promise<MockOutput> {
-    const items = targetPayload?.message?.order?.items || [];
-    const fulfillments = targetPayload?.message?.order?.fulfillments || [];
-
-    // Extract all fulfillment ids from payload
-    const payloadFulfillmentIds = fulfillments.map((f: any) => f.id);
-
-    for (const item of items) {
-      // 1. check item id in sessionData.selected_item_ids
-      if (!sessionData.selected_item_ids.includes(item.id)) {
+      targetPayload: any,
+      sessionData: SessionData,
+    ): Promise<MockOutput> {
+      const order = targetPayload?.message?.order;
+      const providerId = order?.provider?.id;
+      const items = order?.items || [];
+      const fulfillments = order?.fulfillments || [];
+  
+      const providers = masterOnSearchPayload.message.catalog.providers;
+      const provider = providers.find((p: any) => p.id === providerId);
+  
+      // 1. Provider ID Existence
+      if (!provider) {
         return {
           valid: false,
-          message: `Item id ${item.id} not found in sessionData.selected_item_ids: ${sessionData.selected_item_ids}`,
+          message: `Provider ID ${providerId} not found in master catalog.`,
         };
       }
+  
+      // 2. Item ID Existence and Type Check
+      for (const item of items) {
+        const catalogItem = provider.items.find((i: any) => i.id === item.id);
+        if (!catalogItem) {
+          return {
+            valid: false,
+            message: `Item ID ${item.id} not found for provider ${providerId} in master catalog.`,
+          };
+        }
+  
+        // Check if item has type PASS (either via category or descriptor code)
+        // Based on master_on_search_payload, PASS items have descriptor.code === 'PASS'
+        if (catalogItem.descriptor?.code !== "PURCHASE") {
+          return {
+            valid: false,
+            message: `Item ${item.id} is not of type 'PURCHASE'. Found type: ${catalogItem.descriptor?.code}.`,
+          };
+        }
+  
+        // 4. Item Price Value Check
+        const selectedPriceValue = Number(item?.price?.value) || 0;
+        const minPriceValue = Number(catalogItem.price?.minimum_value) || 0;
+        const maxPriceValue = Number(catalogItem.price?.maximum_value) || Infinity;
 
-      // 2. check item.fulfillment_ids are present in payload.fulfillments
-      const itemFulfillmentIds = item.fulfillment_ids || [];
-      if (
-        !itemFulfillmentIds.every((fid: string) =>
-          payloadFulfillmentIds.includes(fid)
-        )
-      ) {
-        return {
-          valid: false,
-          message: `Item ${item.id} has invalid fulfillment ids. Expected subset of ${payloadFulfillmentIds}, got ${itemFulfillmentIds}`,
-        };
+        if (selectedPriceValue < minPriceValue || selectedPriceValue > maxPriceValue) {
+          return {
+            valid: false,
+            message: `Price value ${selectedPriceValue} for item ${item.id} is out of range. Expected between ${minPriceValue} and ${maxPriceValue} in master catalog.`,
+          };
+        }
       }
-
-      // 3. check quantity within min and max for that item in sessionData.items
-      const sessionItem = sessionData.items?.find((i: any) => i.id === item.id);
-      const selectedCount = item?.quantity?.selected?.count;
-
-      if (!sessionItem) {
-        return {
-          valid: false,
-          message: `Item ${item.id} not found in sessionData.items`,
-        };
+  
+      // 3. Fulfillment ID Existence and Type Check
+      for (const fulfillment of fulfillments) {
+        const catalogFulfillment = provider.fulfillments.find(
+          (f: any) => f.id === fulfillment.id,
+        );
+        if (!catalogFulfillment) {
+          return {
+            valid: false,
+            message: `Fulfillment ID ${fulfillment.id} not found for provider ${providerId} in master catalog.`,
+          };
+        }
+  
+        // Check if fulfillment has type PASS
+        if (catalogFulfillment.type !== "PASS") {
+          return {
+            valid: false,
+            message: `Fulfillment ${fulfillment.id} is not of type 'PASS'. Found type: ${catalogFulfillment.type}.`,
+          };
+        }
       }
-
-      const min = sessionItem?.quantity?.minimum?.count ?? 1;
-      const max = sessionItem?.quantity?.maximum?.count ?? Infinity;
-
-      if (selectedCount < min || selectedCount > max) {
-        return {
-          valid: false,
-          message: `Item ${item.id} quantity out of range. Expected between ${min} and ${max}, got ${selectedCount}`,
-        };
-      }
+  
+      return { valid: true };
     }
-
-    return { valid: true };
-  }
   async meetRequirements(sessionData: SessionData): Promise<MockOutput> {
-  // Check for items
-  if (!sessionData.items || sessionData.items.length === 0) {
-    return {
-      valid: false,
-      message: "No items available in session data",
-      code: "MISSING_ITEMS",
-    };
-  }
-  // Check for provider_id
-  if (!sessionData.provider_id) {
-    return {
-      valid: false,
-      message: "No provider_id available in session data",
-      code: "MISSING_PROVIDER_ID",
-    };
-  }
-
-  // All requirements satisfied
   return { valid: true };
 }
 }
