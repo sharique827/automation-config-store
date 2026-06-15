@@ -23987,9 +23987,16 @@ x-validations:
         attr: "$.context.bap_uri"
         _RETURN_: attr are present
         useCasePath: "$.message.intent.fulfillment.vehicle.category"
+      # - _NAME_: REQUIRED_CONTEXT_TTL_11
+      #   attr: "$.context.ttl"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.intent.fulfillment.vehicle.category"
       - _NAME_: REQUIRED_CONTEXT_TTL_11
-        attr: "$.context.ttl"
-        _RETURN_: attr are present
+        attr: $.context.ttl
+        reg: &TTL_REGEX
+        - '^P(?=\\d|T\\d)(\\d+Y)?(\\d+M)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+S)?)?$'
+        _CONTINUE_: '!(attr are present)'
+        _RETURN_: attr follow regex reg
         useCasePath: "$.message.intent.fulfillment.vehicle.category"
       - _NAME_: REQUIRED_MESSAGE_CATEGORY_12
         attr: "$.message.intent.fulfillment.vehicle.category"
