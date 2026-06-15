@@ -24726,6 +24726,8 @@ x-validations:
           - INTERMEDIATE_STOP
           - TRANSIT_STOP
           - PASS
+          - TRIP
+          - TICKET
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
