@@ -23922,6 +23922,8 @@ x-validations:
       - END
       - INTERMEDIATE_STOP
       - TRANSIT_STOP
+      - TRIP
+      - TICKET
       enumPath: "$.message.order.fulfillments[*].type"
       _CONTINUE_: "!(enumPath are present)"
       _RETURN_: enumPath all in enumList
@@ -24138,6 +24140,8 @@ x-validations:
       - END
       - INTERMEDIATE_STOP
       - TRANSIT_STOP
+      - TICKET
+      - TRIP
       enumPath: "$.message.order.fulfillments[*].type"
       _CONTINUE_: "!(enumPath are present)"
       _RETURN_: enumPath all in enumList
@@ -24386,6 +24390,8 @@ x-validations:
       - END
       - INTERMEDIATE_STOP
       - TRANSIT_STOP
+      - TICKET
+      - TRIP
       enumPath: "$.message.order.fulfillments[*].type"
       _CONTINUE_: "!(enumPath are present)"
       _RETURN_: enumPath all in enumList
@@ -24639,6 +24645,8 @@ x-validations:
       - END
       - INTERMEDIATE_STOP
       - TRANSIT_STOP
+      - TICKET
+      - TRIP
       enumPath: "$.message.order.fulfillments[*].type"
       _CONTINUE_: "!(enumPath are present)"
       _RETURN_: enumPath all in enumList
@@ -27635,7 +27643,7 @@ x-validations:
       attr: "$.context.action"
       _RETURN_: attr are present && attr all in enumList
       enumList:
-      - on_cancel
+      - on_update
     - _NAME_: REQUIRED_CONTEXT_BAP_URI_10
       attr: "$.context.bap_uri"
       _RETURN_: attr are present
